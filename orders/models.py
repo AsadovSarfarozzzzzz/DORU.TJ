@@ -16,3 +16,18 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
 
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Ожидает'),
+        ('confirmed', 'Подтверждён'),
+        ('delivering', 'Доставляется'),
+        ('done', 'Выполнен'),
+        ('cancelled', 'Отменён'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    address = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    prescription = models.ImageField(upload_to='prescriptions/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
