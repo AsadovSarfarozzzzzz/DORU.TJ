@@ -25,7 +25,7 @@ class Order(models.Model):
         ('cancelled', 'Отменён'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     total = models.DecimalField(max_digits=10, decimal_places=2)
