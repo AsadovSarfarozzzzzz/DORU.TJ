@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product, Category, Manufacturer
+from .models import Product, Category
 
 def home(request):
     categories = Category.objects.all()
     popular = Product.objects.filter(stock__gt=0).order_by('-id')[:8]
-    return render(request, 'products/home.html', {
+    return render(request, 'home.html', {
         'categories': categories,
         'popular': popular
     })
@@ -33,7 +33,7 @@ def catalog(request):
     if is_prescription:
         products = products.filter(is_prescription=True)
 
-    return render(request, 'products/catalog.html', {
+    return render(request, 'catalog.html', {
         'products': products,
         'categories': categories,
     })
@@ -45,7 +45,7 @@ def product_detail(request, pk):
     similar = Product.objects.filter(
         category=product.category
     ).exclude(pk=pk)[:4]
-    return render(request, 'products/detail.html', {
+    return render(request, 'detail.html', {
         'product': product,
         'similar': similar
     })
