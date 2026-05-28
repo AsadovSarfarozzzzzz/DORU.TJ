@@ -14,3 +14,9 @@ def add_to_cart(request, pk):
         item.save()
     messages.success(request, f'{product.name} добавлен в корзину!')
     return redirect(request.META.get('HTTP_REFERER', 'catalog'))
+
+@login_required
+def remove_from_cart(request, pk):
+    item = get_object_or_404(CartItem, pk=pk, cart__user=request.user)
+    item.delete()
+    return redirect('cart')
