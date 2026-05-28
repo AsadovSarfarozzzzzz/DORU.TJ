@@ -91,3 +91,12 @@ def my_orders(request):
         user=request.user
     ).order_by('-created_at')
     return render(request, 'orders/my_orders.html', {'orders': orders})
+
+@login_required
+def order_detail(request, pk):
+    order = get_object_or_404(Order, pk=pk, user=request.user)
+    items = OrderItem.objects.filter(order=order).select_related('product')
+    return render(request, 'orders/order_detail.html', {
+        'order': order,
+        'items': items
+    })
