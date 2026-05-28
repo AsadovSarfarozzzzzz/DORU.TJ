@@ -42,3 +42,45 @@ def cart_view(request):
         'items': items,
         'total': total
     })
+
+@login_required
+def checkout(request):
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    items = CartItem.objects.filter(cart=cart).select_related('product')
+    
+    if not items:
+        messages.error(request, 'Корзина пуста!')
+        return redirect('cart')
+
+    if request.method == 'POST':
+        address = request.POST.get('address')
+        prescription = request.FILES.get('prescription')
+
+        if not address:
+            messages.error(request, 'Укажите адрес доставки!')
+            return redirect('checkout')
+
+        total = sum(item.product.price * item.quantity for item in items)
+        order = Order.objects.create(
+            user=request.user,
+            address=address,
+            total=total,
+            prescription=prescription or ''
+        )
+        for item in items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.product.price
+            )
+        # очищаем корзину
+        items.delete()
+        messages.success(request, 'Заказ оформлен!')
+        return redirect('order_detail', pk=order.pk)
+
+    total = sum(item.product.price * item.quantity for item in items)
+    return render(request, 'orders/checkout.html', {
+        'items': items,
+        'total': total
+    })
