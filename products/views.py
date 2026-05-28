@@ -37,3 +37,15 @@ def catalog(request):
         'products': products,
         'categories': categories,
     })
+
+
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    # аналоги — те же категории
+    similar = Product.objects.filter(
+        category=product.category
+    ).exclude(pk=pk)[:4]
+    return render(request, 'products/detail.html', {
+        'product': product,
+        'similar': similar
+    })
