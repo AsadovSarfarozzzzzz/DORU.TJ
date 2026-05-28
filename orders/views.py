@@ -20,3 +20,15 @@ def remove_from_cart(request, pk):
     item = get_object_or_404(CartItem, pk=pk, cart__user=request.user)
     item.delete()
     return redirect('cart')
+
+
+@login_required
+def update_cart(request, pk):
+    item = get_object_or_404(CartItem, pk=pk, cart__user=request.user)
+    quantity = int(request.POST.get('quantity', 1))
+    if quantity > 0:
+        item.quantity = quantity
+        item.save()
+    else:
+        item.delete()
+    return redirect('cart')
