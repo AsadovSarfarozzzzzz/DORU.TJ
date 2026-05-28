@@ -5,6 +5,26 @@ from random import randint
 from .models import EmailConfirm, User
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+        avatar = request.FILES.get('avatar')
+
+        user = request.user
+        user.username = username
+        user.phone = phone
+        user.address = address
+        if avatar:
+            user.avatar = avatar
+        user.save()
+        return redirect('profile')
+
+    return render(request, 'accounts/profile.html', {'user': request.user})
 
 
 
