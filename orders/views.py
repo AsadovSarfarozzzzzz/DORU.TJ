@@ -32,3 +32,13 @@ def update_cart(request, pk):
     else:
         item.delete()
     return redirect('cart')
+
+@login_required
+def cart_view(request):
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    items = CartItem.objects.filter(cart=cart).select_related('product')
+    total = sum(item.product.price * item.quantity for item in items)
+    return render(request, 'orders/cart.html', {
+        'items': items,
+        'total': total
+    })
