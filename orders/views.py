@@ -112,3 +112,18 @@ def cancel_order(request, pk):
     else:
         messages.error(request, 'Этот заказ нельзя отменить!')
     return redirect('my_orders')
+
+
+@login_required
+def repeat_order(request, pk):
+    old_order = get_object_or_404(Order, pk=pk, user=request.user)
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    for item in old_order.orderitem_set.all():
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart, product=item.product
+        )
+        if not created:
+            cart_item.quantity += item.quantity
+            cart_item.save()
+    messages.success(request, 'Товары добавлены в корзину!')
+    return redirect('cart')
