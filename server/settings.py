@@ -143,3 +143,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'adolfhitler1637@gmail.com'
 EMAIL_HOST_PASSWORD = 'ubaq cfgn fism iqzq '
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+GROQ_API_KEY = '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'

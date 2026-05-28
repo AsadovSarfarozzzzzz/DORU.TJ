@@ -4,9 +4,17 @@ from .models import Product, Category
 def home(request):
     categories = Category.objects.all()
     popular = Product.objects.filter(stock__gt=0).order_by('-id')[:8]
+
+    advantages = [
+        {"icon": "🚚", "title": "Быстрая доставка", "desc": "За 2 часа по Душанбе"},
+        {"icon": "🤖", "title": "AI Консультант", "desc": "Подберём лекарство по симптомам"},
+        {"icon": "💰", "title": "Выгодные цены", "desc": "Лучшие цены в городе"},
+        {"icon": "🔒", "title": "Безопасно", "desc": "Только сертифицированные препараты"},
+    ]
     return render(request, 'home.html', {
         'categories': categories,
-        'popular': popular
+        'popular': popular,
+        'advantages': advantages
     })
 
 

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="text-3xl font-bold text-gray-800 mb-8">🛒 Корзина</h1>
+
+{% if items %}
+<div class="grid md:grid-cols-3 gap-8">
+    <!-- Товары -->
+    <div class="md:col-span-2 space-y-4">
+        {% for item in items %}
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-5">
+            <div class="bg-green-50 w-16 h-16 rounded-xl flex items-center justify-center text-3xl flex-shrink-0">
+                {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" class="w-full h-full object-cover rounded-xl">
+                {% else %}💊{% endif %}
+            </div>
+            <div class="flex-1">
+                <h3 class="font-semibold text-gray-800">{{ item.product.name }}</h3>
+                <p class="text-green-600 font-bold">{{ item.product.price }} сом</p>
+            </div>
+            <form method="POST" action="/orders/cart/update/{{ item.pk }}/" class="flex items-center gap-2">
+                {% csrf_token %}
+                <button type="submit" name="quantity" value="{{ item.quantity|add:"-1" }}"
+                        class="w-8 h-8 rounded-lg border border-gray-200 text-gray-500 hover:border-green-400 hover:text-green-600 transition flex items-center justify-center font-bold">−</button>
+                <span class="w-8 text-center font-bold">{{ item.quantity }}</span>
+                <button type="submit" name="quantity" value="{{ item.quantity|add:"1" }}"
+                        class="w-8 h-8 rounded-lg border border-gray-200 text-gray-500 hover:border-green-400 hover:text-green-600 transition flex items-center justify-center font-bold">+</button>
+            </form>
+            <p class="font-bold text-gray-800 w-24 text-right">{{ item.product.price }} сом</p>
+            <a href="/orders/cart/remove/{{ item.pk }}/" class="text-red-400 hover:text-red-600 transition text-xl ml-2">✕</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Итого -->
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 h-fit sticky top-24">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Итого</h2>
+        <div class="flex justify-between text-gray-500 mb-3">
+            <span>Товары</span><span>{{ total }} сом</span>
+        </div>
+        <div class="flex justify-between text-gray-500 mb-3">
+            <span>Доставка</span><span class="text-green-600">Бесплатно</span>
+        </div>
+        <div class="border-t border-gray-100 pt-4 mt-4 flex justify-between font-bold text-xl">
+            <span>Итого</span><span class="text-green-600">{{ total }} сом</span>
+        </div>
+        <a href="/orders/checkout/"
+           class="block w-full text-center bg-green-600 text-white font-bold py-4 rounded-2xl hover:bg-green-700 transition mt-6 text-lg">
+            Оформить заказ →
+        </a>
+        <a href="/catalog/" class="block text-center text-gray-400 text-sm mt-3 hover:text-gray-600">Продолжить покупки</a>
+    </div>
+</div>
+
+{% else %}
+<div class="text-center py-24">
+    <div class="text-8xl mb-6">🛒</div>
+    <h2 class="text-2xl font-bold text-gray-700 mb-3">Корзина пуста</h2>
+    <p class="text-gray-400 mb-8">Добавьте лекарства из каталога</p>
+    <a href="/catalog/" class="bg-green-600 text-white font-bold px-10 py-4 rounded-2xl hover:bg-green-700 transition text-lg">Перейти в каталог</a>
+</div>
+{% endif %}
+
+{% endblock %}

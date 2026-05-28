@@ -9,24 +9,29 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def profile_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        phone = request.POST.get('phone')
-        address = request.POST.get('address')
-        avatar = request.FILES.get('avatar')
+    try:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            phone = request.POST.get('phone')
+            address = request.POST.get('address')
+            avatar = request.FILES.get('avatar')
 
-        user = request.user
-        user.username = username
-        user.phone = phone
-        user.address = address
-        if avatar:
-            user.avatar = avatar
-        user.save()
-        return redirect('profile')
+            user = request.user
+            user.username = username
+            user.phone = phone
+            user.address = address
+            if avatar:
+                user.avatar = avatar
+            user.save()
+            return redirect('profile')
 
-    return render(request, 'accounts/profile.html', {'user': request.user})
-
-
+        return render(request, 'profile.html', {'user': request.user})
+    except Exception as e:
+        ai_reply = 'Извините, AI консультант временно недоступен.'
+        print("ERROR TYPE:", type(e))
+        print("ERROR:", e)
+        import traceback
+        traceback.print_exc()
 
 
 def send_confirmation_email(user):
@@ -58,14 +63,14 @@ def register(request):
         age = request.POST.get('age').strip()
 
         if not username or not email or not password1 or not age or not phone:
-            return render(request, 'accounts/register.html', {'error': 'All info are requeired'})
+            return render(request, 'register.html', {'error': 'All info are requeired'})
 
         if password1!=password2:
-            return render(request, 'accounts/register.html', {'error': 'Password doesnt match'})
+            return render(request, 'register.html', {'error': 'Password doesnt match'})
         elif User.objects.filter(username=username).exists():
-            return render(request, 'accounts/register.html', {'error': 'Username already exists'})
+            return render(request, 'register.html', {'error': 'Username already exists'})
         elif User.objects.filter(email=email).exists():
-            return render(request, 'accounts/register.html', {'error': 'Email already exists'})
+            return render(request, 'register.html', {'error': 'Email already exists'})
         
 
         user = User.objects.create_user(username=username, email=email,
@@ -74,11 +79,11 @@ def register(request):
         user.is_active = False
         user.save()
         send_confirmation_email(user)
-        return render(request,'accounts/confirm_email.html', {'username': user.username})
+        return render(request,'confirm_email.html', {'username': user.username})
          
     
     else:
-        return render(request, 'accounts/register.html')
+        return render(request, 'register.html')
 
 
 def login_user(request):
@@ -92,16 +97,16 @@ def login_user(request):
         if not user:
             not_active = User.objects.filter(username=username, is_active=False).first()
             if not_active:
-                return render(request, 'accounts/login.html', {'error':'go and confirm ur email  '})
+                return render(request, 'login.html', {'error':'go and confirm ur email  '})
             else:
-                return render(request, 'accounts/login.html', {'error':'Wrong password or username '})
+                return render(request, 'login.html', {'error':'Wrong password or username '})
         else:
 
             login(request, user)
             return redirect('/')
     
     else:
-        return render(request, 'accounts/login.html')
+        return render(request, 'login.html')
     
 
 def logout_user(request):
@@ -119,14 +124,14 @@ def confirm_email(request):
 
         user = User.objects.filter(username=username).first()
         if not user:
-            return render(request, 'accounts/confirm_email.html', {'error': 'Invalid username'})
+            return render(request, 'confirm_email.html', {'error': 'Invalid username'})
         
         if user.is_active:
             return redirect('login')
         confirm = EmailConfirm.objects.filter(user=user, code=code).first()
 
         if not confirm:
-            return render(request, 'accounts/confirm_email.html', {'error': 'Wrong code'})
+            return render(request, 'confirm_email.html', {'error': 'Wrong code'})
         
         user.is_active= True
         user.save()
@@ -134,4 +139,4 @@ def confirm_email(request):
         return redirect('login')
     
     else:
-        return render(request, 'accounts/confirm_email.html')
+        return render(request, 'confirm_email.html')

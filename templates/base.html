@@ -4,36 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DoriTJ — Онлайн аптека</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#16a34a',
+                        dark: '#15803d',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
-<nav>
-    <a href="/">🏠 DoriTJ</a>
-    <a href="/catalog/">Каталог</a>
-    <a href="/consultant/">AI Консультант</a>
-    {% if user.is_authenticated %}
-        <a href="/orders/cart/">🛒 Корзина</a>
-        <a href="/orders/my-orders/">Мои заказы</a>
-        <a href="/accounts/profile/">Профиль</a>
-        <a href="/accounts/logout/">Выйти</a>
-    {% else %}
-        <a href="/accounts/login/">Войти</a>
-        <a href="/accounts/register/">Регистрация</a>
-    {% endif %}
-</nav>
+<!-- NAVBAR -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        
+        <!-- Лого -->
+        <a href="/" class="flex items-center gap-2 text-green-600 font-bold text-2xl">
+            💊 <span>DoriTJ</span>
+        </a>
 
-<main>
-    {% if messages %}
-        {% for msg in messages %}
-            <div class="message {{ msg.tags }}">{{ msg }}</div>
-        {% endfor %}
-    {% endif %}
+        <!-- Меню -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+            <a href="/" class="hover:text-green-600 transition">Главная</a>
+            {% if user.is_authenticated %}
+                <a href="/catalog/" class="hover:text-green-600 transition">Каталог</a>
+                <a href="/consultant/" class="hover:text-green-600 transition">🤖 AI Консультант</a>
+                <a href="/orders/my-orders/" class="hover:text-green-600 transition">Мои заказы</a>
+            {% endif %}
+        </nav>
+
+        <!-- Правая часть -->
+        <div class="flex items-center gap-3">
+            {% if user.is_authenticated %}
+                <!-- Корзина -->
+                <a href="/orders/cart/" class="relative p-2 rounded-full hover:bg-green-50 transition">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </a>
+
+                <!-- Профиль -->
+                <div class="relative group">
+                    <button class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-green-100 transition">
+                        👤 {{ user.username }}
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <!-- Дропдаун -->
+                    <div class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a href="/accounts/profile/" class="block px-4 py-3 text-sm hover:bg-gray-50 rounded-t-xl">⚙️ Профиль</a>
+                        <a href="/orders/my-orders/" class="block px-4 py-3 text-sm hover:bg-gray-50">📦 Мои заказы</a>
+                        <hr class="border-gray-100">
+                        <a href="/accounts/logout/" class="block px-4 py-3 text-sm text-red-500 hover:bg-red-50 rounded-b-xl">🚪 Выйти</a>
+                    </div>
+                </div>
+
+            {% else %}
+                <a href="/accounts/login/"
+                   class="text-sm font-medium text-gray-600 hover:text-green-600 transition px-4 py-2">
+                    Войти
+                </a>
+                <a href="/accounts/register/"
+                   class="text-sm font-medium bg-green-600 text-white px-5 py-2 rounded-full hover:bg-green-700 transition">
+                    Регистрация
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- СООБЩЕНИЯ -->
+{% if messages %}
+<div class="max-w-7xl mx-auto px-6 mt-4 space-y-2">
+    {% for msg in messages %}
+        <div class="{% if msg.tags == 'success' %}bg-green-50 border border-green-200 text-green-700{% else %}bg-red-50 border border-red-200 text-red-700{% endif %} px-4 py-3 rounded-xl text-sm">
+            {{ msg }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- КОНТЕНТ -->
+<main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full">
     {% block content %}{% endblock %}
 </main>
 
-<footer>
-    <p>© 2025 DoriTJ — Онлайн аптека Таджикистана</p>
+<!-- FOOTER -->
+<footer class="bg-white border-t border-gray-100 mt-auto">
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-green-600 font-bold text-xl mb-3">💊 DoriTJ</h3>
+                <p class="text-gray-500 text-sm">Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3 text-gray-700">Навигация</h4>
+                <ul class="space-y-2 text-sm text-gray-500">
+                    <li><a href="/" class="hover:text-green-600">Главная</a></li>
+                    <li><a href="/catalog/" class="hover:text-green-600">Каталог</a></li>
+                    <li><a href="/consultant/" class="hover:text-green-600">AI Консультант</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3 text-gray-700">Контакты</h4>
+                <ul class="space-y-2 text-sm text-gray-500">
+                    <li>📍 Душанбе, Таджикистан</li>
+                    <li>📞 +992 XX XXX XXXX</li>
+                    <li>✉️ info@doritj.tj</li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-100 mt-8 pt-6 text-center text-sm text-gray-400">
+            © 2025 DoriTJ — Все права защищены
+        </div>
+    </div>
 </footer>
 
 </body>

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="text-3xl font-bold text-gray-800 mb-8">📦 Мои заказы</h1>
+
+{% for order in orders %}
+<div class="bg-white rounded-2xl border border-gray-100 p-6 mb-4 hover:shadow-md transition">
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <h3 class="font-bold text-gray-800 text-lg">Заказ #{{ order.pk }}</h3>
+            <p class="text-gray-400 text-sm">{{ order.created_at|date:"d.m.Y H:i" }}</p>
+        </div>
+        <span class="px-4 py-1.5 rounded-full text-sm font-semibold
+            {% if order.status == 'done' %}bg-green-50 text-green-700
+            {% elif order.status == 'cancelled' %}bg-red-50 text-red-600
+            {% elif order.status == 'delivering' %}bg-blue-50 text-blue-700
+            {% else %}bg-orange-50 text-orange-600{% endif %}">
+            {{ order.get_status_display }}
+        </span>
+    </div>
+    <div class="flex items-center justify-between">
+        <p class="text-2xl font-bold text-green-600">{{ order.total }} сом</p>
+        <div class="flex gap-3">
+            {% if order.status == 'pending' %}
+                <a href="/orders/order/{{ order.pk }}/cancel/"
+                   class="text-sm text-red-400 hover:text-red-600 border border-red-200 px-4 py-2 rounded-xl hover:border-red-400 transition">
+                    Отменить
+                </a>
+            {% endif %}
+            <a href="/orders/order/{{ order.pk }}/repeat/"
+               class="text-sm text-gray-500 hover:text-green-600 border border-gray-200 px-4 py-2 rounded-xl hover:border-green-400 transition">
+                🔄 Повторить
+            </a>
+            <a href="/orders/order/{{ order.pk }}/"
+               class="text-sm bg-green-600 text-white px-5 py-2 rounded-xl hover:bg-green-700 transition">
+                Подробнее →
+            </a>
+        </div>
+    </div>
+</div>
+
+{% empty %}
+<div class="text-center py-24">
+    <div class="text-8xl mb-6">📦</div>
+    <h2 class="text-2xl font-bold text-gray-700 mb-3">Заказов пока нет</h2>
+    <a href="/catalog/" class="bg-green-600 text-white font-bold px-10 py-4 rounded-2xl hover:bg-green-700 transition text-lg">Перейти в каталог</a>
+</div>
+{% endfor %}
+
+{% endblock %}

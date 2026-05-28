@@ -1,21 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<style>
-    .filters { background: white; padding: 20px; border-radius: 12px; margin-bottom: 24px; }
-    .filters form { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
-    .filters input, .filters select { width: auto; flex: 1; min-width: 140px; margin: 0; }
-    .badge { background: #fff3e0; color: #e65100; padding: 3px 8px; border-radius: 20px; font-size: 12px; }
-    .price { font-size: 18px; font-weight: bold; color: #2e7d32; margin-bottom: 10px; }
-    .card-btns { display: flex; gap: 8px; margin-top: 10px; }
-    .card-btns a { flex: 1; text-align: center; font-size: 13px; }
-</style>
 
-<h1 style="margin-bottom:20px;">Каталог лекарств</h1>
+<div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Каталог лекарств</h1>
+    <span class="text-gray-400 text-sm">{{ products|length }} товаров</span>
+</div>
 
-<div class="filters">
-    <form method="GET">
-        <input type="text" name="search" placeholder="🔍 Поиск..." value="{{ request.GET.search }}">
-        <select name="category">
+<!-- Фильтры -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-8">
+    <form method="GET" class="flex flex-wrap gap-3 items-end">
+        <input type="text" name="search" placeholder="🔍 Поиск по названию..."
+               value="{{ request.GET.search }}"
+               class="flex-1 min-w-48 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400">
+        <select name="category"
+                class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400">
             <option value="">Все категории</option>
             {% for cat in categories %}
             <option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>
@@ -23,30 +21,54 @@
             </option>
             {% endfor %}
         </select>
-        <input type="number" name="min_price" placeholder="Цена от" value="{{ request.GET.min_price }}">
-        <input type="number" name="max_price" placeholder="Цена до" value="{{ request.GET.max_price }}">
-        <button type="submit" class="btn">Найти</button>
+        <input type="number" name="min_price" placeholder="Цена от"
+               value="{{ request.GET.min_price }}"
+               class="w-28 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400">
+        <input type="number" name="max_price" placeholder="Цена до"
+               value="{{ request.GET.max_price }}"
+               class="w-28 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400">
+        <button type="submit"
+                class="bg-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-green-700 transition">
+            Найти
+        </button>
+        <a href="/catalog/" class="text-gray-400 text-sm py-2.5 hover:text-gray-600">Сбросить</a>
     </form>
 </div>
 
-<div class="grid">
+<!-- Товары -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
     {% for product in products %}
-    <div class="card">
+    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition group">
         {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-44 object-cover group-hover:scale-105 transition duration-300">
+        {% else %}
+            <div class="w-full h-44 bg-green-50 flex items-center justify-center text-5xl">💊</div>
         {% endif %}
-        <h3>{{ product.name }}</h3>
-        {% if product.is_prescription %}
-            <span class="badge">По рецепту</span>
-        {% endif %}
-        <p class="price">{{ product.price }} сомони</p>
-        <div class="card-btns">
-            <a href="/orders/cart/add/{{ product.pk }}/" class="btn">В корзину</a>
-            <a href="/product/{{ product.pk }}/" class="btn btn-outline">Детали</a>
+        <div class="p-4">
+            {% if product.is_prescription %}
+                <span class="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full mb-2 inline-block">По рецепту</span>
+            {% endif %}
+            <h3 class="font-semibold text-gray-800 text-sm mb-1 truncate">{{ product.name }}</h3>
+            <p class="text-xs text-gray-400 mb-2">{{ product.manufacturer }}</p>
+            <p class="text-green-600 font-bold text-xl mb-3">{{ product.price }} <span class="text-sm font-normal">сом</span></p>
+            <div class="flex gap-2">
+                <a href="/orders/cart/add/{{ product.pk }}/"
+                   class="flex-1 text-center bg-green-600 text-white text-sm py-2 rounded-xl hover:bg-green-700 transition">
+                    + В корзину
+                </a>
+                <a href="/product/{{ product.pk }}/"
+                   class="px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-500 hover:border-green-400 hover:text-green-600 transition">
+                    →
+                </a>
+            </div>
         </div>
     </div>
     {% empty %}
-        <p>Ничего не найдено</p>
+    <div class="col-span-4 text-center py-20">
+        <div class="text-6xl mb-4">🔍</div>
+        <p class="text-gray-400 text-lg">Ничего не найдено</p>
+        <a href="/catalog/" class="text-green-600 text-sm mt-2 inline-block hover:underline">Сбросить фильтры</a>
+    </div>
     {% endfor %}
 </div>
 

@@ -38,7 +38,7 @@ def cart_view(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
     items = CartItem.objects.filter(cart=cart).select_related('product')
     total = sum(item.product.price * item.quantity for item in items)
-    return render(request, 'orders/cart.html', {
+    return render(request, 'cart.html', {
         'items': items,
         'total': total
     })
@@ -80,7 +80,7 @@ def checkout(request):
         return redirect('order_detail', pk=order.pk)
 
     total = sum(item.product.price * item.quantity for item in items)
-    return render(request, 'orders/checkout.html', {
+    return render(request, 'checkout.html', {
         'items': items,
         'total': total
     })
@@ -90,13 +90,13 @@ def my_orders(request):
     orders = Order.objects.filter(
         user=request.user
     ).order_by('-created_at')
-    return render(request, 'orders/my_orders.html', {'orders': orders})
+    return render(request, 'my_orders.html', {'orders': orders})
 
 @login_required
 def order_detail(request, pk):
     order = get_object_or_404(Order, pk=pk, user=request.user)
     items = OrderItem.objects.filter(order=order).select_related('product')
-    return render(request, 'orders/order_detail.html', {
+    return render(request, 'order_detail.html', {
         'order': order,
         'items': items
     })
