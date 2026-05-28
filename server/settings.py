@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'orders',
     'products',
     'accounts',
+    'consultantai',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
