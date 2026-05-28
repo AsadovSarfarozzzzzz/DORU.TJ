@@ -100,3 +100,15 @@ def order_detail(request, pk):
         'order': order,
         'items': items
     })
+
+
+@login_required
+def cancel_order(request, pk):
+    order = get_object_or_404(Order, pk=pk, user=request.user)
+    if order.status == 'pending':
+        order.status = 'cancelled'
+        order.save()
+        messages.success(request, 'Заказ отменён!')
+    else:
+        messages.error(request, 'Этот заказ нельзя отменить!')
+    return redirect('my_orders')
