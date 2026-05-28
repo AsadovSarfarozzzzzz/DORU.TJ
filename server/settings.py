@@ -144,4 +144,13 @@ EMAIL_HOST_USER = 'adolfhitler1637@gmail.com'
 EMAIL_HOST_PASSWORD = 'ubaq cfgn fism iqzq '
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-GROQ_API_KEY = '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'
+import os
+from pathlib import Path
+from dotenv import load_dotenv  # <-- Добавь это
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
