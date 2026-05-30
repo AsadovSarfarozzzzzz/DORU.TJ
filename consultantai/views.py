@@ -51,4 +51,4 @@ def consultant(request):
 @login_required
 def clear_chat(request):
     ChatMessage.objects.filter(user=request.user).delete()
-    return redirect('consultantai')
+    return redirect('consultant')
