@@ -1,5 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import  redirect ,render, get_object_or_404
 from .models import Product, Category
+from .forms import ProductForm, CategoryForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def product_list(request):
+    if not request.user.is_staff:
+        return redirect('home')
+    products = Product.objects.all()
+    return render(request, 'product_list.html',{'product':products})
+
+
 
 def home(request):
     categories = Category.objects.all()
