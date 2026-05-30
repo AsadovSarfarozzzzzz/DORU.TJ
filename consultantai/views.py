@@ -13,7 +13,7 @@ def consultant(request):
     if request.method == 'POST':
         user_message = request.POST.get('message', '').strip()
         if not user_message:
-            return redirect('consultantai')
+            return redirect('consultant')
 
         ChatMessage.objects.create(
             user=request.user,
@@ -43,7 +43,7 @@ def consultant(request):
             role='assistant',
             message=ai_reply
         )
-        return redirect('consultantai')
+        return redirect('consultant')
 
     return render(request, 'chat.html', {'history': history})
 
