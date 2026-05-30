@@ -34,12 +34,15 @@ class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : 'Username or Email'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Your password'}))
 
-class ProfileForm(forms.Form):
-    model = User
-    fields = ['username', 'email', 'phone', 'address', 'avatar']
-    widgets = {'username':forms.TextInput(attrs={'placeholder' : 'Логин'}),
-               'email':forms.EmailInput(attrs={'placeholder':'example@gmail.com'}),
-               'phone':forms.TextInput(attrs={'placeholder':'+992 XX XXX XXXX'}),
-               'address':forms.Textarea(attrs={'placeholder': 'addresss', 'rows' : 2}),}
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'phone', 'address', 'avatar']
+        widgets = {
+            'username': forms.TextInput(attrs={'placeholder': 'Логин'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'phone': forms.TextInput(attrs={'placeholder': '+992 XX XXX XXXX'}),
+            'address': forms.Textarea(attrs={'placeholder': 'Адрес доставки', 'rows': 2}),
+        }
     
     
