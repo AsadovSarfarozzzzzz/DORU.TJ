@@ -28,3 +28,9 @@ class RegisterForm(forms.Form):
         if p1 and p2 and p1 != p2:
             raise forms.ValidationError('Пароли не совпадают')
         return cleaned_data
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : 'Username or Email'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Your password'}))
+    
