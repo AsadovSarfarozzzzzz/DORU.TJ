@@ -23,7 +23,28 @@ def product_add(request):
         form = ProductForm()
     return render(request, 'product_add.html', {'form': form})
 
+@login_required
+def product_delete(request,pk):
+    if not request.user.is_staff:
+        return redirect('home')
+    product = get_object_or_404(Product, pk=pk)
+    product.delete()
+    return redirect('product_list')
 
+@login_required
+def update_product(request,pk):
+    if not request.user.is_staff:
+        return redirect('home')
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'product_edit.html', {'form': form})
+    
 
 def home(request):
     categories = Category.objects.all()
