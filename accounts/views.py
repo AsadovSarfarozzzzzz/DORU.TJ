@@ -106,3 +106,62 @@ def confirm_email(request):
         return redirect('login_user')
 
     return render(request, 'confirm_email.html')
+
+
+from django.utils.crypto import get_random_string
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        user = User.objects.filter(email=email).first()
+        if user:
+            code = get_random_string(6, '0123456789')
+            EmailConfirm.objects.update_or_create(
+                user=user, defaults={'code': code}
+            )
+            try:
+                send_mail(
+                    subject='Восстановление пароля — DoriTJ',
+                    message=f'Привет {user.username}! Твой код для сброса пароля: {code}',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email]
+                )
+            except Exception as e:
+                print("Email error:", e)
+        return render(request, 'reset_code.html', {'email': email})
+    return render(request, 'forgot_password.html')
+
+
+def reset_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        code = request.POST.get('code', '').strip()
+        password1 = request.POST.get('password1', '').strip()
+        password2 = request.POST.get('password2', '').strip()
+
+        if password1 != password2:
+            return render(request, 'reset_code.html', {
+                'email': email,
+                'error': 'Пароли не совпадают'
+            })
+
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return render(request, 'reset_code.html', {
+                'email': email,
+                'error': 'Пользователь не найден'
+            })
+
+        confirm = EmailConfirm.objects.filter(user=user, code=code).first()
+        if not confirm:
+            return render(request, 'reset_code.html', {
+                'email': email,
+                'error': 'Неверный код'
+            })
+
+        user.set_password(password1)
+        user.save()
+        confirm.delete()
+        return redirect('login_user')
+
+    return render(request, 'reset_code.html')
