@@ -3,6 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Cart, CartItem, Order, OrderItem
 from products.models import Product
+from .telegram import send_order_notification
+
+
+
 
 @login_required
 def add_to_cart(request, pk):
@@ -74,6 +78,8 @@ def checkout(request):
                 quantity=item.quantity,
                 price=item.product.price
             )
+        order_items = OrderItem.objects.filter(order=order)
+        send_order_notification(order, order_items)
         # очищаем корзину
         items.delete()
         messages.success(request, 'Заказ оформлен!')
