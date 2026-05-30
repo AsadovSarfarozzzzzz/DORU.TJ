@@ -10,6 +10,19 @@ def product_list(request):
     products = Product.objects.all()
     return render(request, 'product_list.html',{'product':products})
 
+@login_required
+def product_add(request):
+    if not request.user.is_staff:
+        return redirect('home')
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')
+    else:
+        form = ProductForm()
+    return render(request, 'product_add.html', {'form': form})
+
 
 
 def home(request):
