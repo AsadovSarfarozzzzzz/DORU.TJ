@@ -5,102 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DoriTJ — Онлайн аптека</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#16a34a',
-                        dark: '#15803d',
-                    }
-                }
-            }
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-    </script>
-    
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.92); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        .anim-page { animation: fadeUp 0.5s ease forwards; }
+        .anim-pop  { animation: popIn 0.35s ease forwards; }
+        .delay-1 { animation-delay: 0.05s; opacity: 0; }
+        .delay-2 { animation-delay: 0.10s; opacity: 0; }
+        .delay-3 { animation-delay: 0.15s; opacity: 0; }
+        .delay-4 { animation-delay: 0.20s; opacity: 0; }
+        .card-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+        }
+    </style>
 </head>
-
-<style>
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(16px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade {
-        animation: fadeIn 0.4s ease forwards;
-    }
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateX(-16px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-    .animate-slide {
-        animation: slideIn 0.3s ease forwards;
-    }
-</style>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
-<!-- NAVBAR -->
+<!-- TOP BAR -->
+<div class="bg-green-600 text-white text-xs py-2 px-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-6">
+            <span>📞 +992 XX XXX XXXX</span>
+            <span>✉️ info@doritj.tj</span>
+            <span>📍 Душанбе, Таджикистан</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span>🚚 Доставка за 2 часа</span>
+            <span>⏰ 08:00 — 22:00</span>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN HEADER -->
 <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        
-        <!-- Лого -->
-        <a href="/" class="flex items-center gap-2 text-green-600 font-bold text-2xl">
-            💊 <span>DoriTJ</span>
-        </a>
+    <div class="max-w-7xl mx-auto px-6">
 
-        <!-- Меню -->
-        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-            <a href="/" class="hover:text-green-600 transition">Главная</a>
-            {% if user.is_authenticated %}
-                <a href="/catalog/" class="hover:text-green-600 transition">Каталог</a>
-                <a href="/consultantai/" class="hover:text-green-600 transition">🤖 AI Консультант</a>
-                <a href="/orders/my-orders/" class="hover:text-green-600 transition">Мои заказы</a>
-            {% endif %}
-        </nav>
+        <!-- Верхняя часть хедера -->
+        <div class="flex items-center justify-between py-4 border-b border-gray-100">
 
-        <!-- Правая часть -->
-        <div class="flex items-center gap-3">
-            {% if user.is_authenticated %}
+            <!-- Лого -->
+            <a href="{% url 'home' %}" class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-600 rounded-2xl flex items-center justify-center text-white text-xl">
+                    💊
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold text-gray-800">Dori</span><span class="text-xl font-extrabold text-green-600">TJ</span>
+                    <p class="text-xs text-gray-400 leading-none">Онлайн аптека</p>
+                </div>
+            </a>
+
+            <!-- Поиск -->
+            <form method="GET" action="{% url 'catalog' %}"
+                  class="hidden md:flex flex-1 max-w-xl mx-8">
+                <div class="flex w-full bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden focus-within:border-green-400 focus-within:bg-white transition">
+                    <input type="text" name="search"
+                           placeholder="Поиск лекарств, витаминов..."
+                           class="flex-1 bg-transparent px-5 py-3 text-sm focus:outline-none">
+                    <button type="submit"
+                            class="bg-green-600 text-white px-5 py-3 hover:bg-green-700 transition text-sm font-medium">
+                        🔍
+                    </button>
+                </div>
+            </form>
+
+            <!-- Правая часть -->
+            <div class="flex items-center gap-3">
+                {% if user.is_authenticated %}
+
                 <!-- Корзина -->
-                <a href="/orders/cart/" class="relative p-2 rounded-full hover:bg-green-50 transition">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{% url 'cart' %}"
+                   class="relative flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2.5 rounded-2xl hover:bg-green-100 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
+                    <span class="text-sm font-medium">Корзина</span>
                 </a>
 
-                <!-- Профиль -->
+                <!-- Профиль дропдаун -->
                 <div class="relative group">
-                    <button class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-green-100 transition">
-                        👤 {{ user.username }}
+                    <button class="flex items-center gap-2 border border-gray-200 px-4 py-2.5 rounded-2xl text-sm font-medium text-gray-700 hover:border-green-400 hover:text-green-600 transition">
+                        {% if user.avatar %}
+                            <img src="{{ user.avatar.url }}" class="w-6 h-6 rounded-full object-cover">
+                        {% else %}
+                            <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-xs font-bold">
+                                {{ user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                        {{ user.username }}
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
+
                     <!-- Дропдаун -->
-                    <div class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <a href="{% url 'profile' %}" class="block px-4 py-3 text-sm hover:bg-gray-50 rounded-t-xl">⚙️ Профиль</a>
-                        <a href="/orders/my-orders/" class="block px-4 py-3 text-sm hover:bg-gray-50">📦 Мои заказы</a>
+                    <div class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+                        <div class="p-3 bg-green-50 border-b border-gray-100">
+                            <p class="font-semibold text-gray-800 text-sm">{{ user.username }}</p>
+                            <p class="text-xs text-gray-400">{{ user.email }}</p>
+                        </div>
+                        <a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 transition">
+                            👤 Профиль
+                        </a>
+                        <a href="{% url 'my_orders' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 transition">
+                            📦 Мои заказы
+                        </a>
+                        <a href="{% url 'consultant' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 transition">
+                            🤖 AI Консультант
+                        </a>
                         {% if user.is_staff %}
-                        <a href="{% url 'product_list' %}" class="hover:text-green-600 transition">
+                        <hr class="border-gray-100">
+                        <a href="{% url 'product_list' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition">
                             ⚙️ Управление
-                            </a>
+                        </a>
                         {% endif %}
                         <hr class="border-gray-100">
-                        <a href="{% url 'logout' %}" class="block px-4 py-3 text-sm text-red-500 hover:bg-red-50 rounded-b-xl">🚪 Выйти</a>
+                        <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition">
+                            🚪 Выйти
+                        </a>
                     </div>
                 </div>
 
-            {% else %}
-                <a href="/accounts/login/"
-                   class="text-sm font-medium text-gray-600 hover:text-green-600 transition px-4 py-2">
+                {% else %}
+                <a href="{% url 'login_user' %}"
+                   class="text-sm font-medium text-gray-600 hover:text-green-600 transition px-4 py-2.5 border border-gray-200 rounded-2xl hover:border-green-400">
                     Войти
                 </a>
-                <a href="/accounts/register/"
-                   class="text-sm font-medium bg-green-600 text-white px-5 py-2 rounded-full hover:bg-green-700 transition">
+                <a href="{% url 'register' %}"
+                   class="text-sm font-medium bg-green-600 text-white px-5 py-2.5 rounded-2xl hover:bg-green-700 transition">
                     Регистрация
                 </a>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
+
+        <!-- Нижняя часть хедера — навигация -->
+        {% if user.is_authenticated %}
+        <nav class="flex items-center gap-1 py-3">
+            <a href="{% url 'home' %}"
+               class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
+                🏠 Главная
+            </a>
+            <a href="{% url 'catalog' %}"
+               class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
+                💊 Каталог
+            </a>
+            <a href="{% url 'consultant' %}"
+               class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
+                🤖 AI Консультант
+            </a>
+            <a href="{% url 'my_orders' %}"
+               class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
+                📦 Мои заказы
+            </a>
+            {% if user.is_staff %}
+            <a href="{% url 'product_list' %}"
+               class="px-4 py-2 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition ml-auto">
+                ⚙️ Панель управления
+            </a>
+            {% endif %}
+        </nav>
+        {% endif %}
+
     </div>
 </header>
 
@@ -108,9 +184,10 @@
 {% if messages %}
 <div class="max-w-7xl mx-auto px-6 mt-4 space-y-2">
     {% for msg in messages %}
-        <div class="{% if msg.tags == 'success' %}bg-green-50 border border-green-200 text-green-700{% else %}bg-red-50 border border-red-200 text-red-700{% endif %} px-4 py-3 rounded-xl text-sm">
-            {{ msg }}
-        </div>
+    <div class="{% if msg.tags == 'success' %}bg-green-50 border border-green-200 text-green-700{% else %}bg-red-50 border border-red-200 text-red-700{% endif %} px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+        {% if msg.tags == 'success' %}✅{% else %}⚠️{% endif %}
+        {{ msg }}
+    </div>
     {% endfor %}
 </div>
 {% endif %}
@@ -122,31 +199,44 @@
 
 <!-- FOOTER -->
 <footer class="bg-white border-t border-gray-100 mt-auto">
-    <div class="max-w-7xl mx-auto px-6 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="max-w-7xl mx-auto px-6 py-10">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-                <h3 class="text-green-600 font-bold text-xl mb-3">💊 DoriTJ</h3>
-                <p class="text-gray-500 text-sm">Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое.</p>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 bg-green-600 rounded-xl flex items-center justify-center text-white">💊</div>
+                    <span class="font-extrabold text-gray-800">Dori<span class="text-green-600">TJ</span></span>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed">Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое.</p>
             </div>
             <div>
-                <h4 class="font-semibold mb-3 text-gray-700">Навигация</h4>
-                <ul class="space-y-2 text-sm text-gray-500">
-                    <li><a href="/" class="hover:text-green-600">Главная</a></li>
-                    <li><a href="/catalog/" class="hover:text-green-600">Каталог</a></li>
-                    <li><a href="/consultant/" class="hover:text-green-600">AI Консультант</a></li>
+                <h4 class="font-bold text-gray-700 mb-4">Покупателям</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="{% url 'catalog' %}" class="hover:text-green-600 transition">Каталог</a></li>
+                    <li><a href="{% url 'cart' %}" class="hover:text-green-600 transition">Корзина</a></li>
+                    <li><a href="{% url 'my_orders' %}" class="hover:text-green-600 transition">Мои заказы</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-semibold mb-3 text-gray-700">Контакты</h4>
-                <ul class="space-y-2 text-sm text-gray-500">
+                <h4 class="font-bold text-gray-700 mb-4">Сервисы</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="{% url 'consultant' %}" class="hover:text-green-600 transition">AI Консультант</a></li>
+                    <li><a href="#" class="hover:text-green-600 transition">Доставка</a></li>
+                    <li><a href="#" class="hover:text-green-600 transition">О нас</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-700 mb-4">Контакты</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
                     <li>📍 Душанбе, Таджикистан</li>
                     <li>📞 +992 XX XXX XXXX</li>
                     <li>✉️ info@doritj.tj</li>
+                    <li>⏰ 08:00 — 22:00</li>
                 </ul>
             </div>
         </div>
-        <div class="border-t border-gray-100 mt-8 pt-6 text-center text-sm text-gray-400">
-            © 2025 DoriTJ — Все права защищены
+        <div class="border-t border-gray-100 pt-6 flex items-center justify-between text-sm text-gray-400">
+            <span>© 2025 DoriTJ — Все права защищены</span>
+            <span>🇹🇯 Сделано в Таджикистане</span>
         </div>
     </div>
 </footer>
