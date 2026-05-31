@@ -1,10 +1,36 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Cart, CartItem, Order, OrderItem
 from products.models import Product
 from .telegram import send_order_notification
+from django.http import JsonResponse
+from .models import Cart, CartItem, Order, OrderItem, DeliveryChat, DeliveryChatMessage, CourierLocation
+import json
 
+@login_required
+def delivery_chat(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk, user=request.user)
+    chat, _ = DeliveryChat.objects.get_or_create(order=order)
+    messages = DeliveryChatMessage.objects.filter(chat=chat).order_by('created_at')
+
+    if request.method == 'POST':
+        text = request.POST.get('text', '').strip()
+        image = request.FILES.get('image')
+
+        if text or image:
+            DeliveryChatMessage.objects.create(
+                chat=chat,
+                sender='client',
+                text=text,
+                image=image or ''
+            )
+        return redirect('delivery_chat', order_pk=order_pk)
+
+    return render(request, 'delivery_chat.html', {
+        'order': order,
+        'chat': chat,
+        'messages': messages,
+    })
 
 
 
