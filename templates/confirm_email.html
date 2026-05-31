@@ -14,20 +14,47 @@
         </div>
     {% endif %}
 
+    {% if success %}
+        <div class="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl text-sm mb-4">
+            {{ success }}
+        </div>
+    {% endif %}
+
     <form method="POST">
         {% csrf_token %}
         <input type="hidden" name="username" value="{{ username }}">
         <input
             type="text"
             name="code"
-            placeholder="Введите код"
+            placeholder="000000"
             maxlength="6"
+            pattern="\d{6}"
+            inputmode="numeric"
             required
-            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-center text-2xl tracking-widest focus:outline-none focus:border-green-500 mb-4"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-center text-2xl font-mono tracking-widest focus:outline-none focus:border-green-500 mb-4"
         >
         <button type="submit"
-            class="w-full bg-green-600 text-white py-3 rounded-xl font-medium hover:bg-green-700 transition">
+            class="w-full bg-green-600 text-white py-3 rounded-xl font-medium hover:bg-green-700 transition mb-4">
             Подтвердить
         </button>
     </form>
-</di
+
+    <div class="text-center mt-6 pt-4 border-t border-gray-100 text-sm">
+        <p class="text-gray-500 mb-2">Не получили код?</p>
+        <form method="POST" action="{% url 'resend_code' %}">
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{ username }}">
+            <button type="submit" class="text-green-600 hover:text-green-700 font-medium transition focus:outline-none">
+                Отправить код повторно
+            </button>
+        </form>
+        
+        <div class="mt-4">
+            <a href="{% url 'login' %}" class="text-gray-400 hover:text-gray-600 transition">
+                ← Вернуться назад
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
