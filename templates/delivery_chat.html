@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto">
+
+    <!-- Заголовок -->
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{% url 'order_detail' order.pk %}"
+           class="text-gray-400 hover:text-gray-600 transition">← Назад</a>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">💬 Чат с курьером</h1>
+            <p class="text-gray-400 text-sm">Заказ #{{ order.pk }} —
+                <span class="{% if order.status == 'delivering' %}text-blue-500
+                             {% elif order.status == 'done' %}text-green-500
+                             {% else %}text-orange-500{% endif %} font-medium">
+                    {{ order.get_status_display }}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- ЧАТ -->
+        <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden flex flex-col" style="height: 580px;">
+
+            <!-- Сообщения -->
+            <div class="flex-1 overflow-y-auto p-5 space-y-3" id="chat-messages">
+                {% for msg in messages %}
+                <div class="flex {% if msg.sender == 'client' %}justify-end{% else %}justify-start{% endif %}"
+                     data-id="{{ msg.pk }}">
+                    <div class="max-w-xs">
+                        <p class="text-xs text-gray-400 mb-1 {% if msg.sender == 'client' %}text-right{% endif %}">
+                            {% if msg.sender == 'client' %}Вы{% else %}🛵 Курьер{% endif %}
+                            · {{ msg.created_at|date:"H:i" }}
+                        </p>
+                        <div class="{% if msg.sender == 'client' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
+                            {% if msg.text %}
+                                <p class="text-sm">{{ msg.text }}</p>
+                            {% endif %}
+                            {% if msg.image %}
+                                <img src="{{ msg.image.url }}"
+                                     class="rounded-xl mt-2 max-w-full cursor-pointer"
+                                     onclick="window.open('{{ msg.image.url }}')">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-16">
+                    <div class="text-5xl mb-3">💬</div>
+                    <p class="text-gray-400">Напишите курьеру</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Инпут -->
+            <div class="border-t border-gray-100 p-4">
+                <form method="POST" enctype="multipart/form-data" id="chat-form">
+                    {% csrf_token %}
+                    <!-- Превью фото -->
+                    <div id="image-preview" class="hidden mb-3">
+                        <div class="relative inline-block">
+                            <img id="preview-img" class="h-20 rounded-xl object-cover">
+                            <button type="button" onclick="clearImage()"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <!-- Кнопка фото -->
+                        <label class="cursor-pointer p-2.5 border border-gray-200 rounded-xl hover:border-green-400 hover:text-green-600 transition text-gray-400">
+                            📷
+                            <input type="file" name="image" id="image-input"
+                                   accept="image/*" class="hidden"
+                                   onchange="previewImage(this)">
+                        </label>
+                        <input type="text" name="text" id="text-input"
+                               placeholder="Написать курьеру..."
+                               autocomplete="off"
+                               class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition">
+                        <button type="submit"
+                                class="bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition text-sm font-medium">
+                            →
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- КАРТА -->
+        <div class="space-y-4">
+            <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+                    <h2 class="font-bold text-gray-800">📍 Локация курьера</h2>
+                    <span class="text-xs text-gray-400" id="location-time">Обновляется...</span>
+                </div>
+                <div id="map" style="height: 300px; width: 100%;"></div>
+                <div class="p-4" id="no-location" style="display:none;">
+                    <p class="text-gray-400 text-sm text-center py-8">
+                        🛵 Курьер ещё не вышел
+                    </p>
+                </div>
+            </div>
+
+            <!-- Инфо заказа -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-5">
+                <h3 class="font-bold text-gray-800 mb-3">📦 Детали заказа</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Заказ</span>
+                        <span class="font-medium">#{{ order.pk }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Сумма</span>
+                        <span class="font-bold text-green-600">{{ order.total }} сом</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Адрес</span>
+                        <span class="font-medium text-right max-w-32">{{ order.address }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Статус</span>
+                        <span class="font-medium">{{ order.get_status_display }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet карта (бесплатная, без API ключа) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // Карта
+    let map = null;
+    let courierMarker = null;
+
+    function initMap(lat, lng) {
+        if (!map) {
+            map = L.map('map').setView([lat, lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        }
+        if (!courierMarker) {
+            courierMarker = L.marker([lat, lng]).addTo(map)
+                .bindPopup('🛵 Курьер здесь').openPopup();
+        } else {
+            courierMarker.setLatLng([lat, lng]);
+        }
+        map.setView([lat, lng], 15);
+    }
+
+    // Получаем локацию курьера каждые 5 секунд
+    function fetchLocation() {
+        fetch('{% url "courier_location_api" order.pk %}')
+            .then(res => res.json())
+            .then(data => {
+                if (data.lat) {
+                    document.getElementById('map').style.display = 'block';
+                    document.getElementById('no-location').style.display = 'none';
+                    document.getElementById('location-time').textContent = 'Обновлено в ' + data.updated_at;
+                    initMap(data.lat, data.lng);
+                } else {
+                    document.getElementById('map').style.display = 'none';
+                    document.getElementById('no-location').style.display = 'block';
+                }
+            })
+            .catch(() => {
+                document.getElementById('map').style.display = 'none';
+                document.getElementById('no-location').style.display = 'block';
+            });
+    }
+
+    // Получаем новые сообщения
+    let lastId = {{ messages.last.pk|default:0 }};
+
+    function fetchMessages() {
+        fetch(`{% url "chat_messages_api" order.pk %}?last_id=${lastId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.messages.forEach(msg => {
+                    lastId = msg.id;
+                    const isClient = msg.sender === 'client';
+                    const div = document.createElement('div');
+                    div.className = `flex ${isClient ? 'justify-end' : 'justify-start'}`;
+                    div.dataset.id = msg.id;
+
+                    let content = '';
+                    if (msg.text) content += `<p class="text-sm">${msg.text}</p>`;
+                    if (msg.image) content += `<img src="${msg.image}" class="rounded-xl mt-2 max-w-full cursor-pointer" onclick="window.open('${msg.image}')">`;
+
+                    div.innerHTML = `
+                        <div class="max-w-xs">
+                            <p class="text-xs text-gray-400 mb-1 ${isClient ? 'text-right' : ''}">
+                                ${isClient ? 'Вы' : '🛵 Курьер'} · ${msg.time}
+                            </p>
+                            <div class="${isClient ? 'bg-green-600 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm'} px-4 py-3">
+                                ${content}
+                            </div>
+                        </div>
+                    `;
+
+                    const container = document.getElementById('chat-messages');
+                    // убираем заглушку если есть
+                    const empty = container.querySelector('.text-center');
+                    if (empty) empty.remove();
+                    container.appendChild(div);
+                    container.scrollTop = container.scrollHeight;
+                });
+            });
+    }
+
+    // Превью фото
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('preview-img').src = e.target.result;
+                document.getElementById('image-preview').classList.remove('hidden');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function clearImage() {
+        document.getElementById('image-input').value = '';
+        document.getElementById('image-preview').classList.add('hidden');
+    }
+
+    // Скролл вниз при загрузке
+    const chatBox = document.getElementById('chat-messages');
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Запускаем обновление
+    fetchLocation();
+    setInterval(fetchLocation, 5000);
+    setInterval(fetchMessages, 3000);
+</script>
+
+{% endblock %}
