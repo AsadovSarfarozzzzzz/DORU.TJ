@@ -69,6 +69,19 @@ def courier_location_api(request, order_pk):
     except CourierLocation.DoesNotExist:
         return JsonResponse({'error': 'Локация недоступна'})
 
+def update_courier_location(request, order_pk):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, pk=order_pk)
+        data = json.loads(request.body)
+        CourierLocation.objects.update_or_create(
+            order=order,
+            defaults={
+                'latitude': data['lat'],
+                'longitude': data['lng'],
+            }
+        )
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Method not allowed'})
 
 @login_required
 def add_to_cart(request, pk):
