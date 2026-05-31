@@ -83,6 +83,23 @@ def update_courier_location(request, order_pk):
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Method not allowed'})
 
+def courier_send_message(request, order_pk):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, pk=order_pk)
+        chat, _ = DeliveryChat.objects.get_or_create(order=order)
+        text = request.POST.get('text', '').strip()
+        image = request.FILES.get('image')
+
+        if text or image:
+            DeliveryChatMessage.objects.create(
+                chat=chat,
+                sender='courier',
+                text=text,
+                image=image or ''
+            )
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Method not allowed'})
+
 @login_required
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
