@@ -45,4 +45,16 @@ class DeliveryChat(models.Model):
     def __str__(self):
         return f'Чат заказа #{self.order.pk}'
     
-    
+class DeliveryChatMessage(models.Model):
+    SENDER_CHOICES = [
+        ('client', 'Клиент'),
+        ('courier', 'Курьер'),
+    ]
+    chat = models.ForeignKey(DeliveryChat, on_delete=models.CASCADE)
+    sender = models.CharField(max_length=10, choices=SENDER_CHOICES)
+    text = models.TextField(blank=True)
+    image = models.ImageField(upload_to='chat_images/', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.sender}: {self.text[:30]}'
