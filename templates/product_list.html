@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">📦 Управление товарами</h1>
+    <a href="{% url 'product_add' %}"
+       class="bg-green-600 text-white px-6 py-3 rounded-2xl hover:bg-green-700 transition font-medium">
+        + Добавить товар
+    </a>
+</div>
+
+<div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-gray-50 border-b border-gray-100">
+            <tr>
+                <th class="text-left px-6 py-4 text-sm font-semibold text-gray-500">Фото</th>
+                <th class="text-left px-6 py-4 text-sm font-semibold text-gray-500">Название</th>
+                <th class="text-left px-6 py-4 text-sm font-semibold text-gray-500">Категория</th>
+                <th class="text-left px-6 py-4 text-sm font-semibold text-gray-500">Цена</th>
+                <th class="text-left px-6 py-4 text-sm font-semibold text-gray-500">Остаток</th>
+                <th class="text-left px-6 py-4 text-sm font-semibold text-gray-500">Действия</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+            {% for product in products %}
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="w-12 h-12 rounded-xl object-cover">
+                    {% else %}
+                        <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-2xl">💊</div>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4">
+                    <p class="font-semibold text-gray-800">{{ product.name }}</p>
+                    <p class="text-xs text-gray-400">{{ product.active_substance }}</p>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full">
+                        {{ product.category }}
+                    </span>
+                </td>
+                <td class="px-6 py-4 font-bold text-green-600">{{ product.price }} сом</td>
+                <td class="px-6 py-4">
+                    <span class="{% if product.stock > 10 %}text-green-600{% elif product.stock > 0 %}text-orange-500{% else %}text-red-500{% endif %} font-semibold">
+                        {{ product.stock }} шт.
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                        <a href="{% url 'product_edit' product.pk %}"
+                           class="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-sm hover:bg-blue-100 transition">
+                            ✏️ Изменить
+                        </a>
+                        <form method="POST" action="{% url 'product_delete' product.pk %}"
+                              onsubmit="return confirm('Удалить {{ product.name }}?')">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-sm hover:bg-red-100 transition">
+                                🗑 Удалить
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center py-16 text-gray-400">
+                    <div class="text-5xl mb-3">📦</div>
+                    <p>Товаров пока нет</p>
+                    <a href="{% url 'product_add' %}" class="text-green-600 h
