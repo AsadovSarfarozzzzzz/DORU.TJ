@@ -58,3 +58,13 @@ class DeliveryChatMessage(models.Model):
 
     def __str__(self):
         return f'{self.sender}: {self.text[:30]}'
+    
+
+class CourierLocation(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Локация заказа #{self.order.pk}'
