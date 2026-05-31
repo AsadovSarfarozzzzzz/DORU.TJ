@@ -68,4 +68,12 @@
                 <td colspan="6" class="text-center py-16 text-gray-400">
                     <div class="text-5xl mb-3">📦</div>
                     <p>Товаров пока нет</p>
-                    <a href="{% url 'product_add' %}" class="text-green-600 h
+                    <a href="{% url 'product_add' %}" class="text-green-600 hover:underline text-sm mt-2 inline-block">Добавить первый товар</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

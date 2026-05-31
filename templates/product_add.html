@@ -73,4 +73,27 @@
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition resize-none">{{ form.description.value|default:'' }}</textarea>
                 </div>
 
-                <div class="col-span-2"
+                <div class="col-span-2">
+                    <label class="text-sm text-gray-500 mb-1.5 block">Фото товара</label>
+                    <input type="file" name="image" accept="image/*"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm">
+                </div>
+
+                <div class="col-span-2">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" name="is_prescription"
+                            class="w-5 h-5 rounded accent-green-600">
+                        <span class="text-sm text-gray-700">Требуется рецепт</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-green-600 text-white font-bold py-4 rounded-2xl hover:bg-green-700 transition text-lg">
+                ✅ Сохранить товар
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}  

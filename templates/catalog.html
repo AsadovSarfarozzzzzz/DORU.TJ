@@ -3,7 +3,15 @@
 
 <div class="flex items-center justify-between mb-6">
     <h1 class="text-3xl font-bold text-gray-800">Каталог лекарств</h1>
-    <span class="text-gray-400 text-sm">{{ products|length }} товаров</span>
+    <div class="flex items-center gap-3">
+        <span class="text-gray-400 text-sm">{{ products|length }} товаров</span>
+        {% if user.is_staff %}
+        <a href="{% url 'product_add' %}"
+           class="bg-green-600 text-white px-5 py-2.5 rounded-xl text-sm hover:bg-green-700 transition">
+            + Добавить товар
+        </a>
+        {% endif %}
+    </div>
 </div>
 
 <!-- Фильтры -->
@@ -31,7 +39,7 @@
                 class="bg-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-green-700 transition">
             Найти
         </button>
-        <a href="/catalog/" class="text-gray-400 text-sm py-2.5 hover:text-gray-600">Сбросить</a>
+        <a href="{% url 'catalog' %}" class="text-gray-400 text-sm py-2.5 hover:text-gray-600">Сбросить</a>
     </form>
 </div>
 
@@ -40,10 +48,12 @@
     {% for product in products %}
     <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition group">
         {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-44 object-cover group-hover:scale-105 transition duration-300">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                 class="w-full h-44 object-cover group-hover:scale-105 transition duration-300">
         {% else %}
             <div class="w-full h-44 bg-green-50 flex items-center justify-center text-5xl">💊</div>
         {% endif %}
+
         <div class="p-4">
             {% if product.is_prescription %}
                 <span class="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full mb-2 inline-block">По рецепту</span>
@@ -51,23 +61,43 @@
             <h3 class="font-semibold text-gray-800 text-sm mb-1 truncate">{{ product.name }}</h3>
             <p class="text-xs text-gray-400 mb-2">{{ product.manufacturer }}</p>
             <p class="text-green-600 font-bold text-xl mb-3">{{ product.price }} <span class="text-sm font-normal">сом</span></p>
+
             <div class="flex gap-2">
-                <a href="/orders/cart/add/{{ product.pk }}/"
+                <a href="{% url 'add_to_cart' product.pk %}"
                    class="flex-1 text-center bg-green-600 text-white text-sm py-2 rounded-xl hover:bg-green-700 transition">
                     + В корзину
                 </a>
-                <a href="/product/{{ product.pk }}/"
+                <a href="{% url 'product_detail' product.pk %}"
                    class="px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-500 hover:border-green-400 hover:text-green-600 transition">
                     →
                 </a>
             </div>
+
+            <!-- Кнопки админа -->
+            {% if user.is_staff %}
+            <div class="flex gap-2 mt-3 pt-3 border-t border-gray-100">
+                <a href="{% url 'product_edit' product.pk %}"
+                   class="flex-1 text-center bg-blue-50 text-blue-600 text-xs py-2 rounded-xl hover:bg-blue-100 transition">
+                    ✏️ Изменить
+                </a>
+                <form method="POST" action="{% url 'product_delete' product.pk %}"
+                      onsubmit="return confirm('Удалить {{ product.name }}?')">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="bg-red-50 text-red-500 text-xs px-3 py-2 rounded-xl hover:bg-red-100 transition">
+                        🗑
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+
         </div>
     </div>
     {% empty %}
     <div class="col-span-4 text-center py-20">
         <div class="text-6xl mb-4">🔍</div>
         <p class="text-gray-400 text-lg">Ничего не найдено</p>
-        <a href="/catalog/" class="text-green-600 text-sm mt-2 inline-block hover:underline">Сбросить фильтры</a>
+        <a href="{% url 'catalog' %}" class="text-green-600 text-sm mt-2 inline-block hover:underline">Сбросить фильтры</a>
     </div>
     {% endfor %}
 </div>
