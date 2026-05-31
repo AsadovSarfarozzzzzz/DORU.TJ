@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from products.models import Product
-from .telegram import send_order_notification
 from django.http import JsonResponse
+from products.models import Product
 from .models import Cart, CartItem, Order, OrderItem, DeliveryChat, DeliveryChatMessage, CourierLocation
+from .telegram import send_order_notification
 import json
+
 
 @login_required
 def delivery_chat(request, order_pk):
@@ -143,7 +144,7 @@ def cart_view(request):
 def checkout(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
     items = CartItem.objects.filter(cart=cart).select_related('product')
-    
+
     if not items:
         messages.error(request, 'Корзина пуста!')
         return redirect('cart')
@@ -157,12 +158,14 @@ def checkout(request):
             return redirect('checkout')
 
         total = sum(item.product.price * item.quantity for item in items)
+
         order = Order.objects.create(
             user=request.user,
             address=address,
             total=total,
             prescription=prescription or ''
         )
+
         for item in items:
             OrderItem.objects.create(
                 order=order,
@@ -170,9 +173,11 @@ def checkout(request):
                 quantity=item.quantity,
                 price=item.product.price
             )
+
+        # отправляем уведомление в Telegram
         order_items = OrderItem.objects.filter(order=order)
         send_order_notification(order, order_items)
-        # очищаем корзину
+
         items.delete()
         messages.success(request, 'Заказ оформлен!')
         return redirect('order_detail', pk=order.pk)
