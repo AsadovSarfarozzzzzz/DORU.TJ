@@ -33,6 +33,29 @@ def delivery_chat(request, order_pk):
     })
 
 
+@login_required
+def chat_messages_api(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk, user=request.user)
+    chat, _ = DeliveryChat.objects.get_or_create(order=order)
+    last_id = request.GET.get('last_id', 0)
+
+    messages = DeliveryChatMessage.objects.filter(
+        chat=chat,
+        id__gt=last_id
+    ).order_by('created_at')
+
+    data = []
+    for msg in messages:
+        data.append({
+            'id': msg.pk,
+            'sender': msg.sender,
+            'text': msg.text,
+            'image': msg.image.url if msg.image else None,
+            'time': msg.created_at.strftime('%H:%M'),
+        })
+
+    return JsonResponse({'messages': data})
+
 
 @login_required
 def add_to_cart(request, pk):
