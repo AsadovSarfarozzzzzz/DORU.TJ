@@ -56,6 +56,19 @@ def chat_messages_api(request, order_pk):
 
     return JsonResponse({'messages': data})
 
+@login_required
+def courier_location_api(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk, user=request.user)
+    try:
+        location = CourierLocation.objects.get(order=order)
+        return JsonResponse({
+            'lat': location.latitude,
+            'lng': location.longitude,
+            'updated_at': location.updated_at.strftime('%H:%M:%S')
+        })
+    except CourierLocation.DoesNotExist:
+        return JsonResponse({'error': 'Локация недоступна'})
+
 
 @login_required
 def add_to_cart(request, pk):
