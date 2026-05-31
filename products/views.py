@@ -24,11 +24,13 @@ def product_add(request):
     return render(request, 'product_add.html', {'form': form})
 
 @login_required
-def product_delete(request,pk):
+def product_delete(request, pk):
     if not request.user.is_staff:
         return redirect('home')
     product = get_object_or_404(Product, pk=pk)
-    product.delete()
+    if request.method == 'POST':
+        product.delete()
+        return redirect('product_list')
     return redirect('product_list')
 
 @login_required
