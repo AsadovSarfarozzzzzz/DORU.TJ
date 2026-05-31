@@ -34,7 +34,7 @@ def product_delete(request, pk):
     return redirect('product_list')
 
 @login_required
-def update_product(request,pk):
+def product_edit(request,pk):
     if not request.user.is_staff:
         return redirect('home')
     product = get_object_or_404(Product, pk=pk)
