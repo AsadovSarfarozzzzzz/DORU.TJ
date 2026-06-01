@@ -296,3 +296,17 @@ def courier_api_messages(request, token):
             'time': msg.created_at.strftime('%H:%M'),
         })
     return JsonResponse({'messages': data})
+
+def update_courier_location_by_token(request, token):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, courier_token=token)
+        data = json.loads(request.body)
+        CourierLocation.objects.update_or_create(
+            order=order,
+            defaults={
+                'latitude': data['lat'],
+                'longitude': data['lng'],
+            }
+        )
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Method not allowed'})
