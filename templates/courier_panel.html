@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto">
+
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">🛵 Панель курьера</h1>
+        <span class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+            Заказ #{{ order.pk }}
+        </span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- ЧАТ -->
+        <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden flex flex-col" style="height: 580px;">
+            <div class="p-4 border-b border-gray-100 bg-green-50">
+                <h2 class="font-bold text-gray-800">💬 Чат с клиентом</h2>
+                <p class="text-xs text-gray-400">{{ order.user.username }} · {{ order.user.phone }}</p>
+            </div>
+
+            <!-- Сообщения -->
+            <div class="flex-1 overflow-y-auto p-5 space-y-3" id="chat-messages">
+                {% for msg in messages %}
+                <div class="flex {% if msg.sender == 'courier' %}justify-end{% else %}justify-start{% endif %}"
+                     data-id="{{ msg.pk }}">
+                    <div class="max-w-xs">
+                        <p class="text-xs text-gray-400 mb-1 {% if msg.sender == 'courier' %}text-right{% endif %}">
+                            {% if msg.sender == 'courier' %}Вы{% else %}👤 Клиент{% endif %}
+                            · {{ msg.created_at|date:"H:i" }}
+                        </p>
+                        <div class="{% if msg.sender == 'courier' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
+                            {% if msg.text %}
+                                <p class="text-sm">{{ msg.text }}</p>
+                            {% endif %}
+                            {% if msg.image %}
+                                <img src="{{ msg.image.url }}"
+                                     class="rounded-xl mt-2 max-w-full cursor-pointer"
+                                     onclick="window.open('{{ msg.image.url }}')">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-16">
+                    <div class="text-5xl mb-3">💬</div>
+                    <p class="text-gray-400 text-sm">Напишите клиенту</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Инпут -->
+            <div class="border-t border-gray-100 p-4">
+                <form method="POST" enctype="multipart/form-data" id="chat-form"
+                      action="{% url 'courier_send_message' order.pk %}">
+                    {% csrf_token %}
+                    <div id="image-preview" class="hidden mb-3">
+                        <div class="relative inline-block">
+                            <img id="preview-img" class="h-20 rounded-xl object-cover">
+                            <button type="button" onclick="clearImage()"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">✕</button>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <label class="cursor-pointer p-2.5 border border-gray-200 rounded-xl hover:border-green-400 text-gray-400 transition">
+                            📷
+                            <input type="file" name="image" id="image-input" accept="image/*"
+                                   class="hidden" onchange="previewImage(this)">
+                        </label>
+                        <input type="text" name="text" id="text-input"
+                               placeholder="Написать клиенту..."
+                               autocomplete="off"
+                               class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition">
+                        <button type="submit"
+                                class="bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition text-sm">
+                            →
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ПРАВАЯ ЧАСТЬ -->
+        <div class="space-y-4">
+
+            <!-- Инфо заказа -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-5">
+                <h3 class="font-bold text-gray-800 mb-3">📦 Заказ #{{ order.pk }}</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Клиент</span>
+                        <span class="font-medium">{{ order.user.username }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Телефон</span>
+                        <span class="font-medium text-green-600">{{ order.user.phone }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Адрес</span>
+                        <span class="font-medium text-right max-w-40">{{ order.address }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Сумма</span>
+                        <span class="font-bold text-green-600">{{ order.total }} сом</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Геолокация -->
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="font-bold text-gray-800">📍 Моя локация</h3>
+                    <button onclick="shareLocation()"
+                            id="location-btn"
+                            class="bg-green-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-green-700 transition">
+                        Поделиться локацией
+                    </button>
+                </div>
+                <div id="courier-map" style="height: 200px;"></div>
+                <div class="p-3 text-center" id="location-status">
+                    <p class="text-gray-400 text-xs">Нажмите чтобы начать отслеживание</p>
+                </div>
+            </div>
+
+            <!-- Кнопки статуса -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
+                <h3 class="font-bold text-gray-800 mb-3">⚡ Управление заказом</h3>
+                <form method="POST" action="{% url 'courier_update_status' order.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="delivering">
+                    <button type="submit"
+                            class="w-full bg-blue-50 text-blue-600 py-3 rounded-xl text-sm font-medium hover:bg-blue-100 transition mb-2">
+                        🚚 Начать доставку
+                    </button>
+                </form>
+                <form method="POST" action="{% url 'courier_update_status' order.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="done">
+                    <button type="submit"
+                            class="w-full bg-green-600 text-white py-3 rounded-xl text-sm font-medium hover:bg-green-700 transition">
+                        ✅ Заказ доставлен
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    let map = null;
+    let marker = null;
+    let watchId = null;
+    let lastId = {{ messages.last.pk|default:0 }};
+
+    // Карта курьера
+    function initMap(lat, lng) {
+        if (!map) {
+            map = L.map('courier-map').setView([lat, lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        }
+        if (!marker) {
+            marker = L.marker([lat, lng]).addTo(map).bindPopup('Вы здесь').openPopup();
+        } else {
+            marker.setLatLng([lat, lng]);
+            map.setView([lat, lng], 15);
+        }
+    }
+
+    // Поделиться геолокацией
+    function shareLocation() {
+        if (!navigator.geolocation) {
+            alert('Геолокация не поддерживается');
+            return;
+        }
+
+        document.getElementById('location-btn').textContent = '📍 Отслеживается...';
+        document.getElementById('location-btn').classList.add('bg-orange-500');
+        document.getElementById('location-btn').classList.remove('bg-green-600');
+
+        watchId = navigator.geolocation.watchPosition(
+            position => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                initMap(lat, lng);
+                document.getElementById('location-status').innerHTML =
+                    `<p class="text-green-600 text-xs">✅ Локация обновлена</p>`;
+
+                // отправляем на сервер
+                fetch('{% url "update_courier_location" order.pk %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ lat, lng })
+                });
+            },
+            error => {
+                document.getElementById('location-status').innerHTML =
+                    `<p class="text-red-500 text-xs">❌ Ошибка геолокации</p>`;
+            },
+            { enableHighAccuracy: true, maximumAge: 3000, timeout: 5000 }
+        );
+    }
+
+    // Получаем новые сообщения каждые 3 секунды
+    function fetchMessages() {
+        fetch(`{% url "chat_messages_api" order.pk %}?last_id=${lastId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.messages.forEach(msg => {
+                    lastId = msg.id;
+                    const isCourier = msg.sender === 'courier';
+                    const div = document.createElement('div');
+                    div.className = `flex ${isCourier ? 'justify-end' : 'justify-start'}`;
+                    div.dataset.id = msg.id;
+
+                    let content = '';
+                    if (msg.text) content += `<p class="text-sm">${msg.text}</p>`;
+                    if (msg.image) content += `<img src="${msg.image}" class="rounded-xl mt-2 max-w-full">`;
+
+                    div.innerHTML = `
+                        <div class="max-w-xs">
+                            <p class="text-xs text-gray-400 mb-1 ${isCourier ? 'text-right' : ''}">
+                                ${isCourier ? 'Вы' : '👤 Клиент'} · ${msg.time}
+                            </p>
+                            <div class="${isCourier ? 'bg-green-600 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm'} px-4 py-3">
+                                ${content}
+                            </div>
+                        </div>
+                    `;
+
+                    const container = document.getElementById('chat-messages');
+                    const empty = container.querySelector('.text-center');
+                    if (empty) empty.remove();
+                    container.appendChild(div);
+                    container.scrollTop = container.scrollHeight;
+                });
+            });
+    }
+
+    // Превью фото
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('preview-img').src = e.target.result;
+                document.getElementById('image-preview').classList.remove('hidden');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function clearImage() {
+        document.getElementById('image-input').value = '';
+        document.getElementById('image-preview').classList.add('hidden');
+    }
+
+    // Скролл вниз
+    const chatBox = document.getElementById('chat-messages');
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Запуск
+    setInterval(fetchMessages, 3000);
+</script>
+
+{% endblock %}

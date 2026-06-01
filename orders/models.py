@@ -1,6 +1,7 @@
 from django.db import models
 from products.models import Product
 from django.conf import settings
+import secrets
 
 # Create your models here.
 class Cart(models.Model):
@@ -31,6 +32,13 @@ class Order(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2)
     prescription = models.ImageField(upload_to='prescriptions/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    courier_token = models.CharField(max_length=64, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.courier_token:
+            self.courier_token = secrets.token_urlsafe(32)
+        super().save(*args, **kwargs)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

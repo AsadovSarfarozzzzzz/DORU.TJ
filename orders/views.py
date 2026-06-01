@@ -12,12 +12,13 @@ import json
 def delivery_chat(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk, user=request.user)
     chat, _ = DeliveryChat.objects.get_or_create(order=order)
-    messages = DeliveryChatMessage.objects.filter(chat=chat).order_by('created_at')
+    chat_messages = DeliveryChatMessage.objects.filter(
+        chat=chat
+    ).order_by('created_at')
 
     if request.method == 'POST':
         text = request.POST.get('text', '').strip()
         image = request.FILES.get('image')
-
         if text or image:
             DeliveryChatMessage.objects.create(
                 chat=chat,
@@ -30,7 +31,7 @@ def delivery_chat(request, order_pk):
     return render(request, 'delivery_chat.html', {
         'order': order,
         'chat': chat,
-        'messages': messages,
+        'messages': chat_messages,
     })
 
 
@@ -40,13 +41,13 @@ def chat_messages_api(request, order_pk):
     chat, _ = DeliveryChat.objects.get_or_create(order=order)
     last_id = request.GET.get('last_id', 0)
 
-    messages = DeliveryChatMessage.objects.filter(
+    chat_messages = DeliveryChatMessage.objects.filter(
         chat=chat,
         id__gt=last_id
     ).order_by('created_at')
 
     data = []
-    for msg in messages:
+    for msg in chat_messages:
         data.append({
             'id': msg.pk,
             'sender': msg.sender,
@@ -54,8 +55,8 @@ def chat_messages_api(request, order_pk):
             'image': msg.image.url if msg.image else None,
             'time': msg.created_at.strftime('%H:%M'),
         })
-
     return JsonResponse({'messages': data})
+
 
 @login_required
 def courier_location_api(request, order_pk):
@@ -69,6 +70,7 @@ def courier_location_api(request, order_pk):
         })
     except CourierLocation.DoesNotExist:
         return JsonResponse({'error': 'Локация недоступна'})
+
 
 def update_courier_location(request, order_pk):
     if request.method == 'POST':
@@ -84,13 +86,13 @@ def update_courier_location(request, order_pk):
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Method not allowed'})
 
+
 def courier_send_message(request, order_pk):
     if request.method == 'POST':
         order = get_object_or_404(Order, pk=order_pk)
         chat, _ = DeliveryChat.objects.get_or_create(order=order)
         text = request.POST.get('text', '').strip()
         image = request.FILES.get('image')
-
         if text or image:
             DeliveryChatMessage.objects.create(
                 chat=chat,
@@ -100,6 +102,7 @@ def courier_send_message(request, order_pk):
             )
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Method not allowed'})
+
 
 @login_required
 def add_to_cart(request, pk):
@@ -111,6 +114,7 @@ def add_to_cart(request, pk):
         item.save()
     messages.success(request, f'{product.name} добавлен в корзину!')
     return redirect(request.META.get('HTTP_REFERER', 'catalog'))
+
 
 @login_required
 def remove_from_cart(request, pk):
@@ -130,6 +134,7 @@ def update_cart(request, pk):
         item.delete()
     return redirect('cart')
 
+
 @login_required
 def cart_view(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -139,6 +144,7 @@ def cart_view(request):
         'items': items,
         'total': total
     })
+
 
 @login_required
 def checkout(request):
@@ -174,7 +180,6 @@ def checkout(request):
                 price=item.product.price
             )
 
-        # отправляем уведомление в Telegram
         order_items = OrderItem.objects.filter(order=order)
         send_order_notification(order, order_items)
 
@@ -188,12 +193,14 @@ def checkout(request):
         'total': total
     })
 
+
 @login_required
 def my_orders(request):
     orders = Order.objects.filter(
         user=request.user
     ).order_by('-created_at')
     return render(request, 'my_orders.html', {'orders': orders})
+
 
 @login_required
 def order_detail(request, pk):
@@ -232,25 +239,60 @@ def repeat_order(request, pk):
     return redirect('cart')
 
 
-@login_required
-def courier_panel(request, order_pk):
-    order = get_object_or_404(Order, pk=order_pk)
+def courier_panel(request, token):
+    order = get_object_or_404(Order, courier_token=token)
     chat, _ = DeliveryChat.objects.get_or_create(order=order)
-    messages = DeliveryChatMessage.objects.filter(
+    chat_messages = DeliveryChatMessage.objects.filter(
         chat=chat
     ).order_by('created_at')
     return render(request, 'courier_panel.html', {
         'order': order,
-        'messages': messages,
+        'messages': chat_messages,
+        'token': token,
     })
 
 
-@login_required
-def courier_update_status(request, order_pk):
-    order = get_object_or_404(Order, pk=order_pk)
+def courier_update_status(request, token):
+    order = get_object_or_404(Order, courier_token=token)
     if request.method == 'POST':
         status = request.POST.get('status')
         if status in ['delivering', 'done', 'cancelled']:
             order.status = status
             order.save()
-    return redirect('courier_panel', order_pk=order_pk)
+    return redirect('courier_panel', token=token)
+
+
+def courier_chat_send(request, token):
+    order = get_object_or_404(Order, courier_token=token)
+    if request.method == 'POST':
+        chat, _ = DeliveryChat.objects.get_or_create(order=order)
+        text = request.POST.get('text', '').strip()
+        image = request.FILES.get('image')
+        if text or image:
+            DeliveryChatMessage.objects.create(
+                chat=chat,
+                sender='courier',
+                text=text,
+                image=image or ''
+            )
+    return redirect('courier_panel', token=token)
+
+
+def courier_api_messages(request, token):
+    order = get_object_or_404(Order, courier_token=token)
+    chat, _ = DeliveryChat.objects.get_or_create(order=order)
+    last_id = request.GET.get('last_id', 0)
+    chat_messages = DeliveryChatMessage.objects.filter(
+        chat=chat, id__gt=last_id
+    ).order_by('created_at')
+
+    data = []
+    for msg in chat_messages:
+        data.append({
+            'id': msg.pk,
+            'sender': msg.sender,
+            'text': msg.text,
+            'image': msg.image.url if msg.image else None,
+            'time': msg.created_at.strftime('%H:%M'),
+        })
+    return JsonResponse({'messages': data})

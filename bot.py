@@ -163,6 +163,31 @@ async def start(message: types.Message):
         'Или просто отправь геолокацию 📍'
     )
 
+@dp.callback_query(F.data.startswith('accept_'))
+async def accept_order(callback: types.CallbackQuery):
+    from orders.models import Order, DeliveryChat
+    order_id = int(callback.data.split('_')[1])
+
+    order = await asyncio.to_thread(Order.objects.get, pk=order_id)
+    order.status = 'delivering'
+    await asyncio.to_thread(order.save)
+
+    await asyncio.to_thread(
+        DeliveryChat.objects.get_or_create, order=order
+    )
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[[
+        InlineKeyboardButton(
+            text='🛵 Открыть панель курьера',
+            url=f'http://твой_домен/orders/courier/{order_id}/'
+        ),
+    ]])
+
+    await callback.message.edit_text(
+        callback.message.text + '\n\n🚚 Принято! Заказ доставляется.',
+        reply_markup=keyboard
+    )
+    await callback.answer('Заказ принят!')
 
 async def main():
     await dp.start_polling(bot)

@@ -16,4 +16,6 @@ urlpatterns = [
     path('chat/<int:order_pk>/location/', views.courier_location_api, name='courier_location_api'),
     path('chat/<int:order_pk>/courier-message/', views.courier_send_message, name='courier_send_message'),
     path('chat/<int:order_pk>/update-location/', views.update_courier_location, name='update_courier_location'),
+    path('courier/<int:order_pk>/', views.courier_panel, name='courier_panel'),
+    path('courier/<int:order_pk>/status/', views.courier_update_status, name='courier_update_status'),
 ]
