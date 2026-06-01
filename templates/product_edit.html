@@ -38,8 +38,7 @@
                     <select name="category" required
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                         {% for cat in form.category.field.queryset %}
-                        <option value="{{ cat.pk }}"
-                            {% if form.category.value == cat.pk %}selected{% endif %}>
+                        <option value="{{ cat.pk }}" {% if form.category.value|slugify == cat.pk|slugify %}selected{% endif %}>
                             {{ cat.name }}
                         </option>
                         {% endfor %}
@@ -52,8 +51,7 @@
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                         <option value="">Не указан</option>
                         {% for man in form.manufacturer.field.queryset %}
-                        <option value="{{ man.pk }}"
-                            {% if form.manufacturer.value == man.pk %}selected{% endif %}>
+                        <option value="{{ man.pk }}" {% if form.manufacturer.value|slugify == man.pk|slugify %}selected{% endif %}>
                             {{ man.name }}
                         </option>
                         {% endfor %}
@@ -76,8 +74,7 @@
                 <div class="col-span-2">
                     <label class="text-sm text-gray-500 mb-1.5 block">Фото товара</label>
                     {% if form.instance.image %}
-                        <img src="{{ form.instance.image.url }}"
-                             class="w-24 h-24 rounded-xl object-cover mb-3">
+                        <img src="{{ form.instance.image.url }}" class="w-24 h-24 rounded-xl object-cover mb-3">
                     {% endif %}
                     <input type="file" name="image" accept="image/*"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm">
@@ -85,8 +82,7 @@
 
                 <div class="col-span-2">
                     <label class="flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" name="is_prescription"
-                            {% if form.instance.is_prescription %}checked{% endif %}
+                        <input type="checkbox" name="is_prescription" {% if form.is_prescription.value %}checked{% endif %}
                             class="w-5 h-5 rounded accent-green-600">
                         <span class="text-sm text-gray-700">Требуется рецепт</span>
                     </label>

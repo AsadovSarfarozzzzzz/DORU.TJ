@@ -1,51 +1,78 @@
-from django.shortcuts import  redirect ,render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from .models import Product, Category
 from .forms import ProductForm, CategoryForm
-from django.contrib.auth.decorators import login_required
+from django.views import generic
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-@login_required
-def product_list(request):
-    if not request.user.is_staff:
-        return redirect('home')
-    products = Product.objects.all()
-    return render(request, 'product_list.html',{'product':products})
+class ProductView(LoginRequiredMixin,generic.ListView):
+    model = Product
+    template_name = 'product_list.html'
+    context_object_name = 'product'
+    
+class ProductAdd(LoginRequiredMixin,generic.CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'product_add.html'
+    success_url = reverse_lazy('product_list')
 
-@login_required
-def product_add(request):
-    if not request.user.is_staff:
+    def test_func(self):
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
         return redirect('home')
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('product_list')
-    else:
-        form = ProductForm()
-    return render(request, 'product_add.html', {'form': form})
 
-@login_required
-def product_delete(request, pk):
-    if not request.user.is_staff:
-        return redirect('home')
-    product = get_object_or_404(Product, pk=pk)
-    if request.method == 'POST':
-        product.delete()
-        return redirect('product_list')
-    return redirect('product_list')
+class ProductDeleteView(LoginRequiredMixin,UserPassesTestMixin,generic.DeleteView):
+    model = Product
+    success_url = reverse_lazy('product_list')
+    def test_func(self):
+        return self.request.user.is_staff
 
-@login_required
-def product_edit(request,pk):
-    if not request.user.is_staff:
-        return redirect('home')
-    product = get_object_or_404(Product, pk=pk)
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)
-        if form.is_valid():
-            form.save()
-            return redirect('product_list')
-    else:
-        form = ProductForm(instance=product)
-    return render(request, 'product_edit.html', {'form': form})
+class ProductUpdateView(generic.UpdateView):
+    model = Product
+    fields = '__all__'
+    template_name = 'product_edit.html'
+    success_url = reverse_lazy('product_list')
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+# @login_required
+# def product_add(request):
+#     if not request.user.is_staff:
+#         return redirect('home')
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('product_list')
+#     else:
+#         form = ProductForm()
+#     return render(request, 'product_add.html', {'form': form})
+
+# @login_required
+# def product_delete(request, pk):
+#     if not request.user.is_staff:
+#         return redirect('home')
+#     product = get_object_or_404(Product, pk=pk)
+#     if request.method == 'POST':
+#         product.delete()
+#         return redirect('product_list')
+#     return redirect('product_list')
+
+# @login_required
+# def product_edit(request,pk):
+#     if not request.user.is_staff:
+#         return redirect('home')
+#     product = get_object_or_404(Product, pk=pk)
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST, request.FILES, instance=product)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('product_list')
+#     else:
+#         form = ProductForm(instance=product)
+#     return render(request, 'product_edit.html', {'form': form})
     
 
 def home(request):
@@ -96,7 +123,6 @@ def catalog(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    # аналоги — те же категории
     similar = Product.objects.filter(
         category=product.category
     ).exclude(pk=pk)[:4]

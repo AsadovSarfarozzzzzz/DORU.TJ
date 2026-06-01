@@ -14,7 +14,7 @@
             <div class="grid grid-cols-2 gap-5">
                 <div class="col-span-2">
                     <label class="text-sm text-gray-500 mb-1.5 block">Название товара</label>
-                    <input type="text" name="name" placeholder="Парацетамол 500мг" required
+                    <input type="text" name="name" placeholder="Анальгин 500мг" required
                         value="{{ form.name.value|default:'' }}"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                     {% if form.name.errors %}
@@ -42,7 +42,7 @@
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                         <option value="">Выберите категорию</option>
                         {% for cat in form.category.field.queryset %}
-                        <option value="{{ cat.pk }}" {% if form.category.value == cat.pk %}selected{% endif %}>
+                        <option value="{{ cat.pk }}" {% if form.category.value|slugify == cat.pk|slugify %}selected{% endif %}>
                             {{ cat.name }}
                         </option>
                         {% endfor %}
@@ -55,14 +55,16 @@
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                         <option value="">Выберите производителя</option>
                         {% for man in form.manufacturer.field.queryset %}
-                        <option value="{{ man.pk }}">{{ man.name }}</option>
+                        <option value="{{ man.pk }}" {% if form.manufacturer.value|slugify == man.pk|slugify %}selected{% endif %}>
+                            {{ man.name }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
 
                 <div class="col-span-2">
                     <label class="text-sm text-gray-500 mb-1.5 block">Действующее вещество</label>
-                    <input type="text" name="active_substance" placeholder="Парацетамол"
+                    <input type="text" name="active_substance" placeholder="Ибупрофен"
                         value="{{ form.active_substance.value|default:'' }}"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                 </div>
@@ -81,7 +83,7 @@
 
                 <div class="col-span-2">
                     <label class="flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" name="is_prescription"
+                        <input type="checkbox" name="is_prescription" {% if form.is_prescription.value %}checked{% endif %}
                             class="w-5 h-5 rounded accent-green-600">
                         <span class="text-sm text-gray-700">Требуется рецепт</span>
                     </label>
@@ -96,4 +98,4 @@
     </div>
 </div>
 
-{% endblock %}  
+{% endblock %}
