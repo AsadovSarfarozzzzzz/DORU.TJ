@@ -230,3 +230,27 @@ def repeat_order(request, pk):
             cart_item.save()
     messages.success(request, 'Товары добавлены в корзину!')
     return redirect('cart')
+
+
+@login_required
+def courier_panel(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk)
+    chat, _ = DeliveryChat.objects.get_or_create(order=order)
+    messages = DeliveryChatMessage.objects.filter(
+        chat=chat
+    ).order_by('created_at')
+    return render(request, 'courier_panel.html', {
+        'order': order,
+        'messages': messages,
+    })
+
+
+@login_required
+def courier_update_status(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk)
+    if request.method == 'POST':
+        status = request.POST.get('status')
+        if status in ['delivering', 'done', 'cancelled']:
+            order.status = status
+            order.save()
+    return redirect('courier_panel', order_pk=order_pk)
