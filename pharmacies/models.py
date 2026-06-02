@@ -13,3 +13,12 @@ class Pharmacy(models.Model):
 
     def __str__(self):
         return self.name
+    
+class PharmacyProduct(models.Model):
+    pharmacy = models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.pharmacy.name} — {self.product.name}'
