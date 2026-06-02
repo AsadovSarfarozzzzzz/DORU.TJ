@@ -145,16 +145,11 @@ def product_detail(request, pk):
         is_deleted=False
     ).exclude(pk=pk)[:4]
 
-    reviews = Review.objects.filter(
-        product=product
-    ).order_by('-created_at')
+    reviews = Review.objects.filter(product=product).order_by('-created_at')
 
-    # средний рейтинг
-    avg_rating = reviews.aggregate(
-        avg=models.Avg('rating')
-    )['avg'] or 0
+    from django.db.models import Avg
+    avg_rating = reviews.aggregate(avg=Avg('rating'))['avg'] or 0
 
-    # проверяем оставлял ли юзер отзыв
     user_review = None
     if request.user.is_authenticated:
         user_review = reviews.filter(user=request.user).first()

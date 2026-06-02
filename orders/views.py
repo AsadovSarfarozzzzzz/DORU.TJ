@@ -94,7 +94,12 @@ def courier_complete_order(request, pk):
 
 @login_required
 def delivery_chat(request, order_pk):
-    order = get_object_or_404(Order, pk=order_pk, user=request.user)
+    # клиент видит только свой заказ, курьер и админ любой
+    if request.user.is_courier or request.user.is_staff:
+        order = get_object_or_404(Order, pk=order_pk)
+    else:
+        order = get_object_or_404(Order, pk=order_pk, user=request.user)
+    
     chat, _ = DeliveryChat.objects.get_or_create(order=order)
     chat_messages = DeliveryChatMessage.objects.filter(
         chat=chat
@@ -121,13 +126,16 @@ def delivery_chat(request, order_pk):
 
 @login_required
 def chat_messages_api(request, order_pk):
-    order = get_object_or_404(Order, pk=order_pk, user=request.user)
+    if request.user.is_courier or request.user.is_staff:
+        order = get_object_or_404(Order, pk=order_pk)
+    else:
+        order = get_object_or_404(Order, pk=order_pk, user=request.user)
+    
     chat, _ = DeliveryChat.objects.get_or_create(order=order)
     last_id = request.GET.get('last_id', 0)
 
     chat_messages = DeliveryChatMessage.objects.filter(
-        chat=chat,
-        id__gt=last_id
+        chat=chat, id__gt=last_id
     ).order_by('created_at')
 
     data = []
@@ -140,7 +148,6 @@ def chat_messages_api(request, order_pk):
             'time': msg.created_at.strftime('%H:%M'),
         })
     return JsonResponse({'messages': data})
-
 
 @login_required
 def courier_location_api(request, order_pk):

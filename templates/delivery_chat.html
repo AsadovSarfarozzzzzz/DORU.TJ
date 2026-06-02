@@ -135,9 +135,9 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    // Карта
     let map = null;
     let courierMarker = null;
+    let lastId = {{ messages.last.pk|default:0 }};  // добавь это!
 
     function initMap(lat, lng) {
         if (!map) {
@@ -153,7 +153,6 @@
         map.setView([lat, lng], 15);
     }
 
-    // Получаем локацию курьера каждые 5 секунд
     function fetchLocation() {
         fetch('{% url "courier_location_api" order.pk %}')
             .then(res => res.json())
@@ -167,15 +166,8 @@
                     document.getElementById('map').style.display = 'none';
                     document.getElementById('no-location').style.display = 'block';
                 }
-            })
-            .catch(() => {
-                document.getElementById('map').style.display = 'none';
-                document.getElementById('no-location').style.display = 'block';
             });
     }
-
-    // Получаем новые сообщения
-    let lastId = {{ messages.last.pk|default:0 }};
 
     function fetchMessages() {
         fetch(`{% url "chat_messages_api" order.pk %}?last_id=${lastId}`)
@@ -204,7 +196,6 @@
                     `;
 
                     const container = document.getElementById('chat-messages');
-                    // убираем заглушку если есть
                     const empty = container.querySelector('.text-center');
                     if (empty) empty.remove();
                     container.appendChild(div);
@@ -213,7 +204,6 @@
             });
     }
 
-    // Превью фото
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -230,11 +220,10 @@
         document.getElementById('image-preview').classList.add('hidden');
     }
 
-    // Скролл вниз при загрузке
     const chatBox = document.getElementById('chat-messages');
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    // Запускаем обновление
+    // запускаем один раз — без дубликатов!
     fetchLocation();
     setInterval(fetchLocation, 5000);
     setInterval(fetchMessages, 3000);
