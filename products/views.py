@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Product, Category
 from .forms import ProductForm, CategoryForm
+from django.http import JsonResponse
 from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -8,7 +9,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 class ProductView(LoginRequiredMixin,generic.ListView):
     model = Product
     template_name = 'product_list.html'
-    context_object_name = 'product'
+    context_object_name = 'products'
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get_queryset(self):
+        return Product.objects.filter(is_deleted=False)
     
 class ProductAdd(LoginRequiredMixin,generic.CreateView):
     model = Product
@@ -25,8 +32,15 @@ class ProductAdd(LoginRequiredMixin,generic.CreateView):
 class ProductDeleteView(LoginRequiredMixin,UserPassesTestMixin,generic.DeleteView):
     model = Product
     success_url = reverse_lazy('product_list')
+
     def test_func(self):
         return self.request.user.is_staff
+    
+    def form_valid(self, form):
+        self.object.delete()  # soft delete
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
+        return redirect(self.success_url)
 
 class ProductUpdateView(generic.UpdateView):
     model = Product
