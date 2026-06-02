@@ -72,8 +72,18 @@ def login_user(request):
                 if not_active:
                     return render(request, 'login.html', {'form': form, 'error': 'Подтвердите email'})
                 return render(request, 'login.html', {'form': form, 'error': 'Неверный логин или пароль'})
+            
             login(request, user)
-            return redirect('home')
+            
+            # если курьер — на панель курьера
+            if user.is_courier:
+                return redirect('courier_dashboard')
+            # если админ — на панель управления
+            elif user.is_staff:
+                return redirect('product_list')
+            # обычный юзер — на главную
+            else:
+                return redirect('home')
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form})

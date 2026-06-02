@@ -24,4 +24,8 @@ urlpatterns = [
     path('courier/<str:token>/send/', views.courier_chat_send, name='courier_chat_send'),
     path('courier/<str:token>/api/', views.courier_api_messages, name='courier_api_messages'),
     path('courier/<str:token>/location/', views.update_courier_location_by_token, name='update_location_by_token'),
+    path('courier-dashboard/', views.courier_dashboard, name='courier_dashboard'),
+    path('courier-dashboard/take/<int:pk>/', views.courier_take_order, name='courier_take_order'),
+    path('courier-dashboard/order/<int:pk>/', views.courier_order_detail, name='courier_order_detail'),
+    path('courier-dashboard/complete/<int:pk>/', views.courier_complete_order, name='courier_complete_order'),
 ]

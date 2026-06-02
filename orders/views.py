@@ -7,6 +7,90 @@ from .models import Cart, CartItem, Order, OrderItem, DeliveryChat, DeliveryChat
 from .telegram import send_order_notification
 import json
 
+@login_required
+def courier_dashboard(request):
+    # проверяем что юзер курьер
+    if not request.user.is_courier:
+        return redirect('home')
+
+    # активные заказы которые ещё не приняты
+    pending_orders = Order.objects.filter(
+        status='pending'
+    ).order_by('-created_at')
+
+    # заказы этого курьера
+    my_orders = Order.objects.filter(
+        assigned_courier__user=request.user
+    ).order_by('-created_at')
+
+    return render(request, 'courier_dashboard.html', {
+        'pending_orders': pending_orders,
+        'my_orders': my_orders,
+    })
+
+
+@login_required
+def courier_take_order(request, pk):
+    if not request.user.is_courier:
+        return redirect('home')
+
+    order = get_object_or_404(Order, pk=pk)
+    courier = request.user.courier
+
+    order.status = 'delivering'
+    order.save()
+
+    courier.current_order = order
+    courier.save()
+
+    DeliveryChat.objects.get_or_create(order=order)
+
+    return redirect('courier_order_detail', pk=order.pk)
+
+
+@login_required
+def courier_order_detail(request, pk):
+    if not request.user.is_courier:
+        return redirect('home')
+
+    order = get_object_or_404(Order, pk=pk)
+    chat, _ = DeliveryChat.objects.get_or_create(order=order)
+    chat_messages = DeliveryChatMessage.objects.filter(
+        chat=chat
+    ).order_by('created_at')
+
+    if request.method == 'POST':
+        text = request.POST.get('text', '').strip()
+        image = request.FILES.get('image')
+        if text or image:
+            DeliveryChatMessage.objects.create(
+                chat=chat,
+                sender='courier',
+                text=text,
+                image=image or ''
+            )
+        return redirect('courier_order_detail', pk=pk)
+
+    return render(request, 'courier_order_detail.html', {
+        'order': order,
+        'messages': chat_messages,
+    })
+
+
+@login_required
+def courier_complete_order(request, pk):
+    if not request.user.is_courier:
+        return redirect('home')
+
+    order = get_object_or_404(Order, pk=pk)
+    order.status = 'done'
+    order.save()
+
+    courier = request.user.courier
+    courier.current_order = None
+    courier.save()
+
+    return redirect('courier_dashboard')
 
 @login_required
 def delivery_chat(request, order_pk):
