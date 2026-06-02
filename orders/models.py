@@ -76,3 +76,22 @@ class CourierLocation(models.Model):
 
     def __str__(self):
         return f'Локация заказа #{self.order.pk}'
+    
+class Courier(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    phone = models.CharField(max_length=20, blank=True)
+    is_active = models.BooleanField(default=True)
+    current_order = models.ForeignKey(
+        'Order',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='assigned_courier'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Курьер: {self.user.username}'

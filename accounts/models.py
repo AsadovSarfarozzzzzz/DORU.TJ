@@ -8,6 +8,7 @@ class User(AbstractUser):
     birth_date = models.DateField(null=True, blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
+    is_courier = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
