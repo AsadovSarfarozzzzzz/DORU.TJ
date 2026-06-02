@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">🏥 Аптеки Душанбе</h1>
+        <p class="text-gray-400 text-sm mt-1">Найдите ближайшую аптеку</p>
+    </div>
+</div>
+
+<!-- Карта всех аптек -->
+<div class="bg-white rounded-3xl border border-gray-100 overflow-hidden mb-8">
+    <div class="p-4 border-b border-gray-100">
+        <h2 class="font-bold text-gray-800">📍 На карте</h2>
+    </div>
+    <div id="map" style="height: 400px;"></div>
+</div>
+
+<!-- Список аптек -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for pharmacy in pharmacies %}
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition card-hover">
+        <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-2xl">
+                🏥
+            </div>
+            <span class="bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full font-medium">
+                Открыто
+            </span>
+        </div>
+        <h3 class="font-bold text-gray-800 text-lg mb-2">{{ pharmacy.name }}</h3>
+        <div class="space-y-2 text-sm text-gray-500 mb-4">
+            <div class="flex items-center gap-2">
+                <span>📍</span>
+                <span>{{ pharmacy.address }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span>📞</span>
+                <a href="tel:{{ pharmacy.phone }}"
+                   class="text-green-600 hover:underline">{{ pharmacy.phone }}</a>
+            </div>
+            <div class="flex items-center gap-2">
+                <span>⏰</span>
+                <span>{{ pharmacy.working_hours }}</span>
+            </div>
+        </div>
+        <a href="{% url 'pharmacy_detail' pharmacy.pk %}"
+           class="block w-full text-center bg-green-600 text-white py-3 rounded-2xl hover:bg-green-700 transition text-sm font-medium">
+            Посмотреть товары →
+        </a>
+    </div>
+    {% empty %}
+    <div class="col-span-3 text-center py-20">
+        <div class="text-6xl mb-4">🏥</div>
+        <p class="text-gray-400">Аптек пока нет</p>
+    </div>
+    {% endfor %}
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    const map = L.map('map').setView([38.5598, 68.7870], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    const pharmacies = [
+        {% for pharmacy in pharmacies %}
+        {
+            name: "{{ pharmacy.name }}",
+            address: "{{ pharmacy.address }}",
+            phone: "{{ pharmacy.phone }}",
+            lat: {{ pharmacy.latitude }},
+            lng: {{ pharmacy.longitude }},
+            url: "{% url 'pharmacy_detail' pharmacy.pk %}"
+        },
+        {% endfor %}
+    ];
+
+    pharmacies.forEach(p => {
+        L.marker([p.lat, p.lng])
+            .addTo(map)
+            .bindPopup(`
+                <div style="min-width:180px">
+                    <p style="font-weight:bold;margin-bottom:4px">🏥 ${p.name}</p>
+                    <p style="font-size:12px;color:#666;margin-bottom:4px">📍 ${p.address}</p>
+                    <p style="font-size:12px;color:#666;margin-bottom:8px">📞 ${p.phone}</p>
+                    <a href="${p.url}" style="background:#16a34a;color:white;padding:4px 12px;border-radius:8px;font-size:12px;text-decoration:none">
+                        Открыть →
+                    </a>
+                </div>
+            `);
+    });
+</script>
+
+{% endblock %}

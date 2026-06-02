@@ -36,6 +36,10 @@
                class="block w-full text-center bg-green-600 text-white font-bold py-4 rounded-2xl hover:bg-green-700 transition text-lg mb-3">
                 🛒 Добавить в корзину
             </a>
+            <a href="{% url 'product_pharmacies' product.pk %}"
+                class="block w-full text-center border border-green-600 text-green-600 py-3 rounded-2xl hover:bg-green-50 transition mb-3">
+                🏥 В каких аптеках есть
+            </a>
             <p class="text-gray-500 text-sm leading-relaxed">{{ product.description }}</p>
         </div>
     </div>

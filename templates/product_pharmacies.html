@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="flex items-center gap-4 mb-8">
+    <a href="{% url 'product_detail' product.pk %}"
+       class="text-gray-400 hover:text-gray-600 transition">← Назад к товару</a>
+    <h1 class="text-2xl font-bold text-gray-800">
+        В каких аптеках есть <span class="text-green-600">{{ product.name }}</span>
+    </h1>
+</div>
+
+{% if pharmacies %}
+<div class="space-y-4">
+    {% for item in pharmacies %}
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-md transition flex items-center justify-between">
+        <div class="flex items-center gap-5">
+            <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-2xl">
+                🏥
+            </div>
+            <div>
+                <h3 class="font-bold text-gray-800 text-lg">{{ item.pharmacy.name }}</h3>
+                <p class="text-gray-400 text-sm">📍 {{ item.pharmacy.address }}</p>
+                <p class="text-gray-400 text-sm">⏰ {{ item.pharmacy.working_hours }}</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-2xl font-extrabold text-green-600 mb-1">{{ item.price }} сом</p>
+            <p class="text-xs {% if item.stock > 0 %}text-green-600{% else %}text-red-500{% endif %} mb-3">
+                {% if item.stock > 0 %}✅ В наличии ({{ item.stock }} шт.){% else %}❌ Нет в наличии{% endif %}
+            </p>
+            <div class="flex gap-2">
+                <a href="{% url 'pharmacy_detail' item.pharmacy.pk %}"
+                   class="text-sm border border-gray-200 text-gray-500 px-4 py-2 rounded-xl hover:border-green-400 hover:text-green-600 transition">
+                    На карте
+                </a>
+                {% if user.is_authenticated and item.stock > 0 %}
+                <a href="{% url 'add_to_cart' product.pk %}"
+                   class="text-sm bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition">
+                    + В корзину
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="text-center py-24">
+    <div class="text-6xl mb-4">🔍</div>
+    <p class="text-gray-400 text-lg">Этого товара нет ни в одной аптеке</p>
+    <a href="{% url 'catalog' %}" class="text-green-600 hover:underline text-sm mt-2 inline-block">
+        Посмотреть другие товары
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

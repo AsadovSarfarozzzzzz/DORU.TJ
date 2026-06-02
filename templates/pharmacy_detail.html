@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="flex items-center gap-4 mb-8">
+    <a href="{% url 'pharmacy_list' %}"
+       class="text-gray-400 hover:text-gray-600 transition">← Все аптеки</a>
+    <h1 class="text-3xl font-bold text-gray-800">🏥 {{ pharmacy.name }}</h1>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+    <!-- Инфо аптеки -->
+    <div class="bg-white rounded-3xl border border-gray-100 p-6">
+        <h2 class="font-bold text-gray-800 mb-4">📋 Информация</h2>
+        <div class="space-y-3 text-sm">
+            <div class="flex items-start gap-3">
+                <span class="text-lg">📍</span>
+                <div>
+                    <p class="text-gray-400 text-xs">Адрес</p>
+                    <p class="font-medium text-gray-700">{{ pharmacy.address }}</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <span class="text-lg">📞</span>
+                <div>
+                    <p class="text-gray-400 text-xs">Телефон</p>
+                    <a href="tel:{{ pharmacy.phone }}"
+                       class="font-medium text-green-600 hover:underline">
+                        {{ pharmacy.phone }}
+                    </a>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <span class="text-lg">⏰</span>
+                <div>
+                    <p class="text-gray-400 text-xs">Режим работы</p>
+                    <p class="font-medium text-gray-700">{{ pharmacy.working_hours }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Карта -->
+    <div class="md:col-span-2 bg-white rounded-3xl border border-gray-100 overflow-hidden">
+        <div id="map" style="height: 250px;"></div>
+    </div>
+</div>
+
+<!-- Товары аптеки -->
+<div>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+        💊 Товары в наличии
+        <span class="text-gray-400 font-normal text-base ml-2">{{ products|length }} позиций</span>
+    </h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for item in products %}
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition card-hover">
+            {% if item.product.image %}
+                <img src="{{ item.product.image.url }}"
+                     class="w-full h-40 object-cover">
+            {% else %}
+                <div class="w-full h-40 bg-green-50 flex items-center justify-center text-5xl">💊</div>
+            {% endif %}
+            <div class="p-4">
+                <h3 class="font-semibold text-gray-800 text-sm mb-1 truncate">
+                    {{ item.product.name }}
+                </h3>
+                <p class="text-xs text-gray-400 mb-2">{{ item.product.active_substance }}</p>
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-green-600 font-bold text-lg">{{ item.price }} сом</p>
+                    <span class="text-xs {% if item.stock > 10 %}text-green-600{% elif item.stock > 0 %}text-orange-500{% else %}text-red-500{% endif %}">
+                        {{ item.stock }} шт.
+                    </span>
+                </div>
+                {% if user.is_authenticated %}
+                <a href="{% url 'add_to_cart' item.product.pk %}"
+                   class="block w-full text-center bg-green-600 text-white text-sm py-2 rounded-xl hover:bg-green-700 transition">
+                    + В корзину
+                </a>
+                {% else %}
+                <a href="{% url 'login_user' %}"
+                   class="block w-full text-center border border-green-600 text-green-600 text-sm py-2 rounded-xl hover:bg-green-50 transition">
+                    Войти для заказа
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-4 text-center py-16">
+            <div class="text-5xl mb-3">📦</div>
+            <p class="text-gray-400">Товаров пока нет</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    const map = L.map('map').setView([{{ pharmacy.latitude }}, {{ pharmacy.longitude }}], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.marker([{{ pharmacy.latitude }}, {{ pharmacy.longitude }}])
+        .addTo(map)
+        .bindPopup('🏥 {{ pharmacy.name }}')
+        .openPopup();
+</script>
+
+{% endblock %}
