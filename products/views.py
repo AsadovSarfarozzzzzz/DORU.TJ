@@ -5,6 +5,9 @@ from django.http import JsonResponse
 from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .models import Product, Category, Manufacturer, Review
+from django.contrib.auth.decorators import login_required
+from django.db import models
 
 class ProductView(LoginRequiredMixin,generic.ListView):
     model = Product
@@ -136,11 +139,50 @@ def catalog(request):
 
 
 def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+    product = get_object_or_404(Product, pk=pk, is_deleted=False)
     similar = Product.objects.filter(
-        category=product.category
+        category=product.category,
+        is_deleted=False
     ).exclude(pk=pk)[:4]
+
+    reviews = Review.objects.filter(
+        product=product
+    ).order_by('-created_at')
+
+    # средний рейтинг
+    avg_rating = reviews.aggregate(
+        avg=models.Avg('rating')
+    )['avg'] or 0
+
+    # проверяем оставлял ли юзер отзыв
+    user_review = None
+    if request.user.is_authenticated:
+        user_review = reviews.filter(user=request.user).first()
+
     return render(request, 'detail.html', {
         'product': product,
-        'similar': similar
+        'similar': similar,
+        'reviews': reviews,
+        'avg_rating': round(avg_rating, 1),
+        'user_review': user_review,
     })
+
+
+@login_required
+def add_review(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment', '').strip()
+
+        if rating:
+            Review.objects.update_or_create(
+                product=product,
+                user=request.user,
+                defaults={
+                    'rating': int(rating),
+                    'comment': comment
+                }
+            )
+    return redirect('product_detail', pk=pk)
