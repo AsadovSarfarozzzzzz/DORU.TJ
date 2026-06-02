@@ -74,14 +74,11 @@ def login_user(request):
                 return render(request, 'login.html', {'form': form, 'error': 'Неверный логин или пароль'})
             
             login(request, user)
-            
-            # если курьер — на панель курьера
+
             if user.is_courier:
                 return redirect('courier_dashboard')
-            # если админ — на панель управления
             elif user.is_staff:
                 return redirect('product_list')
-            # обычный юзер — на главную
             else:
                 return redirect('home')
     else:

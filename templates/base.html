@@ -156,29 +156,38 @@
                class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
                 🏠 Главная
             </a>
-            <a href="{% url 'catalog' %}"
-               class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
-                💊 Каталог
-            </a>
-            <a href="{% url 'consultant' %}"
-               class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
-                🤖 AI Консультант
-            </a>
-            <a href="{% url 'my_orders' %}"
-               class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
-                📦 Мои заказы
-            </a>
-            {% if user.is_staff %}
-            <a href="{% url 'product_list' %}"
-               class="px-4 py-2 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition ml-auto">
-                ⚙️ Панель управления
-            </a>
-            <a href="{% url 'pharmacy_list' %}" class="hover:text-green-600 transition">
-                🏥 Аптеки
-            </a>
+        
+            {% if user.is_courier %}
+                <a href="{% url 'courier_dashboard' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition">
+                    🛵 Панель курьера
+                </a>
+            {% else %}
+                <a href="{% url 'catalog' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
+                    💊 Каталог
+                </a>
+                <a href="{% url 'consultant' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
+                    🤖 AI Консультант
+                </a>
+                <a href="{% url 'my_orders' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
+                    📦 Мои заказы
+                </a>
+                <a href="{% url 'pharmacy_list' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
+                    🏥 Аптеки
+                </a>
+                {% if user.is_staff %}
+                <a href="{% url 'product_list' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition ml-auto">
+                    ⚙️ Панель управления
+                </a>
+                {% endif %}
             {% endif %}
         </nav>
-        {% endif %}
+    {% endif %}
 
     </div>
 </header>

@@ -288,7 +288,12 @@ def my_orders(request):
 
 @login_required
 def order_detail(request, pk):
-    order = get_object_or_404(Order, pk=pk, user=request.user)
+    # если курьер — показываем без проверки юзера
+    if request.user.is_courier or request.user.is_staff:
+        order = get_object_or_404(Order, pk=pk)
+    else:
+        order = get_object_or_404(Order, pk=pk, user=request.user)
+    
     items = OrderItem.objects.filter(order=order).select_related('product')
     return render(request, 'order_detail.html', {
         'order': order,
