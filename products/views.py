@@ -91,7 +91,7 @@ class ProductUpdateView(generic.UpdateView):
 
 def home(request):
     categories = Category.objects.all()
-    popular = Product.objects.filter(stock__gt=0).order_by('-id')[:8]
+    popular = Product.objects.filter(stock__gt=0, is_deleted=False).order_by('-id')[:8]
 
     advantages = [
         {"icon": "🚚", "title": "Быстрая доставка", "desc": "За 2 часа по Душанбе"},

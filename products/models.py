@@ -7,10 +7,10 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     icon = models.ImageField(upload_to='icons/', null=True, blank=True)
-    is_delete = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
 
     def delete(self, *args, **kwargs):
-        self.is_delete = True   
+        self.is_deleted = True   
         self.save()
 
     def save(self, *args, **kwargs):
@@ -40,6 +40,11 @@ class Product(models.Model):
     is_prescription = models.BooleanField(default=False)
     active_substance = models.CharField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def delete(self, *args, **kwargs):
+        self.is_deleted = True
+        self.save()
 
     def __str__(self):
         return self.name
