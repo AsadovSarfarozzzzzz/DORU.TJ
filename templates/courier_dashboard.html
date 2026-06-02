@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+    <!-- Заголовок -->
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center text-2xl">
+                🛵
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Панель курьера</h1>
+                <p class="text-gray-400 text-sm">Привет, {{ request.user.username }}!</p>
+            </div>
+        </div>
+        <span class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+            🟢 Онлайн
+        </span>
+    </div>
+
+    <!-- Статистика -->
+    <div class="grid grid-cols-3 gap-5 mb-8">
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <p class="text-3xl font-bold text-green-600">{{ pending_orders|length }}</p>
+            <p class="text-gray-400 text-sm mt-1">Новых заказов</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <p class="text-3xl font-bold text-blue-600">{{ my_orders|length }}</p>
+            <p class="text-gray-400 text-sm mt-1">Моих заказов</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <p class="text-3xl font-bold text-orange-500">
+                {{ my_orders|length }}
+            </p>
+            <p class="text-gray-400 text-sm mt-1">Доставлено</p>
+        </div>
+    </div>
+
+    <!-- Новые заказы -->
+    <div class="mb-8">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">
+            🔔 Новые заказы
+            {% if pending_orders %}
+            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-2">
+                {{ pending_orders|length }}
+            </span>
+            {% endif %}
+        </h2>
+
+        {% if pending_orders %}
+        <div class="space-y-4">
+            {% for order in pending_orders %}
+            <div class="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md transition">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Заказ #{{ order.pk }}</h3>
+                        <p class="text-gray-400 text-sm">{{ order.created_at|date:"d.m.Y H:i" }}</p>
+                    </div>
+                    <span class="bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full text-xs font-medium">
+                        ⏳ Ожидает
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mb-4 text-sm">
+                    <div>
+                        <p class="text-gray-400">Клиент</p>
+                        <p class="font-medium">{{ order.user.username }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400">Телефон</p>
+                        <p class="font-medium text-green-600">{{ order.user.phone }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400">Сумма</p>
+                        <p class="font-bold text-green-600">{{ order.total }} сом</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-3 mb-4">
+                    <p class="text-gray-400 text-xs mb-1">📍 Адрес доставки</p>
+                    <p class="font-medium text-gray-700 text-sm">{{ order.address }}</p>
+                </div>
+
+                <!-- Товары -->
+                <div class="mb-4">
+                    <p class="text-gray-400 text-xs mb-2">💊 Товары:</p>
+                    <div class="flex flex-wrap gap-2">
+                        {% for item in order.orderitem_set.all %}
+                        <span class="bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full">
+                            {{ item.product.name }} x{{ item.quantity }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <a href="{% url 'courier_take_order' order.pk %}"
+                       class="flex-1 text-center bg-green-600 text-white py-3 rounded-2xl hover:bg-green-700 transition font-medium">
+                        ✅ Принять заказ
+                    </a>
+                    <a href="{% url 'order_detail' order.pk %}"
+                       class="px-5 py-3 border border-gray-200 rounded-2xl text-gray-500 hover:border-green-400 hover:text-green-600 transition text-sm">
+                        Детали
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-white rounded-2xl border border-gray-100 p-12 text-center">
+            <div class="text-5xl mb-3">📭</div>
+            <p class="text-gray-400">Новых заказов пока нет</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Мои заказы -->
+    <div>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">📦 Мои заказы</h2>
+
+        {% if my_orders %}
+        <div class="space-y-3">
+            {% for order in my_orders %}
+            <div class="bg-white rounded-2xl border border-gray-100 p-5 flex items-center justify-between hover:shadow-md transition">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-xl">
+                        📦
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">Заказ #{{ order.pk }}</h3>
+                        <p class="text-gray-400 text-sm">{{ order.user.username }} · {{ order.address|truncatechars:30 }}</p>
+                        <p class="text-gray-400 text-xs">{{ order.created_at|date:"d.m.Y H:i" }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="{% if order.status == 'done' %}bg-green-50 text-green-700
+                                 {% elif order.status == 'delivering' %}bg-blue-50 text-blue-700
+                                 {% else %}bg-yellow-50 text-yellow-700{% endif %}
+                                 px-3 py-1 rounded-full text-xs font-medium">
+                        {{ order.get_status_display }}
+                    </span>
+                    <p class="font-bold text-green-600">{{ order.total }} сом</p>
+                    {% if order.status == 'delivering' %}
+                    <a href="{% url 'courier_order_detail' order.pk %}"
+                       class="bg-green-600 text-white px-4 py-2 rounded-xl text-sm hover:bg-green-700 transition">
+                        Открыть →
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-white rounded-2xl border border-gray-100 p-12 text-center">
+            <div class="text-5xl mb-3">📦</div>
+            <p class="text-gray-400">Вы ещё не брали заказов</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

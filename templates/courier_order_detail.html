@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto">
+
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{% url 'courier_dashboard' %}"
+           class="text-gray-400 hover:text-gray-600 transition">← Назад</a>
+        <h1 class="text-2xl font-bold text-gray-800">🛵 Заказ #{{ order.pk }}</h1>
+        <span class="{% if order.status == 'delivering' %}bg-blue-50 text-blue-700
+                     {% elif order.status == 'done' %}bg-green-50 text-green-700
+                     {% else %}bg-yellow-50 text-yellow-700{% endif %}
+                     px-4 py-1.5 rounded-full text-sm font-medium">
+            {{ order.get_status_display }}
+        </span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- ЧАТ -->
+        <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden flex flex-col" style="height: 580px;">
+            <div class="p-4 border-b border-gray-100 bg-green-50">
+                <h2 class="font-bold text-gray-800">💬 Чат с клиентом</h2>
+                <p class="text-xs text-gray-400">{{ order.user.username }} · {{ order.user.phone }}</p>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5 space-y-3" id="chat-messages">
+                {% for msg in messages %}
+                <div class="flex {% if msg.sender == 'courier' %}justify-end{% else %}justify-start{% endif %}"
+                     data-id="{{ msg.pk }}">
+                    <div class="max-w-xs">
+                        <p class="text-xs text-gray-400 mb-1 {% if msg.sender == 'courier' %}text-right{% endif %}">
+                            {% if msg.sender == 'courier' %}Вы{% else %}👤 Клиент{% endif %}
+                            · {{ msg.created_at|date:"H:i" }}
+                        </p>
+                        <div class="{% if msg.sender == 'courier' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
+                            {% if msg.text %}
+                                <p class="text-sm">{{ msg.text }}</p>
+                            {% endif %}
+                            {% if msg.image %}
+                                <img src="{{ msg.image.url }}"
+                                     class="rounded-xl mt-2 max-w-full cursor-pointer"
+                                     onclick="window.open('{{ msg.image.url }}')">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-16">
+                    <div class="text-5xl mb-3">💬</div>
+                    <p class="text-gray-400 text-sm">Напишите клиенту</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="border-t border-gray-100 p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div id="image-preview" class="hidden mb-3">
+                        <div class="relative inline-block">
+                            <img id="preview-img" class="h-20 rounded-xl object-cover">
+                            <button type="button" onclick="clearImage()"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">✕</button>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <label class="cursor-pointer p-2.5 border border-gray-200 rounded-xl hover:border-green-400 text-gray-400 transition">
+                            📷
+                            <input type="file" name="image" id="image-input"
+                                   accept="image/*" class="hidden"
+                                   onchange="previewImage(this)">
+                        </label>
+                        <input type="text" name="text" id="text-input"
+                               placeholder="Написать клиенту..."
+                               autocomplete="off"
+                               class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition">
+                        <button type="submit"
+                                class="bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition">
+                            →
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ПРАВАЯ ЧАСТЬ -->
+        <div class="space-y-4">
+
+            <!-- Инфо заказа -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-5">
+                <h3 class="font-bold text-gray-800 mb-4">📦 Детали заказа</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Клиент</span>
+                        <span class="font-medium">{{ order.user.username }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Телефон</span>
+                        <a href="tel:{{ order.user.phone }}"
+                           class="font-medium text-green-600 hover:underline">
+                            {{ order.user.phone }}
+                        </a>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Сумма</span>
+                        <span class="font-bold text-green-600">{{ order.total }} сом</span>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-3 mt-3">
+                    <p class="text-gray-400 text-xs mb-1">📍 Адрес</p>
+                    <p class="font-medium text-gray-700 text-sm">{{ order.address }}</p>
+                </div>
+            </div>
+
+            <!-- Товары -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-5">
+                <h3 class="font-bold text-gray-800 mb-3">💊 Товары</h3>
+                <div class="space-y-2">
+                    {% for item in order.orderitem_set.all %}
+                    <div class="flex items-center justify-between text-sm py-2 border-b border-gray-50 last:border-0">
+                        <div class="flex items-center gap-3">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}"
+                                     class="w-8 h-8 rounded-lg object-cover">
+                            {% else %}
+                                <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-sm">💊</div>
+                            {% endif %}
+                            <span class="font-medium text-gray-700">{{ item.product.name }}</span>
+                        </div>
+                        <span class="text-gray-400">x{{ item.quantity }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Геолокация -->
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="font-bold text-gray-800">📍 Моя локация</h3>
+                    <button onclick="shareLocation()" id="location-btn"
+                            class="bg-green-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-green-700 transition">
+                        Поделиться
+                    </button>
+                </div>
+                <div id="courier-map" style="height: 180px;"></div>
+                <div class="p-3 text-center" id="location-status">
+                    <p class="text-gray-400 text-xs">Нажмите чтобы начать отслеживание</p>
+                </div>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="space-y-3">
+                {% if order.status == 'delivering' %}
+                <form method="POST" action="{% url 'courier_complete_order' order.pk %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold hover:bg-green-700 transition text-lg">
+                        ✅ Заказ доставлен
+                    </button>
+                </form>
+                {% endif %}
+                <a href="{% url 'courier_dashboard' %}"
+                   class="block w-full text-center border border-gray-200 text-gray-500 py-3 rounded-2xl hover:border-green-400 hover:text-green-600 transition text-sm">
+                    ← Вернуться к списку
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    let map = null;
+    let marker = null;
+    let lastId = {{ messages.last.pk|default:0 }};
+    const ORDER_PK = {{ order.pk }};
+
+    function initMap(lat, lng) {
+        if (!map) {
+            map = L.map('courier-map').setView([lat, lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        }
+        if (!marker) {
+            marker = L.marker([lat, lng]).addTo(map).bindPopup('Вы здесь').openPopup();
+        } else {
+            marker.setLatLng([lat, lng]);
+            map.setView([lat, lng], 15);
+        }
+    }
+
+    function shareLocation() {
+        if (!navigator.geolocation) {
+            alert('Геолокация не поддерживается');
+            return;
+        }
+        document.getElementById('location-btn').textContent = '📍 Отслеживается...';
+        document.getElementById('location-btn').className = 'bg-orange-500 text-white text-xs px-4 py-2 rounded-xl transition';
+
+        navigator.geolocation.watchPosition(
+            position => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                initMap(lat, lng);
+                document.getElementById('location-status').innerHTML =
+                    `<p class="text-green-600 text-xs">✅ Локация обновлена</p>`;
+
+                fetch(`/orders/chat/${ORDER_PK}/update-location/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ lat, lng })
+                });
+            },
+            error => {
+                document.getElementById('location-status').innerHTML =
+                    `<p class="text-red-500 text-xs">❌ Ошибка геолокации</p>`;
+            },
+            { enableHighAccuracy: true, maximumAge: 3000, timeout: 5000 }
+        );
+    }
+
+    function fetchMessages() {
+        fetch(`/orders/chat/${ORDER_PK}/api/?last_id=${lastId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.messages.forEach(msg => {
+                    lastId = msg.id;
+                    const isCourier = msg.sender === 'courier';
+                    const div = document.createElement('div');
+                    div.className = `flex ${isCourier ? 'justify-end' : 'justify-start'}`;
+                    div.dataset.id = msg.id;
+
+                    let content = '';
+                    if (msg.text) content += `<p class="text-sm">${msg.text}</p>`;
+                    if (msg.image) content += `<img src="${msg.image}" class="rounded-xl mt-2 max-w-full">`;
+
+                    div.innerHTML = `
+                        <div class="max-w-xs">
+                            <p class="text-xs text-gray-400 mb-1 ${isCourier ? 'text-right' : ''}">
+                                ${isCourier ? 'Вы' : '👤 Клиент'} · ${msg.time}
+                            </p>
+                            <div class="${isCourier ? 'bg-green-600 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm'} px-4 py-3">
+                                ${content}
+                            </div>
+                        </div>
+                    `;
+
+                    const container = document.getElementById('chat-messages');
+                    const empty = container.querySelector('.text-center');
+                    if (empty) empty.remove();
+                    container.appendChild(div);
+                    container.scrollTop = container.scrollHeight;
+                });
+            });
+    }
+
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('preview-img').src = e.target.result;
+                document.getElementById('image-preview').classList.remove('hidden');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function clearImage() {
+        document.getElementById('image-input').value = '';
+        document.getElementById('image-preview').classList.add('hidden');
+    }
+
+    const chatBox = document.getElementById('chat-messages');
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    setInterval(fetchMessages, 3000);
+</script>
+
+{% endblock %}
