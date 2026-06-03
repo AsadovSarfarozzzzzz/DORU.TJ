@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{% url 'manager_panel' pharmacy.pk %}"
+           class="text-gray-400 hover:text-gray-600 transition">← Назад</a>
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold">
+                {{ chat.user.username|first|upper }}
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">{{ chat.user.username }}</h1>
+                <p class="text-xs text-gray-400">{{ chat.user.phone }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden flex flex-col" style="height: 600px;">
+
+        <!-- Сообщения -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-3" id="chat-messages">
+            {% for msg in messages %}
+            <div class="flex {% if msg.sender == 'manager' %}justify-end{% else %}justify-start{% endif %}"
+                 data-id="{{ msg.pk }}">
+                <div class="max-w-sm">
+                    <p class="text-xs text-gray-400 mb-1 {% if msg.sender == 'manager' %}text-right{% endif %}">
+                        {% if msg.sender == 'manager' %}Вы{% else %}👤 {{ chat.user.username }}{% endif %}
+                        · {{ msg.created_at|date:"H:i" }}
+                    </p>
+                    <div class="{% if msg.sender == 'manager' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
+                        {% if msg.text %}
+                            <p class="text-sm">{{ msg.text }}</p>
+                        {% endif %}
+                        {% if msg.image %}
+                            <img src="{{ msg.image.url }}"
+                                 class="rounded-xl mt-2 max-w-full cursor-pointer"
+                                 onclick="window.open('{{ msg.image.url }}')">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-20">
+                <div class="text-5xl mb-3">💬</div>
+                <p class="text-gray-400">Ответьте клиенту</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Инпут -->
+        <div class="border-t border-gray-100 p-4">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div id="image-preview" class="hidden mb-3">
+                    <div class="relative inline-block">
+                        <img id="preview-img" class="h-20 rounded-xl object-cover">
+                        <button type="button" onclick="clearImage()"
+                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">✕</button>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <label class="cursor-pointer p-2.5 border border-gray-200 rounded-xl hover:border-green-400 text-gray-400 transition">
+                        📷
+                        <input type="file" name="image" id="image-input"
+                               accept="image/*" class="hidden"
+                               onchange="previewImage(this)">
+                    </label>
+                    <input type="text" name="text" id="text-input"
+                           placeholder="Ответить клиенту..."
+                           autocomplete="off"
+                           class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition">
+                    <button type="submit"
+                            class="bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition text-sm font-medium">
+                        →
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    let lastId = {{ messages.last.pk|default:0 }};
+
+    function fetchMessages() {
+        fetch(`/pharmacies/{{ chat.pharmacy.pk }}/chat/api/?last_id=${lastId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.messages.forEach(msg => {
+                    lastId = msg.id;
+                    const isManager = msg.sender === 'manager';
+                    const div = document.createElement('div');
+                    div.className = `flex ${isManager ? 'justify-end' : 'justify-start'}`;
+
+                    let content = '';
+                    if (msg.text) content += `<p class="text-sm">${msg.text}</p>`;
+                    if (msg.image) content += `<img src="${msg.image}" class="rounded-xl mt-2 max-w-full">`;
+
+                    div.innerHTML = `
+                        <div class="max-w-sm">
+                            <p class="text-xs text-gray-400 mb-1 ${isManager ? 'text-right' : ''}">
+                                ${isManager ? 'Вы' : '👤 Клиент'} · ${msg.time}
+                            </p>
+                            <div class="${isManager ? 'bg-green-600 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm'} px-4 py-3">
+                                ${content}
+                            </div>
+                        </div>
+                    `;
+
+                    const container = document.getElementById('chat-messages');
+                    const empty = container.querySelector('.text-center');
+                    if (empty) empty.remove();
+                    container.appendChild(div);
+                    container.scrollTop = container.scrollHeight;
+                });
+            });
+    }
+
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('preview-img').src = e.target.result;
+                document.getElementById('image-preview').classList.remove('hidden');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function clearImage() {
+        document.getElementById('image-input').value = '';
+        document.getElementById('image-preview').classList.add('hidden');
+    }
+
+    const chatBox = document.getElementById('chat-messages');
+    chatBox.scrollTop = chatBox.scrollHeight;
+    setInterval(fetchMessages, 3000);
+</script>
+
+{% endblock %}
