@@ -175,10 +175,12 @@
                    class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
                     📦 Мои заказы
                 </a>
-                <a href="{% url 'pharmacy_list' %}"
-                   class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
-                    🏥 Аптеки
+                {% if user.is_manager %}
+                <a href="{% url 'manager_dashboard' %}"
+                 class="px-4 py-2 rounded-xl text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition">
+                    🏥 Моя аптека
                 </a>
+                {% endif %}
                 {% if user.is_staff %}
                 <a href="{% url 'product_list' %}"
                    class="px-4 py-2 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition ml-auto">

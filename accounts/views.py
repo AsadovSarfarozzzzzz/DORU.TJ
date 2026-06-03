@@ -79,6 +79,8 @@ def login_user(request):
                 return redirect('courier_dashboard')
             elif user.is_staff:
                 return redirect('product_list')
+            elif user.is_manager:
+                return redirect('manager_dashboard')
             else:
                 return redirect('home')
     else:

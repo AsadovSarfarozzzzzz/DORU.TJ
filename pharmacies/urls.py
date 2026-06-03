@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:pk>/chat/api/', views.pharmacy_chat_api, name='pharmacy_chat_api'),
     path('manager/<int:pk>/', views.manager_panel, name='manager_panel'),
     path('manager/chat/<int:chat_pk>/', views.manager_chat, name='manager_chat'),
+    path('manager/', views.manager_dashboard, name='manager_dashboard'),
 ]

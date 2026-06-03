@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+    <!-- Заголовок -->
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center text-2xl">
+                🏥
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">{{ pharmacy.name }}</h1>
+                <p class="text-gray-400 text-sm">Панель менеджера · {{ request.user.username }}</p>
+            </div>
+        </div>
+        <span class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+            🟢 Онлайн
+        </span>
+    </div>
+
+    <!-- Статистика -->
+    <div class="grid grid-cols-3 gap-5 mb-8">
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <p class="text-3xl font-bold text-purple-600">{{ chats|length }}</p>
+            <p class="text-gray-400 text-sm mt-1">Активных чатов</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <p class="text-3xl font-bold text-green-600">{{ products|length }}</p>
+            <p class="text-gray-400 text-sm mt-1">Товаров в аптеке</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+            <p class="text-3xl font-bold text-blue-600">{{ total_messages }}</p>
+            <p class="text-gray-400 text-sm mt-1">Всего сообщений</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Чаты -->
+        <div>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">
+                💬 Чаты с клиентами
+                {% if chats %}
+                <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full ml-2">
+                    {{ chats|length }}
+                </span>
+                {% endif %}
+            </h2>
+
+            {% if chats %}
+            <div class="space-y-3">
+                {% for chat in chats %}
+                <a href="{% url 'manager_chat' chat.pk %}"
+                   class="bg-white rounded-2xl border border-gray-100 p-4 flex items-center justify-between hover:shadow-md transition block">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold">
+                            {{ chat.user.username|first|upper }}
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800">{{ chat.user.username }}</p>
+                            <p class="text-gray-400 text-xs">{{ chat.user.phone }}</p>
+                        </div>
+                    </div>
+                    <span class="text-purple-600 text-sm">Открыть →</span>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="bg-white rounded-2xl border border-gray-100 p-10 text-center">
+                <div class="text-4xl mb-3">💬</div>
+                <p class="text-gray-400">Чатов пока нет</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Товары аптеки -->
+        <div>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">💊 Товары в наличии</h2>
+            <div class="space-y-2 max-h-96 overflow-y-auto">
+                {% for item in products %}
+                <div class="bg-white rounded-xl border border-gray-100 p-3 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}"
+                                 class="w-10 h-10 rounded-lg object-cover">
+                        {% else %}
+                            <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-lg">💊</div>
+                        {% endif %}
+                        <div>
+                            <p class="font-medium text-gray-800 text-sm">{{ item.product.name }}</p>
+                            <p class="text-gray-400 text-xs">{{ item.product.active_substance }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-green-600 text-sm">{{ item.price }} сом</p>
+                        <p class="text-xs {% if item.stock > 10 %}text-green-600{% elif item.stock > 0 %}text-orange-500{% else %}text-red-500{% endif %}">
+                            {{ item.stock }} шт.
+                        </p>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-10">
+                    <p class="text-gray-400">Товаров нет</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Инфо аптеки -->
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 mt-6">
+        <h2 class="font-bold text-gray-800 mb-4">📋 Информация об аптеке</h2>
+        <div class="grid grid-cols-3 gap-4 text-sm">
+            <div>
+                <p class="text-gray-400 mb-1">📍 Адрес</p>
+                <p class="font-medium text-gray-700">{{ pharmacy.address }}</p>
+            </div>
+            <div>
+                <p class="text-gray-400 mb-1">📞 Телефон</p>
+                <p class="font-medium text-green-600">{{ pharmacy.phone }}</p>
+            </div>
+            <div>
+                <p class="text-gray-400 mb-1">⏰ Режим работы</p>
+                <p class="font-medium text-gray-700">{{ pharmacy.working_hours }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
