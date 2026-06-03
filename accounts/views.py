@@ -6,6 +6,7 @@ from django.conf import settings
 from random import randint
 from .models import EmailConfirm, User
 from .forms import RegisterForm, LoginForm, ProfileForm
+from django.contrib.auth import login
 
 @login_required
 def profile_view(request):
@@ -110,7 +111,7 @@ def confirm_email(request):
         if not user:
             return render(request, 'confirm_email.html', {'error': 'Пользователь не найден'})
         if user.is_active:
-            return redirect('login_user')  # уже активен — на логин
+            return redirect('login_user')
 
         confirm = EmailConfirm.objects.filter(user=user, code=code).first()
         if not confirm:
@@ -119,7 +120,10 @@ def confirm_email(request):
         user.is_active = True
         user.save()
         confirm.delete()
-        return redirect('login_user')  # после подтверждения — на логин!
+
+        # сразу логиним юзера!
+        login(request, user, backend='accounts.backend.EmailOrUsernameBackend')
+        return redirect('home')  # сразу на главную!
 
     return render(request, 'confirm_email.html')
 
