@@ -33,9 +33,6 @@ def send_confirmation_email(user):
     except Exception as e:
         print("Email error:", e)
         
-
-
-
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -50,7 +47,9 @@ def register(request):
             user.is_active = False
             user.save()
             send_confirmation_email(user)
-            return render(request, 'confirm_email.html', {'username': user.username})
+            request.session['confirm_username'] = user.username
+            return redirect('confirm')  # редирект на confirm_email
+        return render(request, 'register.html', {'form': form})
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
@@ -103,13 +102,17 @@ def logout_user(request):
     
 
 def confirm_email(request):
+    if request.method == 'GET':
+        username = request.session.get('confirm_username', '')
+        return render(request, 'confirm_email.html', {'username': username})
+
     if request.method == 'POST':
         username = request.POST.get('username')
         code = request.POST.get('code')
 
         user = User.objects.filter(username=username).first()
         if not user:
-            return render(request, 'confirm_email.html', {'error': 'Пользователь не найден'})
+            return render(request, 'confirm_email.html', {'error': 'Пользователь не найден', 'username': username})
         if user.is_active:
             return redirect('login_user')
 
@@ -120,12 +123,8 @@ def confirm_email(request):
         user.is_active = True
         user.save()
         confirm.delete()
-
-        # сразу логиним юзера!
         login(request, user, backend='accounts.backend.EmailOrUsernameBackend')
-        return redirect('home')  # сразу на главную!
-
-    return render(request, 'confirm_email.html')
+        return redirect('home')
 
 
 from django.utils.crypto import get_random_string
