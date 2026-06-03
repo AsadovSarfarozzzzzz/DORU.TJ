@@ -255,13 +255,15 @@ def checkout(request):
             return redirect('checkout')
 
         total = sum(item.product.price * item.quantity for item in items)
-
+        
+        payment = request.POST.get('payment_method', 'cash')
+        print("PAYMENT:", payment)
         order = Order.objects.create(
             user=request.user,
             address=address,
             total=total,
             prescription=prescription or '',
-            payment_method=request.POST.get('payment_method', 'cash')  # добавь это
+            payment_method=request.POST.get('payment_method', 'cash')
         )
 
         for item in items:
