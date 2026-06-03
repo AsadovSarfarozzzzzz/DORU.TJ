@@ -25,6 +25,10 @@ class Order(models.Model):
         ('done', 'Выполнен'),
         ('cancelled', 'Отменён'),
     ]
+    PAYMENT_CHOICES = [
+        ('cash', 'Наличными'),
+        ('card', 'Картой'),
+    ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.TextField()
@@ -34,6 +38,12 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     courier_token = models.CharField(max_length=64, blank=True)
+
+    payment_method = models.CharField(
+        max_length=10,
+        choices=PAYMENT_CHOICES,
+        default='cash'
+    )
 
     def save(self, *args, **kwargs):
         if not self.courier_token:

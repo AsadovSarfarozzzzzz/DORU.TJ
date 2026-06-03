@@ -260,7 +260,8 @@ def checkout(request):
             user=request.user,
             address=address,
             total=total,
-            prescription=prescription or ''
+            prescription=prescription or '',
+            payment_method=request.POST.get('payment_method', 'cash')  # добавь это
         )
 
         for item in items:
