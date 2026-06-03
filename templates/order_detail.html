@@ -38,12 +38,6 @@
                     💬 Чат с курьером
                 </a>
             {% endif %}
-            {% if user.is_authenticated %}
-                <a href="{% url 'pharmacy_chat' pharmacy.pk %}"
-                class="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-2xl hover:bg-green-700 transition font-medium">
-                 💬 Написать менеджеру
-                </a>
-            {% endif %}
 
             <a href="{% url 'repeat_order' order.pk %}"
                class="bg-gray-50 text-gray-600 border border-gray-200 px-4 py-2 rounded-full text-sm hover:bg-gray-100 transition">
