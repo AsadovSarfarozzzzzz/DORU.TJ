@@ -110,7 +110,7 @@ def confirm_email(request):
         if not user:
             return render(request, 'confirm_email.html', {'error': 'Пользователь не найден'})
         if user.is_active:
-            return redirect('login_user')
+            return redirect('login_user')  # уже активен — на логин
 
         confirm = EmailConfirm.objects.filter(user=user, code=code).first()
         if not confirm:
@@ -119,7 +119,7 @@ def confirm_email(request):
         user.is_active = True
         user.save()
         confirm.delete()
-        return redirect('login_user')
+        return redirect('login_user')  # после подтверждения — на логин!
 
     return render(request, 'confirm_email.html')
 
