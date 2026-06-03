@@ -87,6 +87,13 @@ def login_user(request):
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
     
+def resend_code(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        user = User.objects.filter(username=username, is_active=False).first()
+        if user:
+            send_confirmation_email(user)
+    return render(request, 'confirm_email.html', {'username': username})
 
 def logout_user(request):
         logout(request)
