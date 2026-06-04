@@ -10,36 +10,36 @@
                 🛵
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Панель курьера</h1>
-                <p class="text-gray-400 text-sm">Привет, {{ request.user.username }}!</p>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Панель курьера</h1>
+                <p class="text-gray-400 dark:text-gray-500 text-sm">Привет, {{ request.user.username }}!</p>
             </div>
         </div>
-        <span class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+        <span class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium border border-green-200 dark:border-green-800">
             🟢 Онлайн
         </span>
     </div>
 
     <!-- Статистика -->
     <div class="grid grid-cols-3 gap-5 mb-8">
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
-            <p class="text-3xl font-bold text-green-600">{{ pending_orders|length }}</p>
-            <p class="text-gray-400 text-sm mt-1">Новых заказов</p>
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 text-center">
+            <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ pending_orders|length }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Новых заказов</p>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
-            <p class="text-3xl font-bold text-blue-600">{{ my_orders|length }}</p>
-            <p class="text-gray-400 text-sm mt-1">Моих заказов</p>
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 text-center">
+            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ my_orders|length }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Моих заказов</p>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
-            <p class="text-3xl font-bold text-orange-500">
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 text-center">
+            <p class="text-3xl font-bold text-orange-500 dark:text-orange-400">
                 {{ my_orders|length }}
             </p>
-            <p class="text-gray-400 text-sm mt-1">Доставлено</p>
+            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Доставлено</p>
         </div>
     </div>
 
     <!-- Новые заказы -->
     <div class="mb-8">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
             🔔 Новые заказы
             {% if pending_orders %}
             <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-2">
@@ -51,43 +51,43 @@
         {% if pending_orders %}
         <div class="space-y-4">
             {% for order in pending_orders %}
-            <div class="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md transition">
+            <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20 transition">
                 <div class="flex items-start justify-between mb-4">
                     <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Заказ #{{ order.pk }}</h3>
-                        <p class="text-gray-400 text-sm">{{ order.created_at|date:"d.m.Y H:i" }}</p>
+                        <h3 class="font-bold text-gray-800 dark:text-white text-lg">Заказ #{{ order.pk }}</h3>
+                        <p class="text-gray-400 dark:text-gray-500 text-sm">{{ order.created_at|date:"d.m.Y H:i" }}</p>
                     </div>
-                    <span class="bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full text-xs font-medium">
+                    <span class="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 px-3 py-1 rounded-full text-xs font-medium">
                         ⏳ Ожидает
                     </span>
                 </div>
 
                 <div class="grid grid-cols-3 gap-4 mb-4 text-sm">
                     <div>
-                        <p class="text-gray-400">Клиент</p>
-                        <p class="font-medium">{{ order.user.username }}</p>
+                        <p class="text-gray-400 dark:text-gray-500">Клиент</p>
+                        <p class="font-medium text-gray-800 dark:text-gray-200">{{ order.user.username }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-400">Телефон</p>
-                        <p class="font-medium text-green-600">{{ order.user.phone }}</p>
+                        <p class="text-gray-400 dark:text-gray-500">Телефон</p>
+                        <p class="font-medium text-green-600 dark:text-green-400">{{ order.user.phone }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-400">Сумма</p>
-                        <p class="font-bold text-green-600">{{ order.total }} сом</p>
+                        <p class="text-gray-400 dark:text-gray-500">Сумма</p>
+                        <p class="font-bold text-green-600 dark:text-green-400">{{ order.total }} сом</p>
                     </div>
                 </div>
 
-                <div class="bg-gray-50 rounded-xl p-3 mb-4">
-                    <p class="text-gray-400 text-xs mb-1">📍 Адрес доставки</p>
-                    <p class="font-medium text-gray-700 text-sm">{{ order.address }}</p>
+                <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 mb-4">
+                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-1">📍 Адрес доставки</p>
+                    <p class="font-medium text-gray-700 dark:text-gray-300 text-sm">{{ order.address }}</p>
                 </div>
 
                 <!-- Товары -->
                 <div class="mb-4">
-                    <p class="text-gray-400 text-xs mb-2">💊 Товары:</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-2">💊 Товары:</p>
                     <div class="flex flex-wrap gap-2">
                         {% for item in order.orderitem_set.all %}
-                        <span class="bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full">
+                        <span class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-xs px-3 py-1 rounded-full">
                             {{ item.product.name }} x{{ item.quantity }}
                         </span>
                         {% endfor %}
@@ -96,11 +96,11 @@
 
                 <div class="flex gap-3">
                     <a href="{% url 'courier_take_order' order.pk %}"
-                       class="flex-1 text-center bg-green-600 text-white py-3 rounded-2xl hover:bg-green-700 transition font-medium">
+                       class="flex-1 text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-2xl transition font-medium shadow-lg shadow-green-600/20">
                         ✅ Принять заказ
                     </a>
                     <a href="{% url 'order_detail' order.pk %}"
-                       class="px-5 py-3 border border-gray-200 rounded-2xl text-gray-500 hover:border-green-400 hover:text-green-600 transition text-sm">
+                       class="px-5 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl text-gray-500 dark:text-gray-400 hover:border-green-400 hover:text-green-600 transition text-sm">
                         Детали
                     </a>
                 </div>
@@ -108,42 +108,42 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="bg-white rounded-2xl border border-gray-100 p-12 text-center">
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-12 text-center">
             <div class="text-5xl mb-3">📭</div>
-            <p class="text-gray-400">Новых заказов пока нет</p>
+            <p class="text-gray-400 dark:text-gray-500">Новых заказов пока нет</p>
         </div>
         {% endif %}
     </div>
 
     <!-- Мои заказы -->
     <div>
-        <h2 class="text-xl font-bold text-gray-800 mb-4">📦 Мои заказы</h2>
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">📦 Мои заказы</h2>
 
         {% if my_orders %}
         <div class="space-y-3">
             {% for order in my_orders %}
-            <div class="bg-white rounded-2xl border border-gray-100 p-5 flex items-center justify-between hover:shadow-md transition">
+            <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 flex items-center justify-between hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20 transition">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-xl">
                         📦
                     </div>
                     <div>
-                        <h3 class="font-bold text-gray-800">Заказ #{{ order.pk }}</h3>
-                        <p class="text-gray-400 text-sm">{{ order.user.username }} · {{ order.address|truncatechars:30 }}</p>
-                        <p class="text-gray-400 text-xs">{{ order.created_at|date:"d.m.Y H:i" }}</p>
+                        <h3 class="font-bold text-gray-800 dark:text-white">Заказ #{{ order.pk }}</h3>
+                        <p class="text-gray-400 dark:text-gray-500 text-sm">{{ order.user.username }} · {{ order.address|truncatechars:30 }}</p>
+                        <p class="text-gray-400 dark:text-gray-500 text-xs">{{ order.created_at|date:"d.m.Y H:i" }}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="{% if order.status == 'done' %}bg-green-50 text-green-700
-                                 {% elif order.status == 'delivering' %}bg-blue-50 text-blue-700
-                                 {% else %}bg-yellow-50 text-yellow-700{% endif %}
+                    <span class="{% if order.status == 'done' %}bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400
+                                 {% elif order.status == 'delivering' %}bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400
+                                 {% else %}bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400{% endif %}
                                  px-3 py-1 rounded-full text-xs font-medium">
                         {{ order.get_status_display }}
                     </span>
-                    <p class="font-bold text-green-600">{{ order.total }} сом</p>
+                    <p class="font-bold text-green-600 dark:text-green-400">{{ order.total }} сом</p>
                     {% if order.status == 'delivering' %}
                     <a href="{% url 'courier_order_detail' order.pk %}"
-                       class="bg-green-600 text-white px-4 py-2 rounded-xl text-sm hover:bg-green-700 transition">
+                       class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm transition shadow-lg shadow-green-600/20">
                         Открыть →
                     </a>
                     {% endif %}
@@ -152,9 +152,9 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="bg-white rounded-2xl border border-gray-100 p-12 text-center">
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-12 text-center">
             <div class="text-5xl mb-3">📦</div>
-            <p class="text-gray-400">Вы ещё не брали заказов</p>
+            <p class="text-gray-400 dark:text-gray-500">Вы ещё не брали заказов</p>
         </div>
         {% endif %}
     </div>

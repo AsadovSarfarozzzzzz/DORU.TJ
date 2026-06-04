@@ -4,8 +4,8 @@
 <div class="max-w-4xl mx-auto">
 
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">🛵 Панель курьера</h1>
-        <span class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">🛵 Панель курьера</h1>
+        <span class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium border border-green-200 dark:border-green-800">
             Заказ #{{ order.pk }}
         </span>
     </div>
@@ -13,10 +13,10 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         <!-- ЧАТ -->
-        <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden flex flex-col" style="height: 580px;">
-            <div class="p-4 border-b border-gray-100 bg-green-50">
-                <h2 class="font-bold text-gray-800">💬 Чат с клиентом</h2>
-                <p class="text-xs text-gray-400">{{ order.user.username }} · {{ order.user.phone }}</p>
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-3xl border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col" style="height: 580px;">
+            <div class="p-4 border-b border-gray-100 dark:border-gray-800 bg-green-50 dark:bg-green-900/20">
+                <h2 class="font-bold text-gray-800 dark:text-white">💬 Чат с клиентом</h2>
+                <p class="text-xs text-gray-400 dark:text-gray-500">{{ order.user.username }} · {{ order.user.phone }}</p>
             </div>
 
             <div class="flex-1 overflow-y-auto p-5 space-y-3" id="chat-messages">
@@ -24,11 +24,11 @@
                 <div class="flex {% if msg.sender == 'courier' %}justify-end{% else %}justify-start{% endif %}"
                      data-id="{{ msg.pk }}">
                     <div class="max-w-xs">
-                        <p class="text-xs text-gray-400 mb-1 {% if msg.sender == 'courier' %}text-right{% endif %}">
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 {% if msg.sender == 'courier' %}text-right{% endif %}">
                             {% if msg.sender == 'courier' %}Вы{% else %}👤 Клиент{% endif %}
                             · {{ msg.created_at|date:"H:i" }}
                         </p>
-                        <div class="{% if msg.sender == 'courier' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
+                        <div class="{% if msg.sender == 'courier' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
                             {% if msg.text %}
                                 <p class="text-sm">{{ msg.text }}</p>
                             {% endif %}
@@ -43,12 +43,12 @@
                 {% empty %}
                 <div class="text-center py-16">
                     <div class="text-5xl mb-3">💬</div>
-                    <p class="text-gray-400 text-sm">Напишите клиенту</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-sm">Напишите клиенту</p>
                 </div>
                 {% endfor %}
             </div>
 
-            <div class="border-t border-gray-100 p-4">
+            <div class="border-t border-gray-100 dark:border-gray-800 p-4">
                 <form method="POST" enctype="multipart/form-data" id="chat-form"
                       action="{% url 'courier_chat_send' token %}">
                     {% csrf_token %}
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <label class="cursor-pointer p-2.5 border border-gray-200 rounded-xl hover:border-green-400 text-gray-400 transition">
+                        <label class="cursor-pointer p-2.5 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-green-400 text-gray-400 dark:text-gray-500 transition">
                             📷
                             <input type="file" name="image" id="image-input" accept="image/*"
                                    class="hidden" onchange="previewImage(this)">
@@ -68,9 +68,9 @@
                         <input type="text" name="text" id="text-input"
                                placeholder="Написать клиенту..."
                                autocomplete="off"
-                               class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition">
+                               class="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition bg-transparent dark:text-gray-200">
                         <button type="submit"
-                                class="bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition text-sm">
+                                class="bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition text-sm shadow-lg shadow-green-600/20">
                             →
                         </button>
                     </div>
@@ -81,52 +81,52 @@
         <!-- ПРАВАЯ ЧАСТЬ -->
         <div class="space-y-4">
 
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <h3 class="font-bold text-gray-800 mb-3">📦 Заказ #{{ order.pk }}</h3>
+            <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5">
+                <h3 class="font-bold text-gray-800 dark:text-white mb-3">📦 Заказ #{{ order.pk }}</h3>
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Клиент</span>
-                        <span class="font-medium">{{ order.user.username }}</span>
+                        <span class="text-gray-400 dark:text-gray-500">Клиент</span>
+                        <span class="font-medium text-gray-800 dark:text-gray-200">{{ order.user.username }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Телефон</span>
-                        <span class="font-medium text-green-600">{{ order.user.phone }}</span>
+                        <span class="text-gray-400 dark:text-gray-500">Телефон</span>
+                        <span class="font-medium text-green-600 dark:text-green-400">{{ order.user.phone }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Адрес</span>
-                        <span class="font-medium text-right max-w-40">{{ order.address }}</span>
+                        <span class="text-gray-400 dark:text-gray-500">Адрес</span>
+                        <span class="font-medium text-gray-800 dark:text-gray-200 text-right max-w-40">{{ order.address }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Сумма</span>
-                        <span class="font-bold text-green-600">{{ order.total }} сом</span>
+                        <span class="text-gray-400 dark:text-gray-500">Сумма</span>
+                        <span class="font-bold text-green-600 dark:text-green-400">{{ order.total }} сом</span>
                     </div>
                 </div>
             </div>
 
             <!-- Геолокация -->
-            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="font-bold text-gray-800">📍 Моя локация</h3>
+            <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                    <h3 class="font-bold text-gray-800 dark:text-white">📍 Моя локация</h3>
                     <button onclick="shareLocation()"
                             id="location-btn"
-                            class="bg-green-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-green-700 transition">
+                            class="bg-green-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-600/20">
                         Поделиться локацией
                     </button>
                 </div>
                 <div id="courier-map" style="height: 200px;"></div>
                 <div class="p-3 text-center" id="location-status">
-                    <p class="text-gray-400 text-xs">Нажмите чтобы начать отслеживание</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-xs">Нажмите чтобы начать отслеживание</p>
                 </div>
             </div>
 
             <!-- Кнопки статуса -->
-            <div class="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
-                <h3 class="font-bold text-gray-800 mb-3">⚡ Управление заказом</h3>
+            <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 space-y-3">
+                <h3 class="font-bold text-gray-800 dark:text-white mb-3">⚡ Управление заказом</h3>
                 <form method="POST" action="{% url 'courier_update_status' token %}">
                     {% csrf_token %}
                     <input type="hidden" name="status" value="delivering">
                     <button type="submit"
-                            class="w-full bg-blue-50 text-blue-600 py-3 rounded-xl text-sm font-medium hover:bg-blue-100 transition mb-2">
+                            class="w-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 py-3 rounded-xl text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-900/30 transition mb-2">
                         🚚 Начать доставку
                     </button>
                 </form>
@@ -134,7 +134,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="status" value="done">
                     <button type="submit"
-                            class="w-full bg-green-600 text-white py-3 rounded-xl text-sm font-medium hover:bg-green-700 transition">
+                            class="w-full bg-green-600 text-white py-3 rounded-xl text-sm font-medium hover:bg-green-700 transition shadow-lg shadow-green-600/20">
                         ✅ Заказ доставлен
                     </button>
                 </form>

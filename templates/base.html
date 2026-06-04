@@ -157,9 +157,25 @@
         #mobile-menu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height .3s cubic-bezier(.16,1,.3,1);
+            transition: max-height .35s cubic-bezier(.16,1,.3,1);
         }
-        #mobile-menu.open { max-height: 500px; }
+        #mobile-menu.open { max-height: 600px; }
+
+        /* Mobile overlay */
+        #mobile-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s ease;
+        }
+        #mobile-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Better touch targets on mobile */
+        @media (max-width: 1023px) {
+            .mobile-touch { min-height: 44px; }
+        }
 
         /* Stagger children */
         .stagger > * { opacity: 0; animation: fadeUp .45s cubic-bezier(.16,1,.3,1) forwards; }
@@ -174,7 +190,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="bg-gray-50 dark:bg-[#0d0d12] text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col">
+<body class="bg-white dark:bg-[#090d0b] text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col">
 
 <!-- ═══════════════════════════════ TOP BAR ═══════════════════════════════ -->
 <div class="hidden md:block bg-brand-600 dark:bg-brand-700 text-white">
@@ -209,7 +225,7 @@
 </div>
 
 <!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
-<header id="header" class="sticky top-0 z-50 glass bg-white/80 dark:bg-[#0d0d12]/80 border-b border-gray-200/60 dark:border-gray-800/60">
+<header id="header" class="sticky top-0 z-50 glass bg-white/80 dark:bg-[#090d0b]/80 border-b border-gray-200/60 dark:border-gray-800/60">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <div class="flex items-center justify-between h-16 gap-4">
 
@@ -385,53 +401,56 @@
         </div>
     </div>
 
+    <!-- Mobile overlay -->
+    <div id="mobile-overlay" onclick="toggleMobile()" class="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"></div>
+
     <!-- Mobile menu -->
-    <div id="mobile-menu" class="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white/95 dark:bg-[#0d0d12]/95 glass">
-        <div class="max-w-7xl mx-auto px-4 py-3 space-y-1">
+    <div id="mobile-menu" class="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-[#090d0b] shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 py-4 space-y-0.5">
             {% if user.is_authenticated %}
             {% if not user.is_courier and not user.is_manager %}
 
             <!-- Mobile search -->
-            <form method="GET" action="{% url 'catalog' %}" class="mb-3">
-                <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent focus-within:border-brand-500 transition-all">
-                    <i class="ti ti-search text-gray-400 text-sm ml-3"></i>
+            <form method="GET" action="{% url 'catalog' %}" class="mb-4">
+                <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent focus-within:border-brand-500 transition-all overflow-hidden">
+                    <i class="ti ti-search text-gray-400 text-sm ml-3.5 flex-shrink-0"></i>
                     <input type="text" name="search" placeholder="Поиск лекарств..."
-                           class="flex-1 bg-transparent px-3 py-2.5 text-sm focus:outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400">
-                    <button type="submit" class="m-1 bg-brand-500 text-white text-xs px-3 py-1.5 rounded-lg">
+                           class="flex-1 bg-transparent px-3 py-3 text-sm focus:outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400">
+                    <button type="submit" class="m-1 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
                         Найти
                     </button>
                 </div>
             </form>
 
-            <a href="{% url 'home' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <i class="ti ti-home text-base text-gray-400 w-5"></i> Главная
+            <a href="{% url 'home' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                <i class="ti ti-home text-lg text-gray-400 dark:text-gray-500 w-5"></i> Главная
             </a>
-            <a href="{% url 'catalog' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <i class="ti ti-pill text-base text-gray-400 w-5"></i> Каталог
+            <a href="{% url 'catalog' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                <i class="ti ti-pill text-lg text-gray-400 dark:text-gray-500 w-5"></i> Каталог
             </a>
-            <a href="{% url 'pharmacy_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <i class="ti ti-building-hospital text-base text-gray-400 w-5"></i> Аптеки
+            <a href="{% url 'pharmacy_list' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                <i class="ti ti-building-hospital text-lg text-gray-400 dark:text-gray-500 w-5"></i> Аптеки
             </a>
-            <a href="{% url 'consultant' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <i class="ti ti-robot text-base text-gray-400 w-5"></i> AI Консультант
+            <a href="{% url 'consultant' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                <i class="ti ti-robot text-lg text-gray-400 dark:text-gray-500 w-5"></i> AI Консультант
             </a>
-            <a href="{% url 'my_orders' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <i class="ti ti-package text-base text-gray-400 w-5"></i> Мои заказы
+            <a href="{% url 'my_orders' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                <i class="ti ti-package text-lg text-gray-400 dark:text-gray-500 w-5"></i> Мои заказы
             </a>
-            <a href="{% url 'cart' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <i class="ti ti-shopping-cart text-base text-gray-400 w-5"></i> Корзина
+            <a href="{% url 'cart' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                <i class="ti ti-shopping-cart text-lg text-gray-400 dark:text-gray-500 w-5"></i> Корзина
             </a>
             {% endif %}
-            <div class="h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
-            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                <i class="ti ti-logout text-base w-5"></i> Выйти
+            <div class="h-px bg-gray-100 dark:bg-gray-800 my-3"></div>
+            <a href="{% url 'logout' %}" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
+                <i class="ti ti-logout text-lg w-5"></i> Выйти
             </a>
             {% else %}
-            <a href="{% url 'login_user' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <i class="ti ti-login text-base text-gray-400 w-5"></i> Войти
+            <a href="{% url 'login_user' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                <i class="ti ti-login text-lg text-gray-400 dark:text-gray-500 w-5"></i> Войти
             </a>
-            <a href="{% url 'register' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors">
-                <i class="ti ti-user-plus text-base w-5"></i> Регистрация
+            <a href="{% url 'register' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/15 transition-all">
+                <i class="ti ti-user-plus text-lg w-5"></i> Регистрация
             </a>
             {% endif %}
         </div>
@@ -586,8 +605,11 @@
     // ── Mobile menu ────────────────────────────────────────────────────────
     function toggleMobile() {
         const menu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('mobile-overlay');
         const icon = document.getElementById('mobile-icon');
         const isOpen = menu.classList.toggle('open');
+        overlay.classList.toggle('open');
+        document.body.classList.toggle('overflow-hidden', isOpen);
         icon.className = isOpen ? 'ti ti-x text-[18px]' : 'ti ti-menu-2 text-[18px]';
     }
 
