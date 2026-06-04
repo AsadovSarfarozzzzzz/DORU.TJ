@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 <div class="flex items-center justify-between mb-8">
     <div>
         <div class="flex items-center gap-3 mb-1">
             <i class="ti ti-building-hospital text-3xl text-brand-500"></i>
-            <h1 class="text-3xl font-black text-gray-900 dark:text-white">Аптеки Душанбе</h1>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-white">{% trans 'Аптеки Душанбе' %}</h1>
         </div>
-        <p class="text-gray-400 dark:text-gray-500 text-sm">Найдите ближайшую аптеку на карте</p>
+        <p class="text-gray-400 dark:text-gray-500 text-sm">{% trans 'Найдите ближайшую аптеку на карте' %}</p>
     </div>
 </div>
 
@@ -15,7 +16,7 @@
 <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 overflow-hidden mb-8 shadow-sm">
     <div class="p-4 border-b border-gray-200 dark:border-gray-700/50 flex items-center gap-2">
         <i class="ti ti-map-2 text-brand-500"></i>
-        <h2 class="font-bold text-gray-900 dark:text-white">На карте</h2>
+        <h2 class="font-bold text-gray-900 dark:text-white">{% trans 'На карте' %}</h2>
     </div>
     <div id="map" style="height: 400px;"></div>
 </div>
@@ -30,7 +31,7 @@
             </div>
             <span class="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-xs px-3 py-1.5 rounded-full font-medium border border-green-200 dark:border-green-800">
                 <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                Открыто
+                {% trans 'Открыто' %}
             </span>
         </div>
         <h3 class="font-bold text-gray-900 dark:text-white text-lg mb-3">{{ pharmacy.name }}</h3>
@@ -51,14 +52,14 @@
         </div>
         <a href="{% url 'pharmacy_detail' pharmacy.pk %}"
            class="flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white py-3 rounded-2xl btn-press transition-all text-sm font-semibold shadow-lg shadow-brand-500/25">
-            Посмотреть товары
+            {% trans 'Посмотреть товары' %}
             <i class="ti ti-arrow-right text-sm"></i>
         </a>
     </div>
     {% empty %}
     <div class="col-span-3 text-center py-20">
         <i class="ti ti-building-hospital-off text-6xl text-gray-300 dark:text-gray-600 mb-4 block"></i>
-        <p class="text-gray-400 dark:text-gray-500">Аптек пока нет</p>
+        <p class="text-gray-400 dark:text-gray-500">{% trans 'Аптек пока нет' %}</p>
     </div>
     {% endfor %}
 </div>
@@ -93,7 +94,7 @@
                 <p style="font-size:12px;color:#666;margin-bottom:4px">📍 ${p.address}</p>
                 <p style="font-size:12px;color:#666;margin-bottom:8px">📞 ${p.phone}</p>
                 <a href="${p.url}" style="background:#22c55e;color:white;padding:6px 16px;border-radius:10px;font-size:12px;text-decoration:none;display:inline-block;font-weight:600">
-                    Открыть →
+                    {% trans 'Открыть →' %}
                 </a>
             </div>
         `);

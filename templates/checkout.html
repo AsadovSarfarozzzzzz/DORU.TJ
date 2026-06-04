@@ -1,28 +1,29 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 <div class="max-w-xl mx-auto">
     <div class="flex items-center gap-3 mb-8">
         <i class="ti ti-truck-delivery text-3xl text-brand-500"></i>
-        <h1 class="text-3xl font-black text-gray-900 dark:text-white">Оформление заказа</h1>
+        <h1 class="text-3xl font-black text-gray-900 dark:text-white">{% trans 'Оформление заказа' %}</h1>
     </div>
 
     <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 p-8 mb-6 shadow-sm">
         <h2 class="font-bold text-gray-900 dark:text-white mb-5 text-lg flex items-center gap-2">
             <i class="ti ti-map-pin text-brand-500"></i>
-            Адрес доставки
+            {% trans 'Адрес доставки' %}
         </h2>
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="relative mb-4">
                 <i class="ti ti-home absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-                <textarea name="address" rows="3" placeholder="Улица, дом, квартира..." required
+                <textarea name="address" rows="3" placeholder="{% trans 'Улица, дом, квартира...' %}" required
                     class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition resize-none"></textarea>
             </div>
 
             <label class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
                 <i class="ti ti-file-text text-brand-500"></i>
-                Рецепт (если нужен)
+                {% trans 'Рецепт (если нужен)' %}
             </label>
             <div class="relative mb-6">
                 <input type="file" name="prescription" accept="image/*"
@@ -33,20 +34,20 @@
             <div class="mb-6">
                 <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                     <i class="ti ti-credit-card text-brand-500"></i>
-                    Способ оплаты
+                    {% trans 'Способ оплаты' %}
                 </label>
                 <div class="grid grid-cols-2 gap-3">
                     <div onclick="selectPayment('cash')" id="opt-cash"
                          class="cursor-pointer border-2 border-brand-500 dark:border-brand-400 bg-brand-50 dark:bg-brand-900/20 rounded-2xl p-4 text-center transition-all hover:shadow-md">
                         <i class="ti ti-cash text-2xl text-brand-600 dark:text-brand-400 mb-1 block"></i>
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm">Наличными</p>
-                        <p class="text-gray-400 dark:text-gray-500 text-xs">При получении</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm">{% trans 'Наличными' %}</p>
+                        <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'При получении' %}</p>
                     </div>
                     <div onclick="selectPayment('card')" id="opt-card"
                          class="cursor-pointer border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-4 text-center transition-all hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-md">
                         <i class="ti ti-credit-card text-2xl text-gray-400 dark:text-gray-500 mb-1 block"></i>
-                        <p class="font-semibold text-gray-700 dark:text-gray-300 text-sm">Картой</p>
-                        <p class="text-gray-400 dark:text-gray-500 text-xs">Alif Pay, Корти Милли</p>
+                        <p class="font-semibold text-gray-700 dark:text-gray-300 text-sm">{% trans 'Картой' %}</p>
+                        <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'Alif Pay, Корти Милли' %}</p>
                     </div>
                 </div>
                 <input type="hidden" name="payment_method" id="payment_method" value="cash">
@@ -54,20 +55,20 @@
 
             <div class="bg-brand-50 dark:bg-brand-900/10 rounded-xl p-5 mb-6 border border-brand-100 dark:border-brand-900/20">
                 <div class="flex justify-between text-gray-600 dark:text-gray-300 text-sm mb-2">
-                    <span>Товары</span><span>{{ total }} сом</span>
+                    <span>{% trans 'Товары' %}</span><span>{{ total }} {% trans 'сом' %}</span>
                 </div>
                 <div class="flex justify-between text-gray-600 dark:text-gray-300 text-sm mb-3">
-                    <span>Доставка</span><span class="text-brand-600 dark:text-brand-400">Бесплатно</span>
+                    <span>{% trans 'Доставка' %}</span><span class="text-brand-600 dark:text-brand-400">{% trans 'Бесплатно' %}</span>
                 </div>
                 <div class="flex justify-between font-bold text-xl text-gray-900 dark:text-white border-t border-brand-200 dark:border-brand-900/30 pt-3">
-                    <span>Итого</span><span class="text-brand-600 dark:text-brand-400">{{ total }} сом</span>
+                    <span>{% trans 'Итого' %}</span><span class="text-brand-600 dark:text-brand-400">{{ total }} {% trans 'сом' %}</span>
                 </div>
             </div>
 
             <button type="submit"
                 class="w-full flex items-center justify-center gap-2 bg-brand-500 hover:brand-600 text-white font-bold py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25">
                 <i class="ti ti-circle-check text-xl"></i>
-                Подтвердить заказ
+                {% trans 'Подтвердить заказ' %}
             </button>
         </form>
 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 <div class="max-w-3xl mx-auto">
@@ -6,7 +7,7 @@
     <div class="flex items-center gap-4 mb-6">
         <a href="{% url 'pharmacy_detail' pharmacy.pk %}"
            class="flex items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">
-            <i class="ti ti-arrow-left text-sm"></i> Назад
+            <i class="ti ti-arrow-left text-sm"></i> {% trans 'Назад' %}
         </a>
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center">
@@ -14,7 +15,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold text-gray-900 dark:text-white">{{ pharmacy.name }}</h1>
-                <p class="text-xs text-gray-400 dark:text-gray-500">Чат с менеджером аптеки</p>
+                <p class="text-xs text-gray-400 dark:text-gray-500">{% trans 'Чат с менеджером аптеки' %}</p>
             </div>
         </div>
     </div>
@@ -29,9 +30,9 @@
                 <div class="max-w-sm">
                     <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 {% if msg.sender == 'user' %}text-right{% endif %}">
                         {% if msg.sender == 'user' %}
-                            Вы
+                            {% trans 'Вы' %}
                         {% else %}
-                            <i class="ti ti-building-store text-brand-500 text-xs mr-0.5"></i>Менеджер
+                            <i class="ti ti-building-store text-brand-500 text-xs mr-0.5"></i>{% trans 'Менеджер' %}
                         {% endif %}
                         · {{ msg.created_at|date:"H:i" }}
                     </p>
@@ -50,8 +51,8 @@
             {% empty %}
             <div class="text-center py-20">
                 <i class="ti ti-message text-5xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
-                <p class="text-gray-400 dark:text-gray-500 font-medium">Напишите менеджеру аптеки</p>
-                <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Мы ответим вам в ближайшее время</p>
+                <p class="text-gray-400 dark:text-gray-500 font-medium">{% trans 'Напишите менеджеру аптеки' %}</p>
+                <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">{% trans 'Мы ответим вам в ближайшее время' %}</p>
             </div>
             {% endfor %}
         </div>
@@ -76,7 +77,7 @@
                     </label>
                     <div class="relative flex-1">
                         <input type="text" name="text" id="text-input"
-                               placeholder="Написать менеджеру..."
+                               placeholder="{% trans 'Написать менеджеру...' %}"
                                autocomplete="off"
                                class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
                     </div>
@@ -111,7 +112,7 @@
                     div.innerHTML = `
                         <div class="max-w-sm">
                             <p class="text-xs text-gray-400 mb-1 ${isUser ? 'text-right' : ''}">
-                                ${isUser ? 'Вы' : '🏥 Менеджер'} · ${msg.time}
+                                {% trans '${isUser ? 'Вы' : '🏥 Менеджер'} · ${msg.time}' %}
                             </p>
                             <div class="${isUser ? 'bg-brand-500 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm border border-gray-200 dark:border-gray-700'} px-4 py-3">
                                 ${content}

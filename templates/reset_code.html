@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 <div class="min-h-screen flex items-center justify-center -mt-8">
 <div class="w-full max-w-md animate-fade">
     <div class="text-center mb-8">
         <div class="text-5xl mb-3">🔐</div>
-        <h1 class="text-3xl font-extrabold text-gray-800">Новый пароль</h1>
-        <p class="text-gray-400 mt-2">Введите код из письма и новый пароль</p>
+        <h1 class="text-3xl font-extrabold text-gray-800">{% trans 'Новый пароль' %}</h1>
+        <p class="text-gray-400 mt-2">{% trans 'Введите код из письма и новый пароль' %}</p>
     </div>
 
     <div class="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
@@ -19,23 +20,23 @@
             {% csrf_token %}
             <input type="hidden" name="email" value="{{ email }}">
             <div>
-                <label class="text-sm text-gray-500 mb-1.5 block">Код из письма</label>
+                <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Код из письма' %}</label>
                 <input type="text" name="code" placeholder="123456" maxlength="6" required
                     class="w-full border border-gray-200 rounded-xl px-4 py-3 text-center text-2xl tracking-widest focus:outline-none focus:border-green-400 transition">
             </div>
             <div>
-                <label class="text-sm text-gray-500 mb-1.5 block">Новый пароль</label>
+                <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Новый пароль' %}</label>
                 <input type="password" name="password1" placeholder="••••••••" required
                     class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
             </div>
             <div>
-                <label class="text-sm text-gray-500 mb-1.5 block">Повторите пароль</label>
+                <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Повторите пароль' %}</label>
                 <input type="password" name="password2" placeholder="••••••••" required
                     class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
             </div>
             <button type="submit"
                 class="w-full bg-green-600 text-white font-bold py-3.5 rounded-2xl hover:bg-green-700 transition text-base">
-                Сохранить пароль →
+                {% trans 'Сохранить пароль →' %}
             </button>
         </form>
     </div>

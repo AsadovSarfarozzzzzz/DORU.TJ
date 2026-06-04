@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 <div class="max-w-5xl mx-auto">
@@ -10,12 +11,12 @@
                 🛵
             </div>
             <div class="min-w-0">
-                <h1 class="text-lg md:text-2xl font-bold text-gray-800 dark:text-white truncate">Панель курьера</h1>
-                <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm truncate">Привет, {{ request.user.username }}!</p>
+                <h1 class="text-lg md:text-2xl font-bold text-gray-800 dark:text-white truncate">{% trans 'Панель курьера' %}</h1>
+                <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm truncate">{% trans 'Привет,' %} {{ request.user.username }}!</p>
             </div>
         </div>
         <span class="shrink-0 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium border border-green-200 dark:border-green-800">
-            🟢 Онлайн
+            {% trans '🟢 Онлайн' %}
         </span>
     </div>
 
@@ -23,24 +24,24 @@
     <div class="grid grid-cols-3 gap-3 md:gap-5 mb-8">
         <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-3 md:p-5 text-center">
             <p class="text-xl md:text-3xl font-bold text-green-600 dark:text-green-400">{{ pending_orders|length }}</p>
-            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Новых заказов</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">{% trans 'Новых заказов' %}</p>
         </div>
         <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-3 md:p-5 text-center">
             <p class="text-xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">{{ my_orders|length }}</p>
-            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Моих заказов</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">{% trans 'Моих заказов' %}</p>
         </div>
         <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-3 md:p-5 text-center">
             <p class="text-xl md:text-3xl font-bold text-orange-500 dark:text-orange-400">
                 {{ my_orders|length }}
             </p>
-            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Доставлено</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">{% trans 'Доставлено' %}</p>
         </div>
     </div>
 
     <!-- Новые заказы -->
     <div class="mb-8">
         <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
-            🔔 Новые заказы
+            {% trans '🔔 Новые заказы' %}
             {% if pending_orders %}
             <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-2">
                 {{ pending_orders|length }}
@@ -54,37 +55,37 @@
             <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20 transition">
                 <div class="flex items-start justify-between mb-4">
                     <div>
-                        <h3 class="font-bold text-gray-800 dark:text-white text-lg">Заказ #{{ order.pk }}</h3>
+                        <h3 class="font-bold text-gray-800 dark:text-white text-lg">{% trans 'Заказ #' %}{{ order.pk }}</h3>
                         <p class="text-gray-400 dark:text-gray-500 text-sm">{{ order.created_at|date:"d.m.Y H:i" }}</p>
                     </div>
                     <span class="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 px-3 py-1 rounded-full text-xs font-medium">
-                        ⏳ Ожидает
+                        {% trans '⏳ Ожидает' %}
                     </span>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 mb-4 text-xs md:text-sm">
                     <div>
-                        <p class="text-gray-400 dark:text-gray-500">Клиент</p>
+                        <p class="text-gray-400 dark:text-gray-500">{% trans 'Клиент' %}</p>
                         <p class="font-medium text-gray-800 dark:text-gray-200 truncate">{{ order.user.username }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-400 dark:text-gray-500">Телефон</p>
+                        <p class="text-gray-400 dark:text-gray-500">{% trans 'Телефон' %}</p>
                         <p class="font-medium text-green-600 dark:text-green-400 text-xs md:text-sm">{{ order.user.phone }}</p>
                     </div>
                     <div class="col-span-2 md:col-span-1">
-                        <p class="text-gray-400 dark:text-gray-500">Сумма</p>
-                        <p class="font-bold text-green-600 dark:text-green-400">{{ order.total }} сом</p>
+                        <p class="text-gray-400 dark:text-gray-500">{% trans 'Сумма' %}</p>
+                        <p class="font-bold text-green-600 dark:text-green-400">{{ order.total }} {% trans 'сом' %}</p>
                     </div>
                 </div>
 
                 <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 mb-4">
-                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-1">📍 Адрес доставки</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-1">{% trans '📍 Адрес доставки' %}</p>
                     <p class="font-medium text-gray-700 dark:text-gray-300 text-sm">{{ order.address }}</p>
                 </div>
 
                 <!-- Товары -->
                 <div class="mb-4">
-                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-2">💊 Товары:</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-2">{% trans '💊 Товары:' %}</p>
                     <div class="flex flex-wrap gap-2">
                         {% for item in order.orderitem_set.all %}
                         <span class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-xs px-3 py-1 rounded-full">
@@ -97,11 +98,11 @@
                 <div class="flex gap-3">
                     <a href="{% url 'courier_take_order' order.pk %}"
                        class="flex-1 text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-2xl transition font-medium shadow-lg shadow-green-600/20">
-                        ✅ Принять заказ
+                        {% trans '✅ Принять заказ' %}
                     </a>
                     <a href="{% url 'order_detail' order.pk %}"
                        class="px-5 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl text-gray-500 dark:text-gray-400 hover:border-green-400 hover:text-green-600 transition text-sm">
-                        Детали
+                        {% trans 'Детали' %}
                     </a>
                 </div>
             </div>
@@ -110,14 +111,14 @@
         {% else %}
         <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-12 text-center">
             <div class="text-5xl mb-3">📭</div>
-            <p class="text-gray-400 dark:text-gray-500">Новых заказов пока нет</p>
+            <p class="text-gray-400 dark:text-gray-500">{% trans 'Новых заказов пока нет' %}</p>
         </div>
         {% endif %}
     </div>
 
     <!-- Мои заказы -->
     <div>
-        <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">📦 Мои заказы</h2>
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">{% trans '📦 Мои заказы' %}</h2>
 
         {% if my_orders %}
         <div class="space-y-3">
@@ -128,7 +129,7 @@
                         📦
                     </div>
                     <div class="min-w-0">
-                        <h3 class="font-bold text-gray-800 dark:text-white text-sm md:text-base">Заказ #{{ order.pk }}</h3>
+                        <h3 class="font-bold text-gray-800 dark:text-white text-sm md:text-base">{% trans 'Заказ #' %}{{ order.pk }}</h3>
                         <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm truncate">{{ order.user.username }} · {{ order.address|truncatechars:30 }}</p>
                         <p class="text-gray-400 dark:text-gray-500 text-xs">{{ order.created_at|date:"d.m.Y H:i" }}</p>
                     </div>
@@ -140,11 +141,11 @@
                                  px-2 md:px-3 py-1 rounded-full text-xs font-medium">
                         {{ order.get_status_display }}
                     </span>
-                    <p class="font-bold text-green-600 dark:text-green-400 text-sm md:text-base">{{ order.total }} сом</p>
+                    <p class="font-bold text-green-600 dark:text-green-400 text-sm md:text-base">{{ order.total }} {% trans 'сом' %}</p>
                     {% if order.status == 'delivering' %}
                     <a href="{% url 'courier_order_detail' order.pk %}"
                        class="bg-green-600 hover:bg-green-700 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-xs md:text-sm transition shadow-lg shadow-green-600/20">
-                        Открыть →
+                        {% trans 'Открыть →' %}
                     </a>
                     {% endif %}
                 </div>
@@ -154,7 +155,7 @@
         {% else %}
         <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-12 text-center">
             <div class="text-5xl mb-3">📦</div>
-            <p class="text-gray-400 dark:text-gray-500">Вы ещё не брали заказов</p>
+            <p class="text-gray-400 dark:text-gray-500">{% trans 'Вы ещё не брали заказов' %}</p>
         </div>
         {% endif %}
     </div>

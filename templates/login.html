@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Войти — DoruTJ{% endblock %}
+{% load i18n %}
+{% block title %}{% trans 'Войти — DoruTJ' %}{% endblock %}
 
 {% block content %}
 <div class="min-h-[80vh] flex items-center justify-center -mt-6 md:-mt-10 -mx-4 md:-mx-6 px-4 relative overflow-hidden bg-white dark:bg-[#070d07]">
@@ -39,8 +40,8 @@
                 </div>
                 <span class="text-xl font-black text-gray-900 dark:text-white">Dori<span class="text-brand-500">TJ</span></span>
             </a>
-            <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-1.5">Добро пожаловать</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Войдите в свой аккаунт</p>
+            <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-1.5">{% trans 'Добро пожаловать' %}</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">{% trans 'Войдите в свой аккаунт' %}</p>
         </div>
 
         <!-- Glass card -->
@@ -58,12 +59,12 @@
 
                 <div>
                     <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 block">
-                        Логин или Email
+                        {% trans 'Логин или Email' %}
                     </label>
                     <div class="relative">
                         <i class="ti ti-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-base"></i>
                         <input type="text" name="username"
-                               placeholder="username или email"
+                               placeholder="{% trans 'username или email' %}"
                                required
                                class="w-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-brand-300 dark:hover:border-white/20 focus:border-brand-500 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none transition-all">
                     </div>
@@ -72,10 +73,10 @@
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Пароль
+                            {% trans 'Пароль' %}
                         </label>
                         <a href="{% url 'forgot_password' %}" class="text-xs text-brand-600 dark:text-brand-400 hover:text-brand-500 transition-colors">
-                            Забыли пароль?
+                            {% trans 'Забыли пароль?' %}
                         </a>
                     </div>
                     <div class="relative">
@@ -94,20 +95,20 @@
                 <button type="submit"
                         class="w-full flex items-center justify-center gap-2.5 bg-brand-500 hover:bg-brand-400 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:-translate-y-0.5 btn-press transition-all mt-2">
                     <i class="ti ti-login text-lg"></i>
-                    Войти в аккаунт
+                    {% trans 'Войти в аккаунт' %}
                 </button>
             </form>
 
             <div class="flex items-center gap-3 my-5">
                 <div class="flex-1 h-px bg-gray-200 dark:bg-white/10"></div>
-                <span class="text-xs text-gray-400 dark:text-gray-600">или</span>
+                <span class="text-xs text-gray-400 dark:text-gray-600">{% trans 'или' %}</span>
                 <div class="flex-1 h-px bg-gray-200 dark:bg-white/10"></div>
             </div>
 
             <p class="text-center text-sm text-gray-500 dark:text-gray-500">
-                Нет аккаунта?
+                {% trans 'Нет аккаунта?' %}
                 <a href="{% url 'register' %}" class="text-brand-600 dark:text-brand-400 hover:text-brand-500 font-semibold transition-colors ml-1">
-                    Зарегистрироваться →
+                    {% trans 'Зарегистрироваться →' %}
                 </a>
             </p>
         </div>

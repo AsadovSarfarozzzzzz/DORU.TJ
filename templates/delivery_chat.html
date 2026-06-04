@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 <div class="max-w-4xl mx-auto">
@@ -7,15 +8,15 @@
     <div class="flex items-center gap-4 mb-6">
         <a href="{% url 'order_detail' order.pk %}"
            class="flex items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">
-            <i class="ti ti-arrow-left text-sm"></i> Назад
+            <i class="ti ti-arrow-left text-sm"></i> {% trans 'Назад' %}
         </a>
         <div>
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <i class="ti ti-message text-brand-500"></i>
-                Чат с курьером
+                {% trans 'Чат с курьером' %}
             </h1>
             <p class="text-gray-400 dark:text-gray-500 text-sm">
-                Заказ #{{ order.pk }} —
+                {% trans 'Заказ #' %}{{ order.pk }} —
                 <span class="{% if order.status == 'delivering' %}text-blue-500
                              {% elif order.status == 'done' %}text-green-500
                              {% else %}text-orange-500{% endif %} font-medium">
@@ -36,7 +37,7 @@
                      data-id="{{ msg.pk }}">
                     <div class="max-w-xs">
                         <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 {% if msg.sender == 'client' %}text-right{% endif %}">
-                            {% if msg.sender == 'client' %}Вы{% else %}<i class="ti ti-bike text-brand-500 text-xs mr-0.5"></i>Курьер{% endif %}
+                            {% if msg.sender == 'client' %}{% trans 'Вы' %}{% else %}<i class="ti ti-bike text-brand-500 text-xs mr-0.5"></i>{% trans 'Курьер' %}{% endif %}
                             · {{ msg.created_at|date:"H:i" }}
                         </p>
                         <div class="{% if msg.sender == 'client' %}bg-brand-500 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm border border-gray-200 dark:border-gray-700{% endif %} px-4 py-3 shadow-sm">
@@ -54,7 +55,7 @@
                 {% empty %}
                 <div class="text-center py-16">
                     <i class="ti ti-message text-5xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
-                    <p class="text-gray-400 dark:text-gray-500">Напишите курьеру</p>
+                    <p class="text-gray-400 dark:text-gray-500">{% trans 'Напишите курьеру' %}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -79,7 +80,7 @@
                         </label>
                         <div class="relative flex-1">
                             <input type="text" name="text" id="text-input"
-                                   placeholder="Написать курьеру..."
+                                   placeholder="{% trans 'Написать курьеру...' %}"
                                    autocomplete="off"
                                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
                         </div>
@@ -98,15 +99,15 @@
                 <div class="p-4 border-b border-gray-200 dark:border-gray-700/50 flex items-center justify-between">
                     <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <i class="ti ti-map-2 text-brand-500"></i>
-                        Локация курьера
+                        {% trans 'Локация курьера' %}
                     </h2>
-                    <span class="text-xs text-gray-400 dark:text-gray-500" id="location-time">Обновляется...</span>
+                    <span class="text-xs text-gray-400 dark:text-gray-500" id="location-time">{% trans 'Обновляется...' %}</span>
                 </div>
                 <div id="map" style="height: 300px; width: 100%;"></div>
                 <div class="p-4" id="no-location" style="display:none;">
                     <p class="text-gray-400 dark:text-gray-500 text-sm text-center py-8">
                         <i class="ti ti-bike text-3xl block mb-2"></i>
-                        Курьер ещё не вышел
+                        {% trans 'Курьер ещё не вышел' %}
                     </p>
                 </div>
             </div>
@@ -115,23 +116,23 @@
             <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-5 shadow-sm">
                 <h3 class="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                     <i class="ti ti-package text-brand-500"></i>
-                    Детали заказа
+                    {% trans 'Детали заказа' %}
                 </h3>
                 <div class="space-y-3 text-sm">
                     <div class="flex justify-between">
-                        <span class="text-gray-400 dark:text-gray-500">Заказ</span>
+                        <span class="text-gray-400 dark:text-gray-500">{% trans 'Заказ' %}</span>
                         <span class="font-medium text-gray-900 dark:text-white">#{{ order.pk }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400 dark:text-gray-500">Сумма</span>
-                        <span class="font-bold text-brand-600 dark:text-brand-400">{{ order.total }} сом</span>
+                        <span class="text-gray-400 dark:text-gray-500">{% trans 'Сумма' %}</span>
+                        <span class="font-bold text-brand-600 dark:text-brand-400">{{ order.total }} {% trans 'сом' %}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400 dark:text-gray-500">Адрес</span>
+                        <span class="text-gray-400 dark:text-gray-500">{% trans 'Адрес' %}</span>
                         <span class="font-medium text-gray-900 dark:text-white text-right max-w-32">{{ order.address }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400 dark:text-gray-500">Статус</span>
+                        <span class="text-gray-400 dark:text-gray-500">{% trans 'Статус' %}</span>
                         <span class="font-medium text-gray-700 dark:text-gray-300">{{ order.get_status_display }}</span>
                     </div>
                 </div>
@@ -157,7 +158,7 @@
         }
         if (!courierMarker) {
             courierMarker = L.marker([lat, lng]).addTo(map)
-                .bindPopup('🛵 Курьер здесь').openPopup();
+                {% trans '.bindPopup('🛵 Курьер здесь').openPopup();' %}
         } else {
             courierMarker.setLatLng([lat, lng]);
         }
@@ -171,7 +172,7 @@
                 if (data.lat) {
                     document.getElementById('map').style.display = 'block';
                     document.getElementById('no-location').style.display = 'none';
-                    document.getElementById('location-time').textContent = 'Обновлено в ' + data.updated_at;
+                    {% trans 'document.getElementById('location-time').textContent = 'Обновлено в ' + data.updated_at;' %}
                     initMap(data.lat, data.lng);
                 } else {
                     document.getElementById('map').style.display = 'none';
@@ -198,7 +199,7 @@
                     div.innerHTML = `
                         <div class="max-w-xs">
                             <p class="text-xs text-gray-400 mb-1 ${isClient ? 'text-right' : ''}">
-                                ${isClient ? 'Вы' : '🛵 Курьер'} · ${msg.time}
+                                {% trans '${isClient ? 'Вы' : '🛵 Курьер'} · ${msg.time}' %}
                             </p>
                             <div class="${isClient ? 'bg-brand-500 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm border border-gray-200 dark:border-gray-700'} px-4 py-3">
                                 ${content}

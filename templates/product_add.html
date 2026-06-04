@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 <div class="max-w-2xl mx-auto">
     <div class="flex items-center gap-4 mb-8">
-        <a href="{% url 'product_list' %}" class="text-gray-400 hover:text-gray-600 transition">← Назад</a>
-        <h1 class="text-3xl font-bold text-gray-800">➕ Добавить товар</h1>
+        <a href="{% url 'product_list' %}" class="text-gray-400 hover:text-gray-600 transition">{% trans '← Назад' %}</a>
+        <h1 class="text-3xl font-bold text-gray-800">{% trans '➕ Добавить товар' %}</h1>
     </div>
 
     <div class="bg-white rounded-3xl border border-gray-100 p-8">
@@ -13,8 +14,8 @@
 
             <div class="grid grid-cols-2 gap-5">
                 <div class="col-span-2">
-                    <label class="text-sm text-gray-500 mb-1.5 block">Название товара</label>
-                    <input type="text" name="name" placeholder="Анальгин 500мг" required
+                    <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Название товара' %}</label>
+                    <input type="text" name="name" placeholder="{% trans 'Анальгин 500мг' %}" required
                         value="{{ form.name.value|default:'' }}"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                     {% if form.name.errors %}
@@ -23,24 +24,24 @@
                 </div>
 
                 <div>
-                    <label class="text-sm text-gray-500 mb-1.5 block">Цена (сомони)</label>
+                    <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Цена (сомони)' %}</label>
                     <input type="number" name="price" placeholder="0.00" step="0.01" required
                         value="{{ form.price.value|default:'' }}"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                 </div>
 
                 <div>
-                    <label class="text-sm text-gray-500 mb-1.5 block">Остаток (шт.)</label>
+                    <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Остаток (шт.)' %}</label>
                     <input type="number" name="stock" placeholder="0" min="0" required
                         value="{{ form.stock.value|default:'' }}"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                 </div>
 
                 <div>
-                    <label class="text-sm text-gray-500 mb-1.5 block">Категория</label>
+                    <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Категория' %}</label>
                     <select name="category" required
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
-                        <option value="">Выберите категорию</option>
+                        <option value="">{% trans 'Выберите категорию' %}</option>
                         {% for cat in form.category.field.queryset %}
                         <option value="{{ cat.pk }}" {% if form.category.value|slugify == cat.pk|slugify %}selected{% endif %}>
                             {{ cat.name }}
@@ -50,10 +51,10 @@
                 </div>
 
                 <div>
-                    <label class="text-sm text-gray-500 mb-1.5 block">Производитель</label>
+                    <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Производитель' %}</label>
                     <select name="manufacturer"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
-                        <option value="">Выберите производителя</option>
+                        <option value="">{% trans 'Выберите производителя' %}</option>
                         {% for man in form.manufacturer.field.queryset %}
                         <option value="{{ man.pk }}" {% if form.manufacturer.value|slugify == man.pk|slugify %}selected{% endif %}>
                             {{ man.name }}
@@ -63,20 +64,20 @@
                 </div>
 
                 <div class="col-span-2">
-                    <label class="text-sm text-gray-500 mb-1.5 block">Действующее вещество</label>
-                    <input type="text" name="active_substance" placeholder="Ибупрофен"
+                    <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Действующее вещество' %}</label>
+                    <input type="text" name="active_substance" placeholder="{% trans 'Ибупрофен' %}"
                         value="{{ form.active_substance.value|default:'' }}"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition">
                 </div>
 
                 <div class="col-span-2">
-                    <label class="text-sm text-gray-500 mb-1.5 block">Описание</label>
-                    <textarea name="description" rows="3" placeholder="Описание препарата..."
+                    <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Описание' %}</label>
+                    <textarea name="description" rows="3" placeholder="{% trans 'Описание препарата...' %}"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition resize-none">{{ form.description.value|default:'' }}</textarea>
                 </div>
 
                 <div class="col-span-2">
-                    <label class="text-sm text-gray-500 mb-1.5 block">Фото товара</label>
+                    <label class="text-sm text-gray-500 mb-1.5 block">{% trans 'Фото товара' %}</label>
                     <input type="file" name="image" accept="image/*"
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm">
                 </div>
@@ -85,14 +86,14 @@
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" name="is_prescription" {% if form.is_prescription.value %}checked{% endif %}
                             class="w-5 h-5 rounded accent-green-600">
-                        <span class="text-sm text-gray-700">Требуется рецепт</span>
+                        <span class="text-sm text-gray-700">{% trans 'Требуется рецепт' %}</span>
                     </label>
                 </div>
             </div>
 
             <button type="submit"
                 class="w-full bg-green-600 text-white font-bold py-4 rounded-2xl hover:bg-green-700 transition text-lg">
-                ✅ Сохранить товар
+                {% trans '✅ Сохранить товар' %}
             </button>
         </form>
     </div>

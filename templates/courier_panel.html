@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 <div class="max-w-4xl mx-auto">
 
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">🛵 Панель курьера</h1>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{% trans '🛵 Панель курьера' %}</h1>
         <span class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium border border-green-200 dark:border-green-800">
-            Заказ #{{ order.pk }}
+            {% trans 'Заказ #' %}{{ order.pk }}
         </span>
     </div>
 
@@ -15,7 +16,7 @@
         <!-- ЧАТ -->
         <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-3xl border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col" style="height: 580px;">
             <div class="p-4 border-b border-gray-100 dark:border-gray-800 bg-green-50 dark:bg-green-900/20">
-                <h2 class="font-bold text-gray-800 dark:text-white">💬 Чат с клиентом</h2>
+                <h2 class="font-bold text-gray-800 dark:text-white">{% trans '💬 Чат с клиентом' %}</h2>
                 <p class="text-xs text-gray-400 dark:text-gray-500">{{ order.user.username }} · {{ order.user.phone }}</p>
             </div>
 
@@ -25,7 +26,7 @@
                      data-id="{{ msg.pk }}">
                     <div class="max-w-xs">
                         <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 {% if msg.sender == 'courier' %}text-right{% endif %}">
-                            {% if msg.sender == 'courier' %}Вы{% else %}👤 Клиент{% endif %}
+                            {% if msg.sender == 'courier' %}{% trans 'Вы' %}{% else %}{% trans '👤 Клиент' %}{% endif %}
                             · {{ msg.created_at|date:"H:i" }}
                         </p>
                         <div class="{% if msg.sender == 'courier' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
@@ -43,7 +44,7 @@
                 {% empty %}
                 <div class="text-center py-16">
                     <div class="text-5xl mb-3">💬</div>
-                    <p class="text-gray-400 dark:text-gray-500 text-sm">Напишите клиенту</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-sm">{% trans 'Напишите клиенту' %}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -66,7 +67,7 @@
                                    class="hidden" onchange="previewImage(this)">
                         </label>
                         <input type="text" name="text" id="text-input"
-                               placeholder="Написать клиенту..."
+                               placeholder="{% trans 'Написать клиенту...' %}"
                                autocomplete="off"
                                class="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition bg-transparent dark:text-gray-200">
                         <button type="submit"
@@ -82,23 +83,23 @@
         <div class="space-y-4">
 
             <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5">
-                <h3 class="font-bold text-gray-800 dark:text-white mb-3">📦 Заказ #{{ order.pk }}</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white mb-3">{% trans '📦 Заказ #' %}{{ order.pk }}</h3>
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
-                        <span class="text-gray-400 dark:text-gray-500">Клиент</span>
+                        <span class="text-gray-400 dark:text-gray-500">{% trans 'Клиент' %}</span>
                         <span class="font-medium text-gray-800 dark:text-gray-200">{{ order.user.username }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400 dark:text-gray-500">Телефон</span>
+                        <span class="text-gray-400 dark:text-gray-500">{% trans 'Телефон' %}</span>
                         <span class="font-medium text-green-600 dark:text-green-400">{{ order.user.phone }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400 dark:text-gray-500">Адрес</span>
+                        <span class="text-gray-400 dark:text-gray-500">{% trans 'Адрес' %}</span>
                         <span class="font-medium text-gray-800 dark:text-gray-200 text-right max-w-40">{{ order.address }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400 dark:text-gray-500">Сумма</span>
-                        <span class="font-bold text-green-600 dark:text-green-400">{{ order.total }} сом</span>
+                        <span class="text-gray-400 dark:text-gray-500">{% trans 'Сумма' %}</span>
+                        <span class="font-bold text-green-600 dark:text-green-400">{{ order.total }} {% trans 'сом' %}</span>
                     </div>
                 </div>
             </div>
@@ -106,28 +107,28 @@
             <!-- Геолокация -->
             <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                    <h3 class="font-bold text-gray-800 dark:text-white">📍 Моя локация</h3>
+                    <h3 class="font-bold text-gray-800 dark:text-white">{% trans '📍 Моя локация' %}</h3>
                     <button onclick="shareLocation()"
                             id="location-btn"
                             class="bg-green-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-600/20">
-                        Поделиться локацией
+                        {% trans 'Поделиться локацией' %}
                     </button>
                 </div>
                 <div id="courier-map" style="height: 200px;"></div>
                 <div class="p-3 text-center" id="location-status">
-                    <p class="text-gray-400 dark:text-gray-500 text-xs">Нажмите чтобы начать отслеживание</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'Нажмите чтобы начать отслеживание' %}</p>
                 </div>
             </div>
 
             <!-- Кнопки статуса -->
             <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 space-y-3">
-                <h3 class="font-bold text-gray-800 dark:text-white mb-3">⚡ Управление заказом</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white mb-3">{% trans '⚡ Управление заказом' %}</h3>
                 <form method="POST" action="{% url 'courier_update_status' token %}">
                     {% csrf_token %}
                     <input type="hidden" name="status" value="delivering">
                     <button type="submit"
                             class="w-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 py-3 rounded-xl text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-900/30 transition mb-2">
-                        🚚 Начать доставку
+                        {% trans '🚚 Начать доставку' %}
                     </button>
                 </form>
                 <form method="POST" action="{% url 'courier_update_status' token %}">
@@ -135,7 +136,7 @@
                     <input type="hidden" name="status" value="done">
                     <button type="submit"
                             class="w-full bg-green-600 text-white py-3 rounded-xl text-sm font-medium hover:bg-green-700 transition shadow-lg shadow-green-600/20">
-                        ✅ Заказ доставлен
+                        {% trans '✅ Заказ доставлен' %}
                     </button>
                 </form>
             </div>
@@ -160,7 +161,7 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         }
         if (!marker) {
-            marker = L.marker([lat, lng]).addTo(map).bindPopup('Вы здесь').openPopup();
+            {% trans 'marker = L.marker([lat, lng]).addTo(map).bindPopup('Вы здесь').openPopup();' %}
         } else {
             marker.setLatLng([lat, lng]);
             map.setView([lat, lng], 15);
@@ -169,11 +170,11 @@
 
     function shareLocation() {
         if (!navigator.geolocation) {
-            alert('Геолокация не поддерживается');
+            {% trans 'alert('Геолокация не поддерживается');' %}
             return;
         }
 
-        document.getElementById('location-btn').textContent = '📍 Отслеживается...';
+        {% trans 'document.getElementById('location-btn').textContent = '📍 Отслеживается...';' %}
         document.getElementById('location-btn').className = 'bg-orange-500 text-white text-xs px-4 py-2 rounded-xl transition';
 
         watchId = navigator.geolocation.watchPosition(
@@ -183,7 +184,7 @@
 
                 initMap(lat, lng);
                 document.getElementById('location-status').innerHTML =
-                    `<p class="text-green-600 text-xs">✅ Локация обновлена</p>`;
+                    `<p class="text-green-600 text-xs">{% trans '✅ Локация обновлена' %}</p>`;
 
                 fetch(`/orders/courier/${TOKEN}/location/`, {
                     method: 'POST',
@@ -196,7 +197,7 @@
             },
             error => {
                 document.getElementById('location-status').innerHTML =
-                    `<p class="text-red-500 text-xs">❌ Ошибка геолокации</p>`;
+                    `<p class="text-red-500 text-xs">{% trans '❌ Ошибка геолокации' %}</p>`;
             },
             { enableHighAccuracy: true, maximumAge: 3000, timeout: 5000 }
         );
@@ -220,7 +221,7 @@
                     div.innerHTML = `
                         <div class="max-w-xs">
                             <p class="text-xs text-gray-400 mb-1 ${isCourier ? 'text-right' : ''}">
-                                ${isCourier ? 'Вы' : '👤 Клиент'} · ${msg.time}
+                                {% trans '${isCourier ? 'Вы' : '👤 Клиент'} · ${msg.time}' %}
                             </p>
                             <div class="${isCourier ? 'bg-green-600 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm'} px-4 py-3">
                                 ${content}

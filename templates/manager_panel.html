@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 <div class="max-w-3xl mx-auto">
 
     <div class="flex items-center gap-4 mb-6">
         <a href="{% url 'manager_panel' pharmacy.pk %}"
-           class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition">← Назад</a>
+           class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition">{% trans '← Назад' %}</a>
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 font-bold">
                 {{ chat.user.username|first|upper }}
@@ -26,7 +27,7 @@
                  data-id="{{ msg.pk }}">
                 <div class="max-w-sm">
                     <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 {% if msg.sender == 'manager' %}text-right{% endif %}">
-                        {% if msg.sender == 'manager' %}Вы{% else %}👤 {{ chat.user.username }}{% endif %}
+                        {% if msg.sender == 'manager' %}{% trans 'Вы' %}{% else %}👤 {{ chat.user.username }}{% endif %}
                         · {{ msg.created_at|date:"H:i" }}
                     </p>
                     <div class="{% if msg.sender == 'manager' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
@@ -44,7 +45,7 @@
             {% empty %}
             <div class="text-center py-20">
                 <div class="text-5xl mb-3">💬</div>
-                <p class="text-gray-400 dark:text-gray-500">Ответьте клиенту</p>
+                <p class="text-gray-400 dark:text-gray-500">{% trans 'Ответьте клиенту' %}</p>
             </div>
             {% endfor %}
         </div>
@@ -68,7 +69,7 @@
                                onchange="previewImage(this)">
                     </label>
                     <input type="text" name="text" id="text-input"
-                           placeholder="Ответить клиенту..."
+                           placeholder="{% trans 'Ответить клиенту...' %}"
                            autocomplete="off"
                            class="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition bg-transparent dark:text-gray-200">
                     <button type="submit"
@@ -101,7 +102,7 @@
                     div.innerHTML = `
                         <div class="max-w-sm">
                             <p class="text-xs text-gray-400 mb-1 ${isManager ? 'text-right' : ''}">
-                                ${isManager ? 'Вы' : '👤 Клиент'} · ${msg.time}
+                                {% trans '${isManager ? 'Вы' : '👤 Клиент'} · ${msg.time}' %}
                             </p>
                             <div class="${isManager ? 'bg-green-600 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm'} px-4 py-3">
                                 ${content}

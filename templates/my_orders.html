@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 <div class="flex items-center gap-3 mb-6 md:mb-8">
     <i class="ti ti-package text-2xl md:text-3xl text-brand-500"></i>
-    <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">Мои заказы</h1>
+    <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">{% trans 'Мои заказы' %}</h1>
 </div>
 
 {% for order in orders %}
 <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-4 md:p-6 mb-4 hover:shadow-md transition-all card-lift">
     <div class="flex items-start justify-between mb-4 gap-2">
         <div>
-            <h3 class="font-bold text-gray-900 dark:text-white text-base md:text-lg">Заказ #{{ order.pk }}</h3>
+            <h3 class="font-bold text-gray-900 dark:text-white text-base md:text-lg">{% trans 'Заказ #' %}{{ order.pk }}</h3>
             <p class="text-gray-400 dark:text-gray-500 text-sm mt-0.5">{{ order.created_at|date:"d.m.Y H:i" }}</p>
         </div>
         <span class="shrink-0 px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold flex items-center gap-1.5
@@ -28,31 +29,31 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div class="flex items-baseline gap-1">
             <span class="text-2xl font-black text-brand-600 dark:text-brand-400">{{ order.total }}</span>
-            <span class="text-gray-400 dark:text-gray-500 text-sm">сом</span>
+            <span class="text-gray-400 dark:text-gray-500 text-sm">{% trans 'сом' %}</span>
         </div>
         <div class="flex flex-wrap gap-2">
             {% if order.status == 'pending' %}
                 <a href="/orders/order/{{ order.pk }}/cancel/"
                    class="flex items-center gap-1.5 text-xs md:text-sm text-red-500 dark:text-red-400 border border-red-200 dark:border-red-800 px-3 md:px-4 py-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 btn-press transition-all">
                     <i class="ti ti-x text-sm"></i>
-                    Отменить
+                    {% trans 'Отменить' %}
                 </a>
             {% endif %}
             {% if order.status == 'delivering' %}
                 <a href="{% url 'delivery_chat' order.pk %}"
                    class="flex items-center gap-1.5 text-xs md:text-sm bg-brand-500 text-white px-3 md:px-4 py-2 rounded-xl hover:bg-brand-600 btn-press transition-all">
                     <i class="ti ti-message text-sm"></i>
-                    Чат
+                    {% trans 'Чат' %}
                 </a>
             {% endif %}
             <a href="/orders/order/{{ order.pk }}/repeat/"
                class="flex items-center gap-1.5 text-xs md:text-sm text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 px-3 md:px-4 py-2 rounded-xl hover:border-brand-400 dark:hover:border-brand-600 hover:text-brand-600 dark:hover:text-brand-400 btn-press transition-all">
                 <i class="ti ti-refresh text-sm"></i>
-                Повторить
+                {% trans 'Повторить' %}
             </a>
             <a href="{% url 'order_detail' order.pk %}"
                class="flex items-center gap-1.5 text-xs md:text-sm bg-brand-500 hover:bg-brand-600 text-white px-4 md:px-5 py-2 rounded-xl btn-press transition-all shadow-lg shadow-brand-500/25">
-                Подробнее
+                {% trans 'Подробнее' %}
                 <i class="ti ti-arrow-right text-sm"></i>
             </a>
         </div>
@@ -61,11 +62,11 @@
 {% empty %}
 <div class="text-center py-24">
     <i class="ti ti-package-off text-8xl text-gray-300 dark:text-gray-600 mb-6 block"></i>
-    <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-3">Заказов пока нет</h2>
-    <p class="text-gray-400 dark:text-gray-500 mb-8">Сделайте свой первый заказ</p>
+    <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-3">{% trans 'Заказов пока нет' %}</h2>
+    <p class="text-gray-400 dark:text-gray-500 mb-8">{% trans 'Сделайте свой первый заказ' %}</p>
     <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-10 py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25">
         <i class="ti ti-pill text-lg"></i>
-        Перейти в каталог
+        {% trans 'Перейти в каталог' %}
     </a>
 </div>
 {% endfor %}

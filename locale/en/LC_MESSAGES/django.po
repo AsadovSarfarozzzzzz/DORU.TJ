@@ -1,0 +1,975 @@
+#
+msgid ""
+msgstr ""
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "+ В корзину"
+msgstr "Add to cart"
+
+msgid "+ Добавить товар"
+msgstr "+ Add product"
+
+msgid "1 000+ препаратов"
+msgstr "1,000+ medications"
+
+msgid "AI Консультант"
+msgstr "AI Consultant"
+
+msgid "AI консультант"
+msgstr "AI consultant"
+
+msgid "Alif Pay, Корти Милли"
+msgstr "Alif Pay, Korti Milli"
+
+msgid "DoriTJ — Лекарства с доставкой за 2 часа"
+msgstr "DoriTJ — Medications with delivery in 2 hours"
+
+msgid "DoriTJ — Онлайн аптека с доставкой по Душанбе"
+msgstr "DoriTJ — Online pharmacy with delivery in Dushanbe"
+
+msgid "DoruTJ — Онлайн аптека"
+msgstr "DoruTJ — Online pharmacy"
+
+msgid "username или email"
+msgstr "username or email"
+
+msgid "Адрес"
+msgstr "Address"
+
+msgid "Адрес доставки"
+msgstr "Delivery address"
+
+msgid "Активных чатов"
+msgstr "Active chats"
+
+msgid "Анальгин 500мг"
+msgstr "Analgin 500mg"
+
+msgid "Аптек пока нет"
+msgstr "No pharmacies yet"
+
+msgid "Аптек-партнёров"
+msgstr "Partner pharmacies"
+
+msgid "Аптека"
+msgstr "Pharmacy"
+
+msgid "Аптеки"
+msgstr "Pharmacies"
+
+msgid "Аптеки Душанбе"
+msgstr "Pharmacies of Dushanbe"
+
+msgid "Аптеки-партнёры"
+msgstr "Partner pharmacies"
+
+msgid "Бесплатно"
+msgstr "Free"
+
+msgid "Болит голова"
+msgstr "Headache"
+
+msgid "Быстрая доставка"
+msgstr "Fast delivery"
+
+msgid "В каких аптеках есть"
+msgstr "Which pharmacies have it"
+
+msgid "В корзину"
+msgstr "Add to cart"
+
+msgid "Ваше здоровье —"
+msgstr "Your health —"
+
+msgid "Введите email — пришлём код"
+msgstr "Enter email — we'll send a code"
+
+msgid "Введите код из письма и новый пароль"
+msgstr "Enter the code from email and new password"
+
+msgid "Вернуться к моим заказам"
+msgstr "Back to my orders"
+
+msgid "Весь каталог"
+msgstr "Full catalog"
+
+msgid "Витамины"
+msgstr "Vitamins"
+
+msgid "Возраст"
+msgstr "Age"
+
+msgid "Войдите"
+msgstr "Log in"
+
+msgid "Войдите в свой аккаунт"
+msgstr "Log in to your account"
+
+msgid "Войти"
+msgstr "Login"
+
+msgid "Войти в аккаунт"
+msgstr "Log in"
+
+msgid "Войти для заказа"
+msgstr "Login to order"
+
+msgid "Войти — DoruTJ"
+msgstr "Login — DoruTJ"
+
+msgid "Войти →"
+msgstr "Login →"
+
+msgid "Все"
+msgstr "All"
+
+msgid "Все аптеки"
+msgstr "All pharmacies"
+
+msgid "Все категории"
+msgstr "All categories"
+
+msgid ""
+"Все препараты сертифицированы. Работаем только с проверенными поставщиками"
+msgstr "All medications are certified. We work only with verified suppliers"
+
+msgid "Всего"
+msgstr "Total"
+
+msgid "Всего сообщений"
+msgstr "Total messages"
+
+msgid "Вспомнили пароль?"
+msgstr "Remember your password?"
+
+msgid "Всё что нужно — в одном месте"
+msgstr "Everything you need — in one place"
+
+msgid "Вы"
+msgstr "You"
+
+msgid "Вы ещё не брали заказов"
+msgstr "You haven't taken any orders yet"
+
+msgid "Выберите категорию"
+msgstr "Select category"
+
+msgid "Выберите производителя"
+msgstr "Select manufacturer"
+
+msgid "Выйти"
+msgstr "Logout"
+
+msgid "Выполнен"
+msgstr "Completed"
+
+msgid "Главная"
+msgstr "Home"
+
+msgid "Действия"
+msgstr "Actions"
+
+msgid "Действующее вещество"
+msgstr "Active ingredient"
+
+msgid "Действующее вещество:"
+msgstr "Active ingredient:"
+
+msgid "Детали"
+msgstr "Details"
+
+msgid "Детали доставки"
+msgstr "Delivery details"
+
+msgid "Детали заказа"
+msgstr "Order details"
+
+msgid "Добавить первый товар"
+msgstr "Add first product"
+
+msgid "Добавить товар"
+msgstr "Add product"
+
+msgid "Добавьте в корзину"
+msgstr "Add to cart"
+
+msgid "Добавьте лекарства из каталога"
+msgstr "Add medications from the catalog"
+
+msgid "Добро пожаловать"
+msgstr "Welcome"
+
+msgid "Доставка"
+msgstr "Delivery"
+
+msgid "Доставка за 2 часа"
+msgstr "Delivery within 2 hours"
+
+msgid "Доставка по Душанбе · Работаем 24/7"
+msgstr "Delivery in Dushanbe · Open 24/7"
+
+msgid "Доставлено"
+msgstr "Delivered"
+
+msgid "Душанбе, Таджикистан"
+msgstr "Dushanbe, Tajikistan"
+
+msgid "Забыли пароль?"
+msgstr "Forgot password?"
+
+msgid "Заказ"
+msgstr "Order"
+
+msgid "Заказ #"
+msgstr "Order #"
+
+msgid "Заказ за 3 простых шага"
+msgstr "Order in 3 easy steps"
+
+msgid "Заказов пока нет"
+msgstr "No orders yet"
+
+msgid "Заказы"
+msgstr "Orders"
+
+msgid "Зарегистрироваться"
+msgstr "Register"
+
+msgid "Зарегистрироваться →"
+msgstr "Register →"
+
+msgid "Зарегистрируйтесь<br>и начните заказывать"
+msgstr "Register<br>and start ordering"
+
+msgid "Ибупрофен"
+msgstr "Ibuprofen"
+
+msgid "Изменить"
+msgstr "Edit"
+
+msgid "Изменить отзыв"
+msgstr "Edit review"
+
+msgid "Информация"
+msgstr "Information"
+
+msgid "Информация об аптеке"
+msgstr "Pharmacy info"
+
+msgid ""
+"Искусственный интеллект подберёт препарат по симптомам и предложит аналоги"
+msgstr "AI selects medication by symptoms and suggests alternatives"
+
+msgid "Используйте поиск или спросите у AI‑консультанта по симптомам"
+msgstr "Use search or ask the AI consultant about symptoms"
+
+msgid "Итого"
+msgstr "Total"
+
+msgid "Итого к оплате"
+msgstr "Total due"
+
+msgid "Как это работает"
+msgstr "How it works"
+
+msgid "Какие витамины лучше принимать весной?"
+msgstr "What vitamins are best to take in spring?"
+
+msgid "Картой"
+msgstr "Card"
+
+msgid "Каталог"
+msgstr "Catalog"
+
+msgid "Каталог лекарств"
+msgstr "Medication catalog"
+
+msgid ""
+"Каталог, корзина, AI‑консультант и доставка — всё после быстрой регистрации"
+msgstr ""
+"Catalog, cart, AI consultant and delivery — all after quick registration"
+
+msgid "Категории"
+msgstr "Categories"
+
+msgid "Категории пока не добавлены"
+msgstr "No categories added yet"
+
+msgid "Категория"
+msgstr "Category"
+
+msgid "Клиент"
+msgstr "Client"
+
+msgid "Код из письма"
+msgstr "Code from email"
+
+msgid "Контакты"
+msgstr "Contacts"
+
+msgid "Корзина"
+msgstr "Cart"
+
+msgid "Корзина пуста"
+msgstr "Cart is empty"
+
+msgid "Курьер"
+msgstr "Courier"
+
+msgid "Курьер в пути"
+msgstr "Courier on the way"
+
+msgid "Курьер доставит лекарства за 2 часа прямо к вашей двери по Душанбе"
+msgstr ""
+"Courier delivers medications within 2 hours straight to your door in "
+"Dushanbe"
+
+msgid "Курьер ещё не вышел"
+msgstr "Courier hasn't left yet"
+
+msgid "Лекарства с доставкой за"
+msgstr "Medications delivered in"
+
+msgid "Логин"
+msgstr "Username"
+
+msgid "Логин или Email"
+msgstr "Username or Email"
+
+msgid "Локация курьера"
+msgstr "Courier location"
+
+msgid "Менеджер"
+msgstr "Manager"
+
+msgid "Меню"
+msgstr "Menu"
+
+msgid "Мои заказы"
+msgstr "My Orders"
+
+msgid "Моих заказов"
+msgstr "My orders"
+
+msgid "Моя аптека"
+msgstr "My Pharmacy"
+
+msgid "Мы ответим вам в ближайшее время"
+msgstr "We'll reply shortly"
+
+msgid "Мы отправили 6-значный код на вашу почту"
+msgstr "We sent a 6-digit code to your email"
+
+msgid "На карте"
+msgstr "On map"
+
+msgid "Нажмите чтобы начать отслеживание"
+msgstr "Click to start tracking"
+
+msgid "Назад"
+msgstr "Back"
+
+msgid "Назад в каталог"
+msgstr "Back to catalog"
+
+msgid "Название"
+msgstr "Name"
+
+msgid "Название товара"
+msgstr "Product name"
+
+msgid "Найдите аптеку рядом с вами на интерактивной карте"
+msgstr "Find a pharmacy near you on the interactive map"
+
+msgid "Найдите ближайшую аптеку на карте"
+msgstr "Find the nearest pharmacy on the map"
+
+msgid "Найдите лекарство"
+msgstr "Find medication"
+
+msgid "Найдите нужный препарат быстро"
+msgstr "Find the right medication quickly"
+
+msgid "Найти"
+msgstr "Find"
+
+msgid "Наличными"
+msgstr "Cash"
+
+msgid "Написать клиенту..."
+msgstr "Message client..."
+
+msgid "Написать курьеру..."
+msgstr "Message courier..."
+
+msgid "Написать менеджеру"
+msgstr "Message manager"
+
+msgid "Написать менеджеру..."
+msgstr "Message manager..."
+
+msgid "Напишите ваш отзыв..."
+msgstr "Write your review..."
+
+msgid "Напишите клиенту"
+msgstr "Message the client"
+
+msgid "Напишите курьеру"
+msgstr "Message the courier"
+
+msgid "Напишите менеджеру аптеки"
+msgstr "Message pharmacy manager"
+
+msgid "Начать покупки"
+msgstr "Start shopping"
+
+msgid "Не получили код?"
+msgstr "Didn't receive the code?"
+
+msgid "Не указан"
+msgstr "Not specified"
+
+msgid "Нет аккаунта?"
+msgstr "No account?"
+
+msgid "Ничего не найдено"
+msgstr "Nothing found"
+
+msgid "Новый пароль"
+msgstr "New password"
+
+msgid "Новых заказов"
+msgstr "New orders"
+
+msgid "Новых заказов пока нет"
+msgstr "No new orders yet"
+
+msgid "О нас"
+msgstr "About Us"
+
+msgid "Обновить отзыв"
+msgstr "Update review"
+
+msgid "Обновляется..."
+msgstr "Updating..."
+
+msgid "Ожидает"
+msgstr "Pending"
+
+msgid "Онлайн"
+msgstr "Online"
+
+msgid ""
+"Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое."
+msgstr ""
+"Online pharmacy with delivery in Dushanbe. Medications, vitamins and more."
+
+msgid "Описание"
+msgstr "Description"
+
+msgid "Описание препарата..."
+msgstr "Product description..."
+
+msgid "Опишите симптомы или задайте вопрос..."
+msgstr "Describe symptoms or ask a question..."
+
+msgid "Опишите симптомы или спросите о лекарстве"
+msgstr "Describe symptoms or ask about medication"
+
+msgid "Оплата"
+msgstr "Payment"
+
+msgid "Оригинальный препарат"
+msgstr "Original medication"
+
+msgid "Оставить отзыв"
+msgstr "Leave a review"
+
+msgid "Остаток"
+msgstr "Stock"
+
+msgid "Остаток (шт.)"
+msgstr "Stock (pcs.)"
+
+msgid "Ответить клиенту..."
+msgstr "Reply to client..."
+
+msgid "Ответьте клиенту"
+msgstr "Reply to the client"
+
+msgid "Отзывов пока нет — будьте первым!"
+msgstr "No reviews yet — be the first!"
+
+msgid "Отзывы покупателей"
+msgstr "Customer reviews"
+
+msgid "Открыто"
+msgstr "Open"
+
+msgid "Открыть"
+msgstr "Open"
+
+msgid "Открыть карту"
+msgstr "Open map"
+
+msgid "Открыть каталог"
+msgstr "Open catalog"
+
+msgid "Открыть →"
+msgstr "Open →"
+
+msgid "Отменить"
+msgstr "Cancel"
+
+msgid "Отменён"
+msgstr "Cancelled"
+
+msgid "Отправить"
+msgstr "Send"
+
+msgid "Отправить код повторно"
+msgstr "Resend code"
+
+msgid "Отправить код →"
+msgstr "Send code →"
+
+msgid "Отправить отзыв"
+msgstr "Submit review"
+
+msgid "Отправить фото"
+msgstr "Send photo"
+
+msgid "Отправка..."
+msgstr "Sending..."
+
+msgid "Оформите заказ, укажите адрес доставки и выберите способ оплаты"
+msgstr "Place order, enter delivery address and choose payment method"
+
+msgid "Оформить заказ"
+msgstr "Checkout"
+
+msgid "Оформление заказа"
+msgstr "Checkout"
+
+msgid "Очистить"
+msgstr "Clear"
+
+msgid "Панель курьера"
+msgstr "Courier Panel"
+
+msgid "Панель менеджера ·"
+msgstr "Manager panel ·"
+
+msgid "Пароль"
+msgstr "Password"
+
+msgid "Перейти в каталог"
+msgstr "Go to catalog"
+
+msgid "По рецепту"
+msgstr "By prescription"
+
+msgid "Повторите"
+msgstr "Repeat"
+
+msgid "Повторите пароль"
+msgstr "Repeat password"
+
+msgid "Повторить"
+msgstr "Repeat"
+
+msgid "Поделиться"
+msgstr "Share"
+
+msgid "Поделиться локацией"
+msgstr "Share location"
+
+msgid "Подробнее"
+msgstr "Details"
+
+msgid "Подтвердить"
+msgstr "Confirm"
+
+msgid "Подтвердить заказ"
+msgstr "Confirm order"
+
+msgid "Подтверждение Email"
+msgstr "Email Confirmation"
+
+msgid "Подтверждён"
+msgstr "Confirmed"
+
+msgid "Поиск лекарств..."
+msgstr "Search medications..."
+
+msgid "Поиск по названию..."
+msgstr "Search by name..."
+
+msgid "Поиск..."
+msgstr "Search..."
+
+msgid "Покупателям"
+msgstr "For Customers"
+
+msgid "Получатель"
+msgstr "Recipient"
+
+msgid "Получите дома"
+msgstr "Get it at home"
+
+msgid "Попробуйте изменить параметры поиска"
+msgstr "Try changing your search filters"
+
+msgid "Популярные товары"
+msgstr "Popular products"
+
+msgid "Посмотреть другие товары"
+msgstr "View other products"
+
+msgid "Посмотреть товары"
+msgstr "View products"
+
+msgid "Похожие товары"
+msgstr "Similar products"
+
+msgid "Почему DoriTJ"
+msgstr "Why DoriTJ"
+
+msgid "Препаратов"
+msgstr "Medications"
+
+msgid "При получении"
+msgstr "On delivery"
+
+msgid "Привет! Я AI консультант аптеки DoruTJ"
+msgstr "Hello! I am the AI consultant of DoruTJ pharmacy"
+
+msgid "Привет,"
+msgstr "Hi,"
+
+msgid "Присоединитесь к DoriTJ — это бесплатно"
+msgstr "Join DoriTJ — it's free"
+
+msgid "Присоединяйтесь к тысячам клиентов"
+msgstr "Join thousands of customers"
+
+msgid "Продолжить покупки"
+msgstr "Continue shopping"
+
+msgid "Производитель"
+msgstr "Manufacturer"
+
+msgid "Простуда"
+msgstr "Cold"
+
+msgid "Профиль"
+msgstr "Profile"
+
+msgid "Работаем"
+msgstr "Working"
+
+msgid "Регистрация"
+msgstr "Register"
+
+msgid "Регистрация — DoriTJ"
+msgstr "Registration — DoriTJ"
+
+msgid "Режим работы"
+msgstr "Working hours"
+
+msgid "Рецепт"
+msgstr "Prescription"
+
+msgid "Рецепт (если нужен)"
+msgstr "Prescription (if needed)"
+
+msgid "Самые востребованные препараты"
+msgstr "Most popular medications"
+
+msgid "Сбросить"
+msgstr "Reset"
+
+msgid "Сбросить фильтры"
+msgstr "Reset filters"
+
+msgid "Светлая тема"
+msgstr "Light theme"
+
+msgid "Сделайте свой первый заказ"
+msgstr "Place your first order"
+
+msgid "Сделано в Таджикистане"
+msgstr "Made in Tajikistan"
+
+msgid "Сервисы"
+msgstr "Services"
+
+msgid "Сеть аптек"
+msgstr "Pharmacy network"
+
+msgid "Следите за курьером на карте в реальном времени и общайтесь в чате"
+msgstr "Track the courier on the map in real time and chat"
+
+msgid "Следите за курьером на карте. Доставка за 2 часа по Душанбе"
+msgstr "Track the courier on the map. Delivery in 2 hours in Dushanbe"
+
+msgid "Содержимое заказа"
+msgstr "Order contents"
+
+msgid "Создать аккаунт"
+msgstr "Create account"
+
+msgid "Сохранить изменения"
+msgstr "Save changes"
+
+msgid "Сохранить пароль →"
+msgstr "Save password →"
+
+msgid "Способ оплаты"
+msgstr "Payment method"
+
+msgid "Статус"
+msgstr "Status"
+
+msgid "Стоимость товаров"
+msgstr "Subtotal"
+
+msgid "Сумма"
+msgstr "Amount"
+
+msgid "Телефон"
+msgstr "Phone"
+
+msgid "Тип доставки"
+msgstr "Delivery type"
+
+msgid "Товаров в аптеке"
+msgstr "Products in pharmacy"
+
+msgid "Товаров нет"
+msgstr "No products"
+
+msgid "Товаров пока нет"
+msgstr "No products yet"
+
+msgid "Товары"
+msgstr "Products"
+
+msgid "Товары ("
+msgstr "Products ("
+
+msgid "Товары в наличии"
+msgstr "Products in stock"
+
+msgid "Только оригиналы"
+msgstr "Only originals"
+
+msgid "Требуется рецепт"
+msgstr "Requires prescription"
+
+msgid "Трекинг курьера"
+msgstr "Courier tracking"
+
+msgid "Тёмная тема"
+msgstr "Dark theme"
+
+msgid "У меня болит голова, что посоветуете?"
+msgstr "I have a headache, what do you recommend?"
+
+msgid "Уже есть аккаунт"
+msgstr "Already have an account"
+
+msgid "Уже есть аккаунт?"
+msgstr "Already have an account?"
+
+msgid "Улица, дом, квартира..."
+msgstr "Street, building, apt..."
+
+msgid "Управление"
+msgstr "Management"
+
+msgid "Фото"
+msgstr "Photo"
+
+msgid "Фото профиля"
+msgstr "Profile photo"
+
+msgid "Фото товара"
+msgstr "Product photo"
+
+msgid "Цена"
+msgstr "Price"
+
+msgid "Цена (сомони)"
+msgstr "Price (somoni)"
+
+msgid "Цена до"
+msgstr "Price to"
+
+msgid "Цена от"
+msgstr "Price from"
+
+msgid "Чат"
+msgstr "Chat"
+
+msgid "Чат с курьером"
+msgstr "Chat with courier"
+
+msgid "Чат с менеджером аптеки"
+msgstr "Chat with pharmacy manager"
+
+msgid "Чатов пока нет"
+msgstr "No chats yet"
+
+msgid "Чаты с клиентами"
+msgstr "Chats with clients"
+
+msgid "Что принять при простуде?"
+msgstr "What to take for a cold?"
+
+msgid "Экспресс-курьер (Душанбе)"
+msgstr "Express courier (Dushanbe)"
+
+msgid "Этого товара нет ни в одной аптеке"
+msgstr "This product is not available in any pharmacy"
+
+msgid "или"
+msgstr "or"
+
+msgid "наш приоритет"
+msgstr "our priority"
+
+msgid "отзывов"
+msgstr "reviews"
+
+msgid "позиций"
+msgstr "items"
+
+msgid "сом"
+msgstr "somoni"
+
+msgid "сомони"
+msgstr "somoni"
+
+msgid "товаров"
+msgstr "products"
+
+msgid "часа"
+msgstr "hours"
+
+msgid "чтобы оставить отзыв"
+msgstr "to leave a review"
+
+msgid "шт."
+msgstr "pcs."
+
+msgid "шт. ×"
+msgstr "pcs. ×"
+
+msgid "шт.)"
+msgstr "pcs.)"
+
+msgid "← Вернуться к списку"
+msgstr "← Back to list"
+
+msgid "← Вернуться назад"
+msgstr "← Go back"
+
+msgid "← Назад"
+msgstr "← Back"
+
+msgid "← Назад к товару"
+msgstr "← Back to product"
+
+msgid "⏳ Ожидает"
+msgstr "⏳ Pending"
+
+msgid "⚡ Управление заказом"
+msgstr "⚡ Order management"
+
+msgid "✅ В наличии ("
+msgstr "✅ In stock ("
+
+msgid "✅ Заказ доставлен"
+msgstr "✅ Order delivered"
+
+msgid "✅ Локация обновлена"
+msgstr "✅ Location updated"
+
+msgid "✅ Принять заказ"
+msgstr "✅ Accept order"
+
+msgid "✅ Сохранить товар"
+msgstr "✅ Save product"
+
+msgid "✏️ Изменить"
+msgstr "✏️ Edit"
+
+msgid "✏️ Редактировать товар"
+msgstr "✏️ Edit product"
+
+msgid "❌ Нет в наличии"
+msgstr "❌ Out of stock"
+
+msgid "❌ Ошибка геолокации"
+msgstr "❌ Geolocation error"
+
+msgid "➕ Добавить товар"
+msgstr "➕ Add product"
+
+msgid "👤 Клиент"
+msgstr "👤 Client"
+
+msgid "💊 Товары"
+msgstr "💊 Medications"
+
+msgid "💊 Товары:"
+msgstr "💊 Medications:"
+
+msgid "💬 Чат с клиентом"
+msgstr "💬 Chat with client"
+
+msgid "💾 Сохранить изменения"
+msgstr "💾 Save changes"
+
+msgid "📍 Адрес"
+msgstr "📍 Address"
+
+msgid "📍 Адрес доставки"
+msgstr "📍 Delivery address"
+
+msgid "📍 Моя локация"
+msgstr "📍 My location"
+
+msgid "📦 Детали заказа"
+msgstr "📦 Order details"
+
+msgid "📦 Заказ #"
+msgstr "📦 Order #"
+
+msgid "📦 Мои заказы"
+msgstr "📦 My orders"
+
+msgid "📦 Управление товарами"
+msgstr "📦 Product management"
+
+msgid "🔔 Новые заказы"
+msgstr "🔔 New orders"
+
+msgid "🗑 Удалить"
+msgstr "🗑 Delete"
+
+msgid "🚚 Начать доставку"
+msgstr "🚚 Start delivery"
+
+msgid "🛵 Заказ #"
+msgstr "🛵 Order #"
+
+msgid "🛵 Панель курьера"
+msgstr "🛵 Courier panel"
+
+msgid "🟢 Онлайн"
+msgstr "🟢 Online"
