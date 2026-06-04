@@ -60,8 +60,13 @@
             {% for msg in history %}
             {% if msg.role == 'user' %}
             <div class="flex justify-end">
-                <div class="max-w-sm bg-brand-500 text-white px-5 py-3 rounded-2xl rounded-tr-sm text-sm leading-relaxed shadow-md">
-                    {{ msg.message }}
+                <div class="max-w-sm bg-brand-500 text-white px-5 py-3 rounded-2xl rounded-tr-sm text-sm leading-relaxed shadow-md space-y-2">
+                    {% if msg.image %}
+                    <img src="{{ msg.image.url }}" alt="Фото" class="rounded-xl max-w-full h-auto max-h-64 object-cover">
+                    {% endif %}
+                    {% if msg.message %}
+                    <div>{{ msg.message }}</div>
+                    {% endif %}
                 </div>
             </div>
             {% else %}
@@ -79,14 +84,18 @@
 
         <!-- Инпут -->
         <div class="border-t border-gray-200 dark:border-gray-700/50 p-4">
-            <form method="POST" class="flex gap-3" id="chat-form">
+            <form method="POST" class="flex gap-3" id="chat-form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="relative flex-1">
                     <i class="ti ti-message text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 text-sm"></i>
                     <input type="text" name="message" id="message-input"
                            placeholder="Опишите симптомы или задайте вопрос..."
-                           required autocomplete="off"
-                           class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 focus:bg-white dark:focus:bg-gray-800 transition-all">
+                           autocomplete="off"
+                           class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl pl-10 pr-10 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 focus:bg-white dark:focus:bg-gray-800 transition-all">
+                    <label for="image-input" class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-brand-500 transition-colors">
+                        <i class="ti ti-camera text-lg"></i>
+                    </label>
+                    <input type="file" name="image" id="image-input" accept="image/*" class="hidden" onchange="previewImage(event)">
                 </div>
                 <button type="submit"
                         class="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-2xl btn-press transition-all font-medium text-sm shadow-lg shadow-brand-500/25">
@@ -94,6 +103,12 @@
                     <i class="ti ti-arrow-right text-sm"></i>
                 </button>
             </form>
+            <div id="image-preview" class="hidden mt-3 relative inline-block">
+                <img id="preview-img" src="" alt="Preview" class="h-20 w-20 object-cover rounded-xl border border-gray-200 dark:border-gray-700">
+                <button type="button" onclick="removeImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md hover:bg-red-600 transition-colors">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -105,6 +120,25 @@
     function setQuestion(text) {
         document.getElementById('message-input').value = text;
         document.getElementById('message-input').focus();
+    }
+
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('image-preview');
+            const img = document.getElementById('preview-img');
+            img.src = e.target.result;
+            preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removeImage() {
+        document.getElementById('image-input').value = '';
+        document.getElementById('image-preview').classList.add('hidden');
+        document.getElementById('preview-img').src = '';
     }
 </script>
 

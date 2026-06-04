@@ -12,16 +12,23 @@ def consultant(request):
 
     if request.method == 'POST':
         user_message = request.POST.get('message', '').strip()
-        if not user_message:
+        image = request.FILES.get('image')
+
+        if not user_message and not image:
             return redirect('consultant')
 
-        ChatMessage.objects.create(
+        msg = ChatMessage.objects.create(
             user=request.user,
             role='user',
-            message=user_message
+            message=user_message or '',
+            image=image if image else None
         )
 
         try:
+            ai_message = user_message or '[Изображение]'
+            if msg.image:
+                ai_message += ' (пользователь отправил изображение)'
+
             response = client.chat.completions.create(
                 model='llama-3.3-70b-versatile',
                 messages=[
@@ -29,7 +36,7 @@ def consultant(request):
                         'role': 'system',
                         'content': 'Ты консультант аптеки DoriTJ в Таджикистане. Помогай подбирать лекарства по симптомам, предлагай аналоги. Отвечай на русском любом языке в основе на таджитском.'
                     },
-                    {'role': 'user', 'content': user_message}
+                    {'role': 'user', 'content': ai_message}
                 ]
             )
             ai_reply = response.choices[0].message.content
