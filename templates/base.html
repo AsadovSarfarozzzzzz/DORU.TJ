@@ -1,259 +1,616 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoriTJ — Онлайн аптека</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.92); }
-            to   { opacity: 1; transform: scale(1); }
-        }
-        .anim-page { animation: fadeUp 0.5s ease forwards; }
-        .anim-pop  { animation: popIn 0.35s ease forwards; }
-        .delay-1 { animation-delay: 0.05s; opacity: 0; }
-        .delay-2 { animation-delay: 0.10s; opacity: 0; }
-        .delay-3 { animation-delay: 0.15s; opacity: 0; }
-        .delay-4 { animation-delay: 0.20s; opacity: 0; }
-        .card-hover {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-        }
-    </style>
-</head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+    <meta name="description" content="DoriTJ — Онлайн аптека с доставкой по Душанбе">
+    <title>{% block title %}DoruTJ — Онлайн аптека{% endblock %}</title>
 
-<!-- TOP BAR -->
-<div class="bg-green-600 text-white text-xs py-2 px-6">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-6">
-            <span>📞 +992 XX XXX XXXX</span>
-            <span>✉️ info@doritj.tj</span>
-            <span>📍 Душанбе, Таджикистан</span>
-        </div>
-        <div class="flex items-center gap-4">
-            <span>🚚 Доставка за 2 часа</span>
-            <span>⏰ 08:00 — 22:00</span>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50:  '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    animation: {
+                        'fade-up':   'fadeUp .5s cubic-bezier(.16,1,.3,1) forwards',
+                        'fade-in':   'fadeIn .3s ease forwards',
+                        'slide-down':'slideDown .25s cubic-bezier(.16,1,.3,1) forwards',
+                    },
+                    keyframes: {
+                        fadeUp:    { from:{opacity:0,transform:'translateY(20px)'}, to:{opacity:1,transform:'translateY(0)'} },
+                        fadeIn:    { from:{opacity:0}, to:{opacity:1} },
+                        slideDown: { from:{opacity:0,transform:'translateY(-8px)'}, to:{opacity:1,transform:'translateY(0)'} },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base */
+        *, *::before, *::after { box-sizing: border-box; }
+        html { font-family: 'Inter', system-ui, sans-serif; }
+
+        /* Smooth transitions for dark mode */
+        body, header, nav, footer, main,
+        .card, .btn, input, select, textarea, button {
+            transition: background-color .25s ease, color .25s ease,
+                        border-color .25s ease, box-shadow .25s ease;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar              { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track        { background: transparent; }
+        ::-webkit-scrollbar-thumb        { background: #d1d5db; border-radius: 99px; }
+        .dark ::-webkit-scrollbar-thumb  { background: #374151; }
+
+        /* Glass morphism */
+        .glass {
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+        }
+
+        /* Card hover lift */
+        .card-lift {
+            transition: transform .2s cubic-bezier(.16,1,.3,1),
+                        box-shadow .2s ease;
+        }
+        .card-lift:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px -8px rgba(0,0,0,.12);
+        }
+        .dark .card-lift:hover {
+            box-shadow: 0 12px 40px -8px rgba(0,0,0,.5);
+        }
+
+        /* Nav underline animation */
+        .nav-item {
+            position: relative;
+            padding-bottom: 2px;
+        }
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 50%; right: 50%;
+            height: 2px;
+            background: #22c55e;
+            border-radius: 99px;
+            transition: left .2s ease, right .2s ease;
+        }
+        .nav-item:hover::after,
+        .nav-item.active::after { left: 0; right: 0; }
+
+        /* Button press effect */
+        .btn-press:active { transform: scale(.97); }
+
+        /* Focus ring */
+        .focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(34,197,94,.2);
+        }
+
+        /* Gradient text */
+        .text-gradient {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Notification badge */
+        .badge {
+            position: absolute;
+            top: -4px; right: -4px;
+            width: 16px; height: 16px;
+            background: #ef4444;
+            border-radius: 50%;
+            font-size: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+        .dark .badge { border-color: #111827; }
+
+        /* Dropdown animation */
+        .dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: opacity .2s ease, visibility .2s ease, transform .2s cubic-bezier(.16,1,.3,1);
+        }
+        .dropdown-trigger:hover .dropdown,
+        .dropdown-trigger:focus-within .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Mobile menu */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .3s cubic-bezier(.16,1,.3,1);
+        }
+        #mobile-menu.open { max-height: 500px; }
+
+        /* Stagger children */
+        .stagger > * { opacity: 0; animation: fadeUp .45s cubic-bezier(.16,1,.3,1) forwards; }
+        .stagger > *:nth-child(1) { animation-delay: .05s; }
+        .stagger > *:nth-child(2) { animation-delay: .10s; }
+        .stagger > *:nth-child(3) { animation-delay: .15s; }
+        .stagger > *:nth-child(4) { animation-delay: .20s; }
+        .stagger > *:nth-child(5) { animation-delay: .25s; }
+        .stagger > *:nth-child(6) { animation-delay: .30s; }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-gray-50 dark:bg-[#0d0d12] text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col">
+
+<!-- ═══════════════════════════════ TOP BAR ═══════════════════════════════ -->
+<div class="hidden md:block bg-brand-600 dark:bg-brand-700 text-white">
+    <div class="max-w-7xl mx-auto px-6 py-1.5">
+        <div class="flex items-center justify-between text-xs font-medium">
+            <div class="flex items-center gap-6 opacity-90">
+                <a href="tel:+99244XXXXXXX" class="flex items-center gap-1.5 hover:opacity-100 transition-opacity">
+                    <i class="ti ti-phone-call"></i>
+                    +992 44 XXX XX XX
+                </a>
+                <a href="mailto:info@doritj.tj" class="flex items-center gap-1.5 hover:opacity-100 transition-opacity">
+                    <i class="ti ti-mail"></i>
+                    info@doritj.tj
+                </a>
+                <span class="flex items-center gap-1.5 opacity-80">
+                    <i class="ti ti-map-pin"></i>
+                    Душанбе, Таджикистан
+                </span>
+            </div>
+            <div class="flex items-center gap-5 opacity-80">
+                <span class="flex items-center gap-1.5">
+                    <i class="ti ti-truck-delivery"></i>
+                    Доставка за 2 часа
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <i class="ti ti-clock"></i>
+                    08:00 — 22:00
+                </span>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- MAIN HEADER -->
-<header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6">
+<!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
+<header id="header" class="sticky top-0 z-50 glass bg-white/80 dark:bg-[#0d0d12]/80 border-b border-gray-200/60 dark:border-gray-800/60">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="flex items-center justify-between h-16 gap-4">
 
-        <!-- Верхняя часть хедера -->
-        <div class="flex items-center justify-between py-4 border-b border-gray-100">
-
-            <!-- Лого -->
-            <a href="{% url 'home' %}" class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-green-600 rounded-2xl flex items-center justify-center text-white text-xl">
-                    💊
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="flex items-center gap-2 group flex-shrink-0">
+                <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center shadow-md shadow-brand-500/30 group-hover:scale-105 transition-all duration-200">
+                    <i class="ti ti-pill text-white text-base"></i>
                 </div>
-                <div>
-                    <span class="text-xl font-extrabold text-gray-800">Dori</span><span class="text-xl font-extrabold text-green-600">TJ</span>
-                    <p class="text-xs text-gray-400 leading-none">Онлайн аптека</p>
-                </div>
+                <span class="text-base font-black tracking-tight">
+                    <span class="text-gray-900 dark:text-white">Dori</span><span class="text-gradient">TJ</span>
+                </span>
             </a>
 
-            <!-- Поиск -->
-            <form method="GET" action="{% url 'catalog' %}"
-                  class="hidden md:flex flex-1 max-w-xl mx-8">
-                <div class="flex w-full bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden focus-within:border-green-400 focus-within:bg-white transition">
-                    <input type="text" name="search"
-                           placeholder="Поиск лекарств, витаминов..."
-                           class="flex-1 bg-transparent px-5 py-3 text-sm focus:outline-none">
-                    <button type="submit"
-                            class="bg-green-600 text-white px-5 py-3 hover:bg-green-700 transition text-sm font-medium">
-                        🔍
-                    </button>
-                </div>
-            </form>
+            <!-- Nav — центр -->
+            {% if user.is_authenticated %}
+            <nav class="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+                {% if user.is_courier %}
+                <a href="{% url 'courier_dashboard' %}" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold bg-orange-500 text-white">
+                    <i class="ti ti-bike text-base"></i> Курьер
+                </a>
+                {% elif user.is_manager %}
+                <a href="{% url 'manager_dashboard' %}" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold bg-purple-500 text-white">
+                    <i class="ti ti-building-store text-base"></i> Аптека
+                </a>
+                {% else %}
+                <a href="{% url 'home' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
+                    <i class="ti ti-home text-base"></i> Главная
+                </a>
+                <a href="{% url 'catalog' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
+                    <i class="ti ti-pill text-base"></i> Каталог
+                </a>
+                <a href="{% url 'pharmacy_list' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
+                    <i class="ti ti-building-hospital text-base"></i> Аптеки
+                </a>
+                <a href="{% url 'consultant' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
+                    <i class="ti ti-robot text-base"></i> AI
+                </a>
+                <a href="{% url 'my_orders' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
+                    <i class="ti ti-package text-base"></i> Заказы
+                </a>
+                {% endif %}
+            </nav>
+            {% endif %}
 
-            <!-- Правая часть -->
-            <div class="flex items-center gap-3">
+            <!-- Search + Actions -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+
+                <!-- Search -->
+                {% if user.is_authenticated and not user.is_courier and not user.is_manager %}
+                <form method="GET" action="{% url 'catalog' %}" class="hidden md:flex">
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent hover:border-brand-300 dark:hover:border-brand-700 focus-within:border-brand-500 focus-within:bg-white dark:focus-within:bg-gray-700 transition-all w-52 lg:w-64">
+                        <i class="ti ti-search text-gray-400 text-sm ml-3 flex-shrink-0"></i>
+                        <input type="text" name="search"
+                               placeholder="Поиск..."
+                               class="flex-1 bg-transparent px-2.5 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none">
+                    </div>
+                </form>
+                {% endif %}
+
+                <!-- Divider -->
+                <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
+
+                <!-- Theme -->
+                <button onclick="toggleTheme()" id="theme-btn"
+                        class="w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 btn-press transition-all">
+                    <i id="theme-icon" class="ti ti-moon text-[17px]"></i>
+                </button>
+
                 {% if user.is_authenticated %}
 
-                <!-- Корзина -->
+                <!-- Cart -->
+                {% if not user.is_courier and not user.is_manager %}
                 <a href="{% url 'cart' %}"
-                   class="relative flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2.5 rounded-2xl hover:bg-green-100 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    <span class="text-sm font-medium">Корзина</span>
+                   class="relative w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand-600 btn-press transition-all">
+                    <i class="ti ti-shopping-cart text-[17px]"></i>
                 </a>
+                {% endif %}
 
-                <!-- Профиль дропдаун -->
-                <div class="relative group">
-                    <button class="flex items-center gap-2 border border-gray-200 px-4 py-2.5 rounded-2xl text-sm font-medium text-gray-700 hover:border-green-400 hover:text-green-600 transition">
-                        {% if user.avatar %}
-                            <img src="{{ user.avatar.url }}" class="w-6 h-6 rounded-full object-cover">
-                        {% else %}
-                            <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-xs font-bold">
-                                {{ user.username|first|upper }}
-                            </div>
-                        {% endif %}
-                        {{ user.username }}
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                <!-- Divider -->
+                <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
+
+                <!-- Profile dropdown -->
+                <div class="dropdown-trigger relative">
+                    <button class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 pl-2 pr-2.5 py-1.5 rounded-xl btn-press transition-all">
+                        <div class="w-6 h-6 rounded-lg overflow-hidden flex-shrink-0">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
+                            {% else %}
+                                <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-bold">
+                                    {{ user.username|first|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <span class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200 max-w-[72px] truncate">
+                            {{ user.username }}
+                        </span>
+                        <i class="ti ti-chevron-down text-gray-400 text-xs"></i>
                     </button>
 
-                    <!-- Дропдаун -->
-                    <div class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
-                        <div class="p-3 bg-green-50 border-b border-gray-100">
-                            <p class="font-semibold text-gray-800 text-sm">{{ user.username }}</p>
-                            <p class="text-xs text-gray-400">{{ user.email }}</p>
+                    <!-- Dropdown -->
+                    <div class="dropdown absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 rounded-2xl shadow-xl shadow-black/10 dark:shadow-black/40 border border-gray-100 dark:border-gray-800 overflow-hidden z-50">
+                        <div class="p-3 bg-gradient-to-br from-brand-50 to-emerald-50 dark:from-brand-900/20 dark:to-emerald-900/20 border-b border-gray-100 dark:border-gray-800">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
+                                    {% if user.avatar %}
+                                        <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-bold">
+                                            {{ user.username|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">{{ user.username }}</p>
+                                    <p class="text-xs text-gray-400 truncate">{{ user.email }}</p>
+                                </div>
+                            </div>
                         </div>
-                        <a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 transition">
-                            👤 Профиль
-                        </a>
-                        <a href="{% url 'my_orders' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 transition">
-                            📦 Мои заказы
-                        </a>
-                        <a href="{% url 'consultant' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 transition">
-                            🤖 AI Консультант
-                        </a>
-                        {% if user.is_staff %}
-                        <hr class="border-gray-100">
-                        <a href="{% url 'product_list' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition">
-                            ⚙️ Управление
-                        </a>
-                        {% endif %}
-                        <hr class="border-gray-100">
-                        <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition">
-                            🚪 Выйти
-                        </a>
+
+                        <div class="p-1.5">
+                            {% if not user.is_courier and not user.is_manager %}
+                            <a href="{% url 'profile' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <i class="ti ti-user text-base text-gray-400 w-5"></i> Профиль
+                            </a>
+                            <a href="{% url 'my_orders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <i class="ti ti-package text-base text-gray-400 w-5"></i> Мои заказы
+                            </a>
+                            <a href="{% url 'consultant' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <i class="ti ti-robot text-base text-gray-400 w-5"></i> AI Консультант
+                            </a>
+                            {% endif %}
+                            {% if user.is_staff %}
+                            <div class="h-px bg-gray-100 dark:bg-gray-800 my-1.5 mx-1"></div>
+                            <a href="{% url 'product_list' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                                <i class="ti ti-settings text-base w-5"></i> Управление
+                            </a>
+                            {% endif %}
+                            {% if user.is_courier %}
+                            <a href="{% url 'courier_dashboard' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors">
+                                <i class="ti ti-bike text-base w-5"></i> Панель курьера
+                            </a>
+                            {% endif %}
+                            {% if user.is_manager %}
+                            <a href="{% url 'manager_dashboard' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
+                                <i class="ti ti-building-store text-base w-5"></i> Моя аптека
+                            </a>
+                            {% endif %}
+                            <div class="h-px bg-gray-100 dark:bg-gray-800 my-1.5 mx-1"></div>
+                            <a href="{% url 'logout' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                <i class="ti ti-logout text-base w-5"></i> Выйти
+                            </a>
+                        </div>
                     </div>
                 </div>
 
                 {% else %}
                 <a href="{% url 'login_user' %}"
-                   class="text-sm font-medium text-gray-600 hover:text-green-600 transition px-4 py-2.5 border border-gray-200 rounded-2xl hover:border-green-400">
+                   class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-brand-600 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 btn-press transition-all">
                     Войти
                 </a>
                 <a href="{% url 'register' %}"
-                   class="text-sm font-medium bg-green-600 text-white px-5 py-2.5 rounded-2xl hover:bg-green-700 transition">
+                   class="text-sm font-semibold bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl shadow-lg shadow-brand-500/25 btn-press transition-all">
                     Регистрация
                 </a>
                 {% endif %}
+
+                <!-- Mobile menu button -->
+                <button onclick="toggleMobile()"
+                        class="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 btn-press transition-all">
+                    <i id="mobile-icon" class="ti ti-menu-2 text-[17px]"></i>
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- Нижняя часть хедера — навигация -->
-        {% if user.is_authenticated %}
-        <nav class="flex items-center gap-1 py-3">
-            <a href="{% url 'home' %}"
-               class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
-                🏠 Главная
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white/95 dark:bg-[#0d0d12]/95 glass">
+        <div class="max-w-7xl mx-auto px-4 py-3 space-y-1">
+            {% if user.is_authenticated %}
+            {% if not user.is_courier and not user.is_manager %}
+
+            <!-- Mobile search -->
+            <form method="GET" action="{% url 'catalog' %}" class="mb-3">
+                <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent focus-within:border-brand-500 transition-all">
+                    <i class="ti ti-search text-gray-400 text-sm ml-3"></i>
+                    <input type="text" name="search" placeholder="Поиск лекарств..."
+                           class="flex-1 bg-transparent px-3 py-2.5 text-sm focus:outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400">
+                    <button type="submit" class="m-1 bg-brand-500 text-white text-xs px-3 py-1.5 rounded-lg">
+                        Найти
+                    </button>
+                </div>
+            </form>
+
+            <a href="{% url 'home' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <i class="ti ti-home text-base text-gray-400 w-5"></i> Главная
             </a>
-        
-            {% if user.is_courier %}
-                <a href="{% url 'courier_dashboard' %}"
-                   class="px-4 py-2 rounded-xl text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition">
-                    🛵 Панель курьера
-                </a>
-            {% else %}
-                <a href="{% url 'catalog' %}"
-                   class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
-                    💊 Каталог
-                </a>
-                <a href="{% url 'consultant' %}"
-                   class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
-                    🤖 AI Консультант
-                </a>
-                <a href="{% url 'my_orders' %}"
-                   class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-green-50 hover:text-green-600 transition">
-                    📦 Мои заказы
-                </a>
-                {% if user.is_manager %}
-                <a href="{% url 'manager_dashboard' %}"
-                 class="px-4 py-2 rounded-xl text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition">
-                    🏥 Моя аптека
-                </a>
-                {% endif %}
-                {% if user.is_staff %}
-                <a href="{% url 'product_list' %}"
-                   class="px-4 py-2 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition ml-auto">
-                    ⚙️ Панель управления
-                </a>
-                {% endif %}
+            <a href="{% url 'catalog' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <i class="ti ti-pill text-base text-gray-400 w-5"></i> Каталог
+            </a>
+            <a href="{% url 'pharmacy_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <i class="ti ti-building-hospital text-base text-gray-400 w-5"></i> Аптеки
+            </a>
+            <a href="{% url 'consultant' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <i class="ti ti-robot text-base text-gray-400 w-5"></i> AI Консультант
+            </a>
+            <a href="{% url 'my_orders' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <i class="ti ti-package text-base text-gray-400 w-5"></i> Мои заказы
+            </a>
+            <a href="{% url 'cart' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <i class="ti ti-shopping-cart text-base text-gray-400 w-5"></i> Корзина
+            </a>
             {% endif %}
-        </nav>
-    {% endif %}
-
+            <div class="h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
+            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                <i class="ti ti-logout text-base w-5"></i> Выйти
+            </a>
+            {% else %}
+            <a href="{% url 'login_user' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <i class="ti ti-login text-base text-gray-400 w-5"></i> Войти
+            </a>
+            <a href="{% url 'register' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors">
+                <i class="ti ti-user-plus text-base w-5"></i> Регистрация
+            </a>
+            {% endif %}
+        </div>
     </div>
 </header>
 
-<!-- СООБЩЕНИЯ -->
+<!-- ══════════════════════════════ MESSAGES ═══════════════════════════════ -->
 {% if messages %}
-<div class="max-w-7xl mx-auto px-6 mt-4 space-y-2">
+<div class="max-w-7xl mx-auto px-4 md:px-6 pt-4 space-y-2" id="messages-container">
     {% for msg in messages %}
-    <div class="{% if msg.tags == 'success' %}bg-green-50 border border-green-200 text-green-700{% else %}bg-red-50 border border-red-200 text-red-700{% endif %} px-4 py-3 rounded-xl text-sm flex items-center gap-2">
-        {% if msg.tags == 'success' %}✅{% else %}⚠️{% endif %}
-        {{ msg }}
+    <div class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium border animate-slide-down
+                {% if msg.tags == 'success' %}
+                    bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400
+                {% elif msg.tags == 'error' %}
+                    bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400
+                {% elif msg.tags == 'warning' %}
+                    bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400
+                {% else %}
+                    bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400
+                {% endif %}">
+        <i class="ti {% if msg.tags == 'success' %}ti-circle-check{% elif msg.tags == 'error' %}ti-circle-x{% elif msg.tags == 'warning' %}ti-alert-triangle{% else %}ti-info-circle{% endif %} text-lg flex-shrink-0"></i>
+        <span class="flex-1">{{ msg }}</span>
+        <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 transition-opacity">
+            <i class="ti ti-x text-base"></i>
+        </button>
     </div>
     {% endfor %}
 </div>
 {% endif %}
 
-<!-- КОНТЕНТ -->
-<main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full">
-    {% block content %}{% endblock %}
+<!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
+<main class="flex-1 w-full overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 animate-fade-up">
+        {% block content %}{% endblock %}
+    </div>
 </main>
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
 
-<!-- FOOTER -->
-<footer class="bg-white border-t border-gray-100 mt-auto">
-    <div class="max-w-7xl mx-auto px-6 py-10">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-                <div class="flex items-center gap-2 mb-4">
-                    <div class="w-8 h-8 bg-green-600 rounded-xl flex items-center justify-center text-white">💊</div>
-                    <span class="font-extrabold text-gray-800">Dori<span class="text-green-600">TJ</span></span>
-                </div>
-                <p class="text-gray-400 text-sm leading-relaxed">Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое.</p>
+        <!-- Main footer -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
+
+            <!-- Brand -->
+            <div class="col-span-2 md:col-span-1">
+                <a href="{% url 'home' %}" class="flex items-center gap-2.5 mb-4 group">
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <i class="ti ti-pill text-white text-sm"></i>
+                    </div>
+                    <span class="font-black text-gray-900 dark:text-white">Dori<span class="text-gradient">TJ</span></span>
+                </a>
+                <p class="text-gray-400 dark:text-gray-500 text-sm leading-relaxed mb-5">
+                    Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое.
+                </p>
+                <!-- Theme toggle in footer -->
+                <button onclick="toggleTheme()"
+                        class="inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-xl text-xs font-medium text-gray-500 dark:text-gray-400 btn-press transition-all">
+                    <i id="footer-icon" class="ti ti-moon text-sm"></i>
+                    <span id="footer-text">Тёмная тема</span>
+                </button>
             </div>
+
+            <!-- Links -->
             <div>
-                <h4 class="font-bold text-gray-700 mb-4">Покупателям</h4>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="{% url 'catalog' %}" class="hover:text-green-600 transition">Каталог</a></li>
-                    <li><a href="{% url 'cart' %}" class="hover:text-green-600 transition">Корзина</a></li>
-                    <li><a href="{% url 'my_orders' %}" class="hover:text-green-600 transition">Мои заказы</a></li>
+                <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4">Покупателям</h4>
+                <ul class="space-y-3">
+                    {% for url, icon, label in footer_links_buyers %}
+                    {% empty %}
+                    <li><a href="{% url 'catalog' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-pill text-xs"></i>Каталог</a></li>
+                    <li><a href="{% url 'pharmacy_list' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-building-hospital text-xs"></i>Аптеки</a></li>
+                    <li><a href="{% url 'cart' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-shopping-cart text-xs"></i>Корзина</a></li>
+                    <li><a href="{% url 'my_orders' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-package text-xs"></i>Мои заказы</a></li>
+                    {% endfor %}
                 </ul>
             </div>
+
             <div>
-                <h4 class="font-bold text-gray-700 mb-4">Сервисы</h4>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="{% url 'consultant' %}" class="hover:text-green-600 transition">AI Консультант</a></li>
-                    <li><a href="#" class="hover:text-green-600 transition">Доставка</a></li>
-                    <li><a href="#" class="hover:text-green-600 transition">О нас</a></li>
+                <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4">Сервисы</h4>
+                <ul class="space-y-3">
+                    <li><a href="{% url 'consultant' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-robot text-xs"></i>AI Консультант</a></li>
+                    <li><a href="#" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-truck-delivery text-xs"></i>Доставка</a></li>
+                    <li><a href="#" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-info-circle text-xs"></i>О нас</a></li>
                 </ul>
             </div>
+
             <div>
-                <h4 class="font-bold text-gray-700 mb-4">Контакты</h4>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li>📍 Душанбе, Таджикистан</li>
-                    <li>📞 +992 XX XXX XXXX</li>
-                    <li>✉️ info@doritj.tj</li>
-                    <li>⏰ 08:00 — 22:00</li>
+                <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4">Контакты</h4>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-2 text-sm text-gray-400 dark:text-gray-500">
+                        <i class="ti ti-map-pin text-xs mt-0.5 flex-shrink-0"></i>
+                        Душанбе, Таджикистан
+                    </li>
+                    <li>
+                        <a href="tel:+992XXXXXXXXX" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors">
+                            <i class="ti ti-phone text-xs"></i>+992 XX XXX XXXX
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:info@doritj.tj" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors">
+                            <i class="ti ti-mail text-xs"></i>info@doritj.tj
+                        </a>
+                    </li>
+                    <li class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
+                        <i class="ti ti-clock text-xs"></i>08:00 — 22:00
+                    </li>
                 </ul>
             </div>
         </div>
-        <div class="border-t border-gray-100 pt-6 flex items-center justify-between text-sm text-gray-400">
-            <span>© 2025 DoriTJ — Все права защищены</span>
-            <span>🇹🇯 Сделано в Таджикистане</span>
+
+        <!-- Bottom bar -->
+        <div class="border-t border-gray-100 dark:border-gray-800 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p class="text-sm text-gray-400 dark:text-gray-500">
+                © 2025 DoriTJ. Все права защищены.
+            </p>
+            <p class="text-sm text-gray-400 dark:text-gray-500 flex items-center gap-1.5">
+                <i class="ti ti-heart text-red-400 text-xs"></i>
+                Сделано в Таджикистане
+            </p>
         </div>
     </div>
 </footer>
+
+{% block extra_scripts %}{% endblock %}
+
+<!-- ══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
+<script>
+    // ── Theme ──────────────────────────────────────────────────────────────
+    const html = document.documentElement;
+    const saved = localStorage.getItem('doritj-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (saved === 'dark' || (!saved && prefersDark)) {
+        html.classList.add('dark');
+        syncThemeUI(true);
+    }
+
+    function toggleTheme() {
+        const isDark = html.classList.toggle('dark');
+        localStorage.setItem('doritj-theme', isDark ? 'dark' : 'light');
+        syncThemeUI(isDark);
+    }
+
+    function syncThemeUI(isDark) {
+        const icon    = document.getElementById('theme-icon');
+        const fIcon   = document.getElementById('footer-icon');
+        const fText   = document.getElementById('footer-text');
+        if (icon)  icon.className  = isDark ? 'ti ti-sun text-[18px]'  : 'ti ti-moon text-[18px]';
+        if (fIcon) fIcon.className = isDark ? 'ti ti-sun text-sm'      : 'ti ti-moon text-sm';
+        if (fText) fText.textContent = isDark ? 'Светлая тема' : 'Тёмная тема';
+    }
+
+    // ── Mobile menu ────────────────────────────────────────────────────────
+    function toggleMobile() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('mobile-icon');
+        const isOpen = menu.classList.toggle('open');
+        icon.className = isOpen ? 'ti ti-x text-[18px]' : 'ti ti-menu-2 text-[18px]';
+    }
+
+    // ── Auto-dismiss messages ──────────────────────────────────────────────
+    setTimeout(() => {
+        const container = document.getElementById('messages-container');
+        if (container) {
+            container.style.transition = 'opacity .5s ease';
+            container.style.opacity = '0';
+            setTimeout(() => container.remove(), 500);
+        }
+    }, 4000);
+
+    // ── Header scroll shadow ───────────────────────────────────────────────
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+            header.classList.add('shadow-sm', 'shadow-black/5');
+        } else {
+            header.classList.remove('shadow-sm', 'shadow-black/5');
+        }
+    }, { passive: true });
+</script>
 
 </body>
 </html>
