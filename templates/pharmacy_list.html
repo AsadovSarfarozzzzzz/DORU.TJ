@@ -3,15 +3,19 @@
 
 <div class="flex items-center justify-between mb-8">
     <div>
-        <h1 class="text-3xl font-bold text-gray-800">🏥 Аптеки Душанбе</h1>
-        <p class="text-gray-400 text-sm mt-1">Найдите ближайшую аптеку</p>
+        <div class="flex items-center gap-3 mb-1">
+            <i class="ti ti-building-hospital text-3xl text-brand-500"></i>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-white">Аптеки Душанбе</h1>
+        </div>
+        <p class="text-gray-400 dark:text-gray-500 text-sm">Найдите ближайшую аптеку на карте</p>
     </div>
 </div>
 
 <!-- Карта всех аптек -->
-<div class="bg-white rounded-3xl border border-gray-100 overflow-hidden mb-8">
-    <div class="p-4 border-b border-gray-100">
-        <h2 class="font-bold text-gray-800">📍 На карте</h2>
+<div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 overflow-hidden mb-8 shadow-sm">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700/50 flex items-center gap-2">
+        <i class="ti ti-map-2 text-brand-500"></i>
+        <h2 class="font-bold text-gray-900 dark:text-white">На карте</h2>
     </div>
     <div id="map" style="height: 400px;"></div>
 </div>
@@ -19,40 +23,42 @@
 <!-- Список аптек -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
     {% for pharmacy in pharmacies %}
-    <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition card-hover">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-6 card-lift hover:border-brand-200 dark:hover:border-brand-800 transition-all">
         <div class="flex items-start justify-between mb-4">
-            <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-2xl">
-                🏥
+            <div class="w-12 h-12 bg-brand-50 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center">
+                <i class="ti ti-building-hospital text-2xl text-brand-600 dark:text-brand-400"></i>
             </div>
-            <span class="bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full font-medium">
+            <span class="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-xs px-3 py-1.5 rounded-full font-medium border border-green-200 dark:border-green-800">
+                <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
                 Открыто
             </span>
         </div>
-        <h3 class="font-bold text-gray-800 text-lg mb-2">{{ pharmacy.name }}</h3>
-        <div class="space-y-2 text-sm text-gray-500 mb-4">
-            <div class="flex items-center gap-2">
-                <span>📍</span>
+        <h3 class="font-bold text-gray-900 dark:text-white text-lg mb-3">{{ pharmacy.name }}</h3>
+        <div class="space-y-2.5 text-sm text-gray-500 dark:text-gray-400 mb-5">
+            <div class="flex items-center gap-2.5">
+                <i class="ti ti-map-pin text-gray-400 text-sm w-4"></i>
                 <span>{{ pharmacy.address }}</span>
             </div>
-            <div class="flex items-center gap-2">
-                <span>📞</span>
+            <div class="flex items-center gap-2.5">
+                <i class="ti ti-phone text-gray-400 text-sm w-4"></i>
                 <a href="tel:{{ pharmacy.phone }}"
-                   class="text-green-600 hover:underline">{{ pharmacy.phone }}</a>
+                   class="text-brand-600 dark:text-brand-400 hover:underline">{{ pharmacy.phone }}</a>
             </div>
-            <div class="flex items-center gap-2">
-                <span>⏰</span>
+            <div class="flex items-center gap-2.5">
+                <i class="ti ti-clock text-gray-400 text-sm w-4"></i>
                 <span>{{ pharmacy.working_hours }}</span>
             </div>
         </div>
         <a href="{% url 'pharmacy_detail' pharmacy.pk %}"
-           class="block w-full text-center bg-green-600 text-white py-3 rounded-2xl hover:bg-green-700 transition text-sm font-medium">
-            Посмотреть товары →
+           class="flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white py-3 rounded-2xl btn-press transition-all text-sm font-semibold shadow-lg shadow-brand-500/25">
+            Посмотреть товары
+            <i class="ti ti-arrow-right text-sm"></i>
         </a>
     </div>
     {% empty %}
     <div class="col-span-3 text-center py-20">
-        <div class="text-6xl mb-4">🏥</div>
-        <p class="text-gray-400">Аптек пока нет</p>
+        <i class="ti ti-building-hospital-off text-6xl text-gray-300 dark:text-gray-600 mb-4 block"></i>
+        <p class="text-gray-400 dark:text-gray-500">Аптек пока нет</p>
     </div>
     {% endfor %}
 </div>
@@ -62,7 +68,9 @@
 
 <script>
     const map = L.map('map').setView([38.5598, 68.7870], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
     const pharmacies = [
         {% for pharmacy in pharmacies %}
@@ -78,18 +86,17 @@
     ];
 
     pharmacies.forEach(p => {
-        L.marker([p.lat, p.lng])
-            .addTo(map)
-            .bindPopup(`
-                <div style="min-width:180px">
-                    <p style="font-weight:bold;margin-bottom:4px">🏥 ${p.name}</p>
-                    <p style="font-size:12px;color:#666;margin-bottom:4px">📍 ${p.address}</p>
-                    <p style="font-size:12px;color:#666;margin-bottom:8px">📞 ${p.phone}</p>
-                    <a href="${p.url}" style="background:#16a34a;color:white;padding:4px 12px;border-radius:8px;font-size:12px;text-decoration:none">
-                        Открыть →
-                    </a>
-                </div>
-            `);
+        const marker = L.marker([p.lat, p.lng]).addTo(map);
+        marker.bindPopup(`
+            <div style="min-width:180px;font-family:system-ui,sans-serif">
+                <p style="font-weight:bold;margin-bottom:4px;font-size:14px">🏥 ${p.name}</p>
+                <p style="font-size:12px;color:#666;margin-bottom:4px">📍 ${p.address}</p>
+                <p style="font-size:12px;color:#666;margin-bottom:8px">📞 ${p.phone}</p>
+                <a href="${p.url}" style="background:#22c55e;color:white;padding:6px 16px;border-radius:10px;font-size:12px;text-decoration:none;display:inline-block;font-weight:600">
+                    Открыть →
+                </a>
+            </div>
+        `);
     });
 </script>
 

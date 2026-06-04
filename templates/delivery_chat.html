@@ -6,10 +6,16 @@
     <!-- Заголовок -->
     <div class="flex items-center gap-4 mb-6">
         <a href="{% url 'order_detail' order.pk %}"
-           class="text-gray-400 hover:text-gray-600 transition">← Назад</a>
+           class="flex items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">
+            <i class="ti ti-arrow-left text-sm"></i> Назад
+        </a>
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">💬 Чат с курьером</h1>
-            <p class="text-gray-400 text-sm">Заказ #{{ order.pk }} —
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="ti ti-message text-brand-500"></i>
+                Чат с курьером
+            </h1>
+            <p class="text-gray-400 dark:text-gray-500 text-sm">
+                Заказ #{{ order.pk }} —
                 <span class="{% if order.status == 'delivering' %}text-blue-500
                              {% elif order.status == 'done' %}text-green-500
                              {% else %}text-orange-500{% endif %} font-medium">
@@ -22,19 +28,18 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         <!-- ЧАТ -->
-        <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden flex flex-col" style="height: 580px;">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 overflow-hidden flex flex-col shadow-sm" style="height: 580px;">
 
-            <!-- Сообщения -->
             <div class="flex-1 overflow-y-auto p-5 space-y-3" id="chat-messages">
                 {% for msg in messages %}
                 <div class="flex {% if msg.sender == 'client' %}justify-end{% else %}justify-start{% endif %}"
                      data-id="{{ msg.pk }}">
                     <div class="max-w-xs">
-                        <p class="text-xs text-gray-400 mb-1 {% if msg.sender == 'client' %}text-right{% endif %}">
-                            {% if msg.sender == 'client' %}Вы{% else %}🛵 Курьер{% endif %}
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 {% if msg.sender == 'client' %}text-right{% endif %}">
+                            {% if msg.sender == 'client' %}Вы{% else %}<i class="ti ti-bike text-brand-500 text-xs mr-0.5"></i>Курьер{% endif %}
                             · {{ msg.created_at|date:"H:i" }}
                         </p>
-                        <div class="{% if msg.sender == 'client' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
+                        <div class="{% if msg.sender == 'client' %}bg-brand-500 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm border border-gray-200 dark:border-gray-700{% endif %} px-4 py-3 shadow-sm">
                             {% if msg.text %}
                                 <p class="text-sm">{{ msg.text }}</p>
                             {% endif %}
@@ -48,41 +53,39 @@
                 </div>
                 {% empty %}
                 <div class="text-center py-16">
-                    <div class="text-5xl mb-3">💬</div>
-                    <p class="text-gray-400">Напишите курьеру</p>
+                    <i class="ti ti-message text-5xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
+                    <p class="text-gray-400 dark:text-gray-500">Напишите курьеру</p>
                 </div>
                 {% endfor %}
             </div>
 
             <!-- Инпут -->
-            <div class="border-t border-gray-100 p-4">
+            <div class="border-t border-gray-200 dark:border-gray-700/50 p-4">
                 <form method="POST" enctype="multipart/form-data" id="chat-form">
                     {% csrf_token %}
-                    <!-- Превью фото -->
                     <div id="image-preview" class="hidden mb-3">
                         <div class="relative inline-block">
-                            <img id="preview-img" class="h-20 rounded-xl object-cover">
+                            <img id="preview-img" class="h-20 rounded-xl object-cover border border-gray-200 dark:border-gray-700">
                             <button type="button" onclick="clearImage()"
-                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                                ✕
-                            </button>
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center shadow-md">✕</button>
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <!-- Кнопка фото -->
-                        <label class="cursor-pointer p-2.5 border border-gray-200 rounded-xl hover:border-green-400 hover:text-green-600 transition text-gray-400">
-                            📷
+                        <label class="cursor-pointer p-2.5 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-brand-400 dark:hover:border-brand-600 text-gray-400 dark:text-gray-500 hover:text-brand-500 dark:hover:text-brand-400 btn-press transition-all">
+                            <i class="ti ti-camera text-lg"></i>
                             <input type="file" name="image" id="image-input"
                                    accept="image/*" class="hidden"
                                    onchange="previewImage(this)">
                         </label>
-                        <input type="text" name="text" id="text-input"
-                               placeholder="Написать курьеру..."
-                               autocomplete="off"
-                               class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition">
+                        <div class="relative flex-1">
+                            <input type="text" name="text" id="text-input"
+                                   placeholder="Написать курьеру..."
+                                   autocomplete="off"
+                                   class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
+                        </div>
                         <button type="submit"
-                                class="bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition text-sm font-medium">
-                            →
+                                class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl btn-press transition-all shadow-lg shadow-brand-500/25">
+                            <i class="ti ti-arrow-right text-lg"></i>
                         </button>
                     </div>
                 </form>
@@ -91,38 +94,45 @@
 
         <!-- КАРТА -->
         <div class="space-y-4">
-            <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden">
-                <div class="p-4 border-b border-gray-100 flex items-center justify-between">
-                    <h2 class="font-bold text-gray-800">📍 Локация курьера</h2>
-                    <span class="text-xs text-gray-400" id="location-time">Обновляется...</span>
+            <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 overflow-hidden shadow-sm">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700/50 flex items-center justify-between">
+                    <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i class="ti ti-map-2 text-brand-500"></i>
+                        Локация курьера
+                    </h2>
+                    <span class="text-xs text-gray-400 dark:text-gray-500" id="location-time">Обновляется...</span>
                 </div>
                 <div id="map" style="height: 300px; width: 100%;"></div>
                 <div class="p-4" id="no-location" style="display:none;">
-                    <p class="text-gray-400 text-sm text-center py-8">
-                        🛵 Курьер ещё не вышел
+                    <p class="text-gray-400 dark:text-gray-500 text-sm text-center py-8">
+                        <i class="ti ti-bike text-3xl block mb-2"></i>
+                        Курьер ещё не вышел
                     </p>
                 </div>
             </div>
 
             <!-- Инфо заказа -->
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <h3 class="font-bold text-gray-800 mb-3">📦 Детали заказа</h3>
-                <div class="space-y-2 text-sm">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-5 shadow-sm">
+                <h3 class="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                    <i class="ti ti-package text-brand-500"></i>
+                    Детали заказа
+                </h3>
+                <div class="space-y-3 text-sm">
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Заказ</span>
-                        <span class="font-medium">#{{ order.pk }}</span>
+                        <span class="text-gray-400 dark:text-gray-500">Заказ</span>
+                        <span class="font-medium text-gray-900 dark:text-white">#{{ order.pk }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Сумма</span>
-                        <span class="font-bold text-green-600">{{ order.total }} сом</span>
+                        <span class="text-gray-400 dark:text-gray-500">Сумма</span>
+                        <span class="font-bold text-brand-600 dark:text-brand-400">{{ order.total }} сом</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Адрес</span>
-                        <span class="font-medium text-right max-w-32">{{ order.address }}</span>
+                        <span class="text-gray-400 dark:text-gray-500">Адрес</span>
+                        <span class="font-medium text-gray-900 dark:text-white text-right max-w-32">{{ order.address }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Статус</span>
-                        <span class="font-medium">{{ order.get_status_display }}</span>
+                        <span class="text-gray-400 dark:text-gray-500">Статус</span>
+                        <span class="font-medium text-gray-700 dark:text-gray-300">{{ order.get_status_display }}</span>
                     </div>
                 </div>
             </div>
@@ -130,19 +140,20 @@
     </div>
 </div>
 
-<!-- Leaflet карта (бесплатная, без API ключа) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
     let map = null;
     let courierMarker = null;
-    let lastId = {{ messages.last.pk|default:0 }};  // добавь это!
+    let lastId = {{ messages.last.pk|default:0 }};
 
     function initMap(lat, lng) {
         if (!map) {
             map = L.map('map').setView([lat, lng], 15);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
         }
         if (!courierMarker) {
             courierMarker = L.marker([lat, lng]).addTo(map)
@@ -189,7 +200,7 @@
                             <p class="text-xs text-gray-400 mb-1 ${isClient ? 'text-right' : ''}">
                                 ${isClient ? 'Вы' : '🛵 Курьер'} · ${msg.time}
                             </p>
-                            <div class="${isClient ? 'bg-green-600 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm'} px-4 py-3">
+                            <div class="${isClient ? 'bg-brand-500 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm border border-gray-200 dark:border-gray-700'} px-4 py-3">
                                 ${content}
                             </div>
                         </div>
@@ -223,7 +234,6 @@
     const chatBox = document.getElementById('chat-messages');
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    // запускаем один раз — без дубликатов!
     fetchLocation();
     setInterval(fetchLocation, 5000);
     setInterval(fetchMessages, 3000);

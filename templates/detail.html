@@ -1,107 +1,220 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- весь твой код товара -->
-<div class="bg-white rounded-3xl border border-gray-100 overflow-hidden mb-10">
-    ...
+<!-- ═══════════════════ PRODUCT DETAIL ═══════════════════ -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+    <!-- Image -->
+    <div class="relative group">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 overflow-hidden aspect-square shadow-sm">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                     class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                    <i class="ti ti-pill text-8xl text-gray-300 dark:text-gray-600"></i>
+                </div>
+            {% endif %}
+        </div>
+        {% if product.is_prescription %}
+        <div class="absolute top-4 left-4 flex items-center gap-1.5 bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+            <i class="ti ti-file-certificate text-sm"></i>
+            По рецепту
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Info -->
+    <div>
+        <div class="mb-2">
+            {% if product.category %}
+            <span class="inline-flex items-center gap-1 bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 text-xs font-semibold px-3 py-1 rounded-full">
+                <i class="ti ti-folder text-xs"></i>
+                {{ product.category.name }}
+            </span>
+            {% endif %}
+        </div>
+
+        <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-3">{{ product.name }}</h1>
+
+        {% if product.manufacturer %}
+        <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+            <i class="ti ti-building text-sm mr-1"></i>
+            {{ product.manufacturer }}
+        </p>
+        {% endif %}
+
+        {% if product.active_substance %}
+        <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+            <i class="ti ti-flask text-sm mr-1"></i>
+            Действующее вещество: <span class="font-medium text-gray-700 dark:text-gray-200">{{ product.active_substance }}</span>
+        </p>
+        {% endif %}
+
+        <div class="flex items-baseline gap-2 mb-6">
+            <span class="text-4xl font-black text-brand-600 dark:text-brand-400">{{ product.price }}</span>
+            <span class="text-gray-400 dark:text-gray-500 text-lg">сомони</span>
+        </div>
+
+        {% if product.description %}
+        <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-5 mb-6 border border-gray-200 dark:border-gray-700/50">
+            <h3 class="font-semibold text-gray-900 dark:text-white text-sm mb-2">Описание</h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{{ product.description }}</p>
+        </div>
+        {% endif %}
+
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+            <a href="{% url 'add_to_cart' product.pk %}"
+               class="flex items-center justify-center gap-2.5 bg-brand-500 hover:bg-brand-600 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-brand-500/30 hover:shadow-brand-500/50 hover:-translate-y-0.5 btn-press transition-all text-base flex-1">
+                <i class="ti ti-shopping-cart-plus text-xl"></i>
+                В корзину
+            </a>
+            <a href="{% url 'catalog' %}"
+               class="flex items-center justify-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-400 dark:hover:border-brand-600 px-6 py-4 rounded-2xl btn-press transition-all text-sm font-medium">
+                <i class="ti ti-arrow-left text-base"></i>
+                Назад в каталог
+            </a>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+            <i class="ti ti-shield-check text-brand-500"></i>
+            <span>Оригинальный препарат</span>
+            <span class="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></span>
+            <i class="ti ti-truck-delivery text-brand-500"></i>
+            <span>Доставка за 2 часа</span>
+        </div>
+    </div>
 </div>
 
-<!-- Похожие товары -->
+<!-- ═══════════════════ SIMILAR PRODUCTS ═══════════════════ -->
 {% if similar %}
-...
+<section class="mb-12">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-black text-gray-900 dark:text-white">Похожие товары</h2>
+        <a href="{% url 'catalog' %}?category={{ product.category.slug }}" class="flex items-center gap-1.5 text-sm font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 transition-colors">
+            Все <i class="ti ti-arrow-right text-base"></i>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for p in similar %}
+        <a href="{% url 'product_detail' p.pk %}" class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 overflow-hidden card-lift hover:border-brand-200 dark:hover:border-brand-800 transition-all">
+            <div class="aspect-square bg-gray-50 dark:bg-gray-800 overflow-hidden">
+                {% if p.image %}
+                    <img src="{{ p.image.url }}" alt="{{ p.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="ti ti-pill text-3xl text-gray-300 dark:text-gray-600"></i>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="p-3">
+                <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-xs leading-snug line-clamp-2 mb-1">{{ p.name }}</h3>
+                <span class="font-bold text-brand-600 dark:text-brand-400 text-sm">{{ p.price }} <span class="text-xs font-normal text-gray-400">сом</span></span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
 {% endif %}
 
-<!-- СЮДА ДОБАВЬ ОТЗЫВЫ -->
+<!-- ═══════════════════ REVIEWS ═══════════════════ -->
 <div class="mt-12">
 
     <!-- Средний рейтинг -->
-    <div class="bg-white rounded-3xl border border-gray-100 p-8 mb-6">
+    <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 p-8 mb-6 shadow-sm">
         <div class="flex items-center gap-8">
             <div class="text-center">
-                <p class="text-6xl font-extrabold text-gray-800">{{ avg_rating }}</p>
+                <p class="text-6xl font-extrabold text-gray-900 dark:text-white">{{ avg_rating }}</p>
                 <div class="flex gap-1 justify-center my-2">
                     {% for i in "12345" %}
                         {% if forloop.counter <= avg_rating %}
-                            <span class="text-yellow-400 text-2xl">★</span>
+                            <i class="ti ti-star-filled text-yellow-400 text-xl"></i>
                         {% else %}
-                            <span class="text-gray-200 text-2xl">★</span>
+                            <i class="ti ti-star text-gray-300 dark:text-gray-600 text-xl"></i>
                         {% endif %}
                     {% endfor %}
                 </div>
-                <p class="text-gray-400 text-sm">{{ reviews|length }} отзывов</p>
+                <p class="text-gray-400 dark:text-gray-500 text-sm">{{ reviews|length }} отзывов</p>
             </div>
         </div>
     </div>
 
     <!-- Форма отзыва -->
     {% if user.is_authenticated %}
-    <div class="bg-white rounded-3xl border border-gray-100 p-8 mb-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-5">
-            {% if user_review %}✏️ Изменить отзыв{% else %}💬 Оставить отзыв{% endif %}
+    <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 p-8 mb-6 shadow-sm">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+            <i class="ti ti-message text-brand-500"></i>
+            {% if user_review %}Изменить отзыв{% else %}Оставить отзыв{% endif %}
         </h3>
         <form method="POST" action="{% url 'add_review' product.pk %}">
             {% csrf_token %}
             <div class="flex gap-2 mb-5" id="stars">
                 {% for i in "12345" %}
                 <button type="button"
-        onclick="setRating({{ forloop.counter }})"
-        id="star-{{ forloop.counter }}"
-        class="text-4xl transition hover:scale-110
-        {% if user_review and forloop.counter <= user_review.rating %}text-yellow-400{% else %}text-gray-300{% endif %}"
-        style="color: {% if user_review and forloop.counter <= user_review.rating %}#facc15{% else %}#d1d5db{% endif %}">
-    ★
-</button>
+                    onclick="setRating({{ forloop.counter }})"
+                    id="star-{{ forloop.counter }}"
+                    class="text-3xl transition hover:scale-110 {% if user_review and forloop.counter <= user_review.rating %}text-yellow-400{% else %}text-gray-300 dark:text-gray-600{% endif %}">
+                    <i class="ti {% if user_review and forloop.counter <= user_review.rating %}ti-star-filled{% else %}ti-star{% endif %}"></i>
+                </button>
                 {% endfor %}
             </div>
             <input type="hidden" name="rating" id="rating-input"
                    value="{% if user_review %}{{ user_review.rating }}{% endif %}">
             <textarea name="comment" rows="3"
                       placeholder="Напишите ваш отзыв..."
-                      class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition resize-none mb-4">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+                      class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-2xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition resize-none mb-4">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
             <button type="submit"
-                    class="bg-green-600 text-white px-8 py-3 rounded-2xl hover:bg-green-700 transition font-medium">
+                    class="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-8 py-3 rounded-2xl font-semibold btn-press transition-all shadow-lg shadow-brand-500/25">
+                <i class="ti ti-send text-sm"></i>
                 {% if user_review %}Обновить отзыв{% else %}Отправить отзыв{% endif %}
             </button>
         </form>
     </div>
     {% else %}
-    <div class="bg-green-50 rounded-2xl p-6 mb-6 text-center">
-        <p class="text-gray-600">
-            <a href="{% url 'login_user' %}" class="text-green-600 font-semibold hover:underline">Войдите</a>
+    <div class="bg-brand-50 dark:bg-brand-900/10 rounded-2xl p-6 mb-6 text-center border border-brand-100 dark:border-brand-900/20">
+        <p class="text-gray-600 dark:text-gray-400 text-sm">
+            <a href="{% url 'login_user' %}" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">Войдите</a>
             чтобы оставить отзыв
         </p>
     </div>
     {% endif %}
 
     <!-- Список отзывов -->
-    <h3 class="text-xl font-bold text-gray-800 mb-4">Отзывы покупателей</h3>
+    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <i class="ti ti-messages text-brand-500"></i>
+        Отзывы покупателей
+    </h3>
     <div class="space-y-4">
         {% for review in reviews %}
-        <div class="bg-white rounded-2xl border border-gray-100 p-6">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-6 shadow-sm">
             <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-sm">
                         {{ review.user.username|first|upper }}
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-800">{{ review.user.username }}</p>
-                        <p class="text-xs text-gray-400">{{ review.created_at|date:"d.m.Y" }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ review.user.username }}</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500">{{ review.created_at|date:"d.m.Y" }}</p>
                     </div>
                 </div>
                 <div class="flex gap-0.5">
                     {% for i in "12345" %}
-                        <span class="{% if forloop.counter <= review.rating %}text-yellow-400{% else %}text-gray-200{% endif %} text-lg">★</span>
+                        {% if forloop.counter <= review.rating %}
+                            <i class="ti ti-star-filled text-yellow-400 text-sm"></i>
+                        {% else %}
+                            <i class="ti ti-star text-gray-300 dark:text-gray-600 text-sm"></i>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
             {% if review.comment %}
-            <p class="text-gray-600 text-sm leading-relaxed">{{ review.comment }}</p>
+            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{{ review.comment }}</p>
             {% endif %}
         </div>
         {% empty %}
         <div class="text-center py-12">
-            <div class="text-5xl mb-3">💬</div>
-            <p class="text-gray-400">Отзывов пока нет — будьте первым!</p>
+            <i class="ti ti-message-off text-5xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
+            <p class="text-gray-400 dark:text-gray-500">Отзывов пока нет — будьте первым!</p>
         </div>
         {% endfor %}
     </div>
@@ -115,12 +228,15 @@
         document.getElementById('rating-input').value = rating;
         for (let i = 1; i <= 5; i++) {
             const star = document.getElementById(`star-${i}`);
+            const icon = star.querySelector('i');
             if (i <= rating) {
-                star.classList.remove('text-gray-200');
+                icon.className = 'ti ti-star-filled';
                 star.classList.add('text-yellow-400');
+                star.classList.remove('text-gray-300', 'dark:text-gray-600');
             } else {
+                icon.className = 'ti ti-star';
                 star.classList.remove('text-yellow-400');
-                star.classList.add('text-gray-200');
+                star.classList.add('text-gray-300', 'dark:text-gray-600');
             }
         }
     }
@@ -130,12 +246,15 @@
         star.addEventListener('mouseover', () => {
             for (let j = 1; j <= 5; j++) {
                 const s = document.getElementById(`star-${j}`);
+                const icon = s.querySelector('i');
                 if (j <= i) {
+                    icon.className = 'ti ti-star-filled';
                     s.classList.add('text-yellow-400');
-                    s.classList.remove('text-gray-200');
+                    s.classList.remove('text-gray-300', 'dark:text-gray-600');
                 } else {
+                    icon.className = 'ti ti-star';
                     s.classList.remove('text-yellow-400');
-                    s.classList.add('text-gray-200');
+                    s.classList.add('text-gray-300', 'dark:text-gray-600');
                 }
             }
         });

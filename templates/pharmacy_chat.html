@@ -5,17 +5,21 @@
 
     <div class="flex items-center gap-4 mb-6">
         <a href="{% url 'pharmacy_detail' pharmacy.pk %}"
-           class="text-gray-400 hover:text-gray-600 transition">← Назад</a>
+           class="flex items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">
+            <i class="ti ti-arrow-left text-sm"></i> Назад
+        </a>
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-green-100 rounded-2xl flex items-center justify-center text-xl">🏥</div>
+            <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center">
+                <i class="ti ti-building-hospital text-xl text-brand-600 dark:text-brand-400"></i>
+            </div>
             <div>
-                <h1 class="text-xl font-bold text-gray-800">{{ pharmacy.name }}</h1>
-                <p class="text-xs text-gray-400">Чат с менеджером аптеки</p>
+                <h1 class="text-xl font-bold text-gray-900 dark:text-white">{{ pharmacy.name }}</h1>
+                <p class="text-xs text-gray-400 dark:text-gray-500">Чат с менеджером аптеки</p>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden flex flex-col" style="height: 600px;">
+    <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 overflow-hidden flex flex-col shadow-sm" style="height: 600px;">
 
         <!-- Сообщения -->
         <div class="flex-1 overflow-y-auto p-5 space-y-3" id="chat-messages">
@@ -23,11 +27,15 @@
             <div class="flex {% if msg.sender == 'user' %}justify-end{% else %}justify-start{% endif %}"
                  data-id="{{ msg.pk }}">
                 <div class="max-w-sm">
-                    <p class="text-xs text-gray-400 mb-1 {% if msg.sender == 'user' %}text-right{% endif %}">
-                        {% if msg.sender == 'user' %}Вы{% else %}🏥 Менеджер{% endif %}
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 {% if msg.sender == 'user' %}text-right{% endif %}">
+                        {% if msg.sender == 'user' %}
+                            Вы
+                        {% else %}
+                            <i class="ti ti-building-store text-brand-500 text-xs mr-0.5"></i>Менеджер
+                        {% endif %}
                         · {{ msg.created_at|date:"H:i" }}
                     </p>
-                    <div class="{% if msg.sender == 'user' %}bg-green-600 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm{% endif %} px-4 py-3">
+                    <div class="{% if msg.sender == 'user' %}bg-brand-500 text-white rounded-2xl rounded-tr-sm{% else %}bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm border border-gray-200 dark:border-gray-700{% endif %} px-4 py-3 shadow-sm">
                         {% if msg.text %}
                             <p class="text-sm">{{ msg.text }}</p>
                         {% endif %}
@@ -41,38 +49,40 @@
             </div>
             {% empty %}
             <div class="text-center py-20">
-                <div class="text-5xl mb-3">💬</div>
-                <p class="text-gray-400 font-medium">Напишите менеджеру аптеки</p>
-                <p class="text-gray-300 text-sm mt-1">Мы ответим вам в ближайшее время</p>
+                <i class="ti ti-message text-5xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
+                <p class="text-gray-400 dark:text-gray-500 font-medium">Напишите менеджеру аптеки</p>
+                <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Мы ответим вам в ближайшее время</p>
             </div>
             {% endfor %}
         </div>
 
         <!-- Инпут -->
-        <div class="border-t border-gray-100 p-4">
+        <div class="border-t border-gray-200 dark:border-gray-700/50 p-4">
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div id="image-preview" class="hidden mb-3">
                     <div class="relative inline-block">
-                        <img id="preview-img" class="h-20 rounded-xl object-cover">
+                        <img id="preview-img" class="h-20 rounded-xl object-cover border border-gray-200 dark:border-gray-700">
                         <button type="button" onclick="clearImage()"
-                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">✕</button>
+                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center shadow-md">✕</button>
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <label class="cursor-pointer p-2.5 border border-gray-200 rounded-xl hover:border-green-400 text-gray-400 transition">
-                        📷
+                    <label class="cursor-pointer p-2.5 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-brand-400 dark:hover:border-brand-600 text-gray-400 dark:text-gray-500 hover:text-brand-500 dark:hover:text-brand-400 btn-press transition-all">
+                        <i class="ti ti-camera text-lg"></i>
                         <input type="file" name="image" id="image-input"
                                accept="image/*" class="hidden"
                                onchange="previewImage(this)">
                     </label>
-                    <input type="text" name="text" id="text-input"
-                           placeholder="Написать менеджеру..."
-                           autocomplete="off"
-                           class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400 transition">
+                    <div class="relative flex-1">
+                        <input type="text" name="text" id="text-input"
+                               placeholder="Написать менеджеру..."
+                               autocomplete="off"
+                               class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
+                    </div>
                     <button type="submit"
-                            class="bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition text-sm font-medium">
-                        →
+                            class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl btn-press transition-all shadow-lg shadow-brand-500/25">
+                        <i class="ti ti-arrow-right text-lg"></i>
                     </button>
                 </div>
             </form>
@@ -96,14 +106,14 @@
 
                     let content = '';
                     if (msg.text) content += `<p class="text-sm">${msg.text}</p>`;
-                    if (msg.image) content += `<img src="${msg.image}" class="rounded-xl mt-2 max-w-full">`;
+                    if (msg.image) content += `<img src="${msg.image}" class="rounded-xl mt-2 max-w-full cursor-pointer" onclick="window.open('${msg.image}')">`;
 
                     div.innerHTML = `
                         <div class="max-w-sm">
                             <p class="text-xs text-gray-400 mb-1 ${isUser ? 'text-right' : ''}">
                                 ${isUser ? 'Вы' : '🏥 Менеджер'} · ${msg.time}
                             </p>
-                            <div class="${isUser ? 'bg-green-600 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm'} px-4 py-3">
+                            <div class="${isUser ? 'bg-brand-500 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm border border-gray-200 dark:border-gray-700'} px-4 py-3">
                                 ${content}
                             </div>
                         </div>

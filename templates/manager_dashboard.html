@@ -6,32 +6,45 @@
     <!-- Заголовок -->
     <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center text-2xl">
-                🏥
+            <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-purple-500/30">
+                <i class="ti ti-building-store text-white"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">{{ pharmacy.name }}</h1>
-                <p class="text-gray-400 text-sm">Панель менеджера · {{ request.user.username }}</p>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ pharmacy.name }}</h1>
+                <p class="text-gray-400 dark:text-gray-500 text-sm">Панель менеджера · {{ request.user.username }}</p>
             </div>
         </div>
-        <span class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
-            🟢 Онлайн
+        <span class="flex items-center gap-1.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium border border-green-200 dark:border-green-800">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            Онлайн
         </span>
     </div>
 
     <!-- Статистика -->
     <div class="grid grid-cols-3 gap-5 mb-8">
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
-            <p class="text-3xl font-bold text-purple-600">{{ chats|length }}</p>
-            <p class="text-gray-400 text-sm mt-1">Активных чатов</p>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-5 text-center shadow-sm">
+            <div class="w-10 h-10 bg-purple-50 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="ti ti-message text-purple-600 dark:text-purple-400 text-xl"></i>
+            </div>
+            <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ chats|length }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Активных чатов</p>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
-            <p class="text-3xl font-bold text-green-600">{{ products|length }}</p>
-            <p class="text-gray-400 text-sm mt-1">Товаров в аптеке</p>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-5 text-center shadow-sm">
+            <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="ti ti-pill text-brand-600 dark:text-brand-400 text-xl"></i>
+            </div>
+            <p class="text-3xl font-bold text-brand-600 dark:text-brand-400">{{ products|length }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Товаров в аптеке</p>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 text-center">
-            <p class="text-3xl font-bold text-blue-600">{{ total_messages }}</p>
-            <p class="text-gray-400 text-sm mt-1">Всего сообщений</p>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-5 text-center shadow-sm">
+            <div class="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="ti ti-messages text-blue-600 dark:text-blue-400 text-xl"></i>
+            </div>
+            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ total_messages }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Всего сообщений</p>
         </div>
     </div>
 
@@ -39,10 +52,11 @@
 
         <!-- Чаты -->
         <div>
-            <h2 class="text-xl font-bold text-gray-800 mb-4">
-                💬 Чаты с клиентами
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <i class="ti ti-message text-purple-500"></i>
+                Чаты с клиентами
                 {% if chats %}
-                <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full ml-2">
+                <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full ml-1">
                     {{ chats|length }}
                 </span>
                 {% endif %}
@@ -52,56 +66,63 @@
             <div class="space-y-3">
                 {% for chat in chats %}
                 <a href="{% url 'manager_chat' chat.pk %}"
-                   class="bg-white rounded-2xl border border-gray-100 p-4 flex items-center justify-between hover:shadow-md transition block">
+                   class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-4 flex items-center justify-between hover:shadow-md hover:border-purple-200 dark:hover:border-purple-800 transition-all card-lift">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold">
+                        <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-sm">
                             {{ chat.user.username|first|upper }}
                         </div>
                         <div>
-                            <p class="font-semibold text-gray-800">{{ chat.user.username }}</p>
-                            <p class="text-gray-400 text-xs">{{ chat.user.phone }}</p>
+                            <p class="font-semibold text-gray-900 dark:text-white">{{ chat.user.username }}</p>
+                            <p class="text-gray-400 dark:text-gray-500 text-xs">{{ chat.user.phone }}</p>
                         </div>
                     </div>
-                    <span class="text-purple-600 text-sm">Открыть →</span>
+                    <span class="flex items-center gap-1 text-purple-600 dark:text-purple-400 text-sm font-medium">
+                        Открыть <i class="ti ti-arrow-right text-sm"></i>
+                    </span>
                 </a>
                 {% endfor %}
             </div>
             {% else %}
-            <div class="bg-white rounded-2xl border border-gray-100 p-10 text-center">
-                <div class="text-4xl mb-3">💬</div>
-                <p class="text-gray-400">Чатов пока нет</p>
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-10 text-center">
+                <i class="ti ti-message-off text-4xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
+                <p class="text-gray-400 dark:text-gray-500">Чатов пока нет</p>
             </div>
             {% endif %}
         </div>
 
         <!-- Товары аптеки -->
         <div>
-            <h2 class="text-xl font-bold text-gray-800 mb-4">💊 Товары в наличии</h2>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <i class="ti ti-pill text-brand-500"></i>
+                Товары в наличии
+            </h2>
             <div class="space-y-2 max-h-96 overflow-y-auto">
                 {% for item in products %}
-                <div class="bg-white rounded-xl border border-gray-100 p-3 flex items-center justify-between">
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700/50 p-3 flex items-center justify-between hover:shadow-sm transition-all">
                     <div class="flex items-center gap-3">
                         {% if item.product.image %}
                             <img src="{{ item.product.image.url }}"
                                  class="w-10 h-10 rounded-lg object-cover">
                         {% else %}
-                            <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-lg">💊</div>
+                            <div class="w-10 h-10 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
+                                <i class="ti ti-pill text-lg text-gray-300 dark:text-gray-600"></i>
+                            </div>
                         {% endif %}
                         <div>
-                            <p class="font-medium text-gray-800 text-sm">{{ item.product.name }}</p>
-                            <p class="text-gray-400 text-xs">{{ item.product.active_substance }}</p>
+                            <p class="font-medium text-gray-900 dark:text-white text-sm">{{ item.product.name }}</p>
+                            <p class="text-gray-400 dark:text-gray-500 text-xs">{{ item.product.active_substance }}</p>
                         </div>
                     </div>
                     <div class="text-right">
-                        <p class="font-bold text-green-600 text-sm">{{ item.price }} сом</p>
-                        <p class="text-xs {% if item.stock > 10 %}text-green-600{% elif item.stock > 0 %}text-orange-500{% else %}text-red-500{% endif %}">
+                        <p class="font-bold text-brand-600 dark:text-brand-400 text-sm">{{ item.price }} сом</p>
+                        <p class="text-xs {% if item.stock > 10 %}text-green-600 dark:text-green-400{% elif item.stock > 0 %}text-orange-500 dark:text-orange-400{% else %}text-red-500 dark:text-red-400{% endif %}">
                             {{ item.stock }} шт.
                         </p>
                     </div>
                 </div>
                 {% empty %}
                 <div class="text-center py-10">
-                    <p class="text-gray-400">Товаров нет</p>
+                    <p class="text-gray-400 dark:text-gray-500">Товаров нет</p>
                 </div>
                 {% endfor %}
             </div>
@@ -109,20 +130,23 @@
     </div>
 
     <!-- Инфо аптеки -->
-    <div class="bg-white rounded-2xl border border-gray-100 p-6 mt-6">
-        <h2 class="font-bold text-gray-800 mb-4">📋 Информация об аптеке</h2>
+    <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-6 mt-6 shadow-sm">
+        <h2 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <i class="ti ti-info-circle text-brand-500"></i>
+            Информация об аптеке
+        </h2>
         <div class="grid grid-cols-3 gap-4 text-sm">
             <div>
-                <p class="text-gray-400 mb-1">📍 Адрес</p>
-                <p class="font-medium text-gray-700">{{ pharmacy.address }}</p>
+                <p class="text-gray-400 dark:text-gray-500 mb-1"><i class="ti ti-map-pin text-xs mr-1"></i>Адрес</p>
+                <p class="font-medium text-gray-900 dark:text-white">{{ pharmacy.address }}</p>
             </div>
             <div>
-                <p class="text-gray-400 mb-1">📞 Телефон</p>
-                <p class="font-medium text-green-600">{{ pharmacy.phone }}</p>
+                <p class="text-gray-400 dark:text-gray-500 mb-1"><i class="ti ti-phone text-xs mr-1"></i>Телефон</p>
+                <p class="font-medium text-brand-600 dark:text-brand-400">{{ pharmacy.phone }}</p>
             </div>
             <div>
-                <p class="text-gray-400 mb-1">⏰ Режим работы</p>
-                <p class="font-medium text-gray-700">{{ pharmacy.working_hours }}</p>
+                <p class="text-gray-400 dark:text-gray-500 mb-1"><i class="ti ti-clock text-xs mr-1"></i>Режим работы</p>
+                <p class="font-medium text-gray-900 dark:text-white">{{ pharmacy.working_hours }}</p>
             </div>
         </div>
     </div>

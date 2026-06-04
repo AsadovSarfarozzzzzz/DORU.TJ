@@ -2,26 +2,29 @@
 {% block content %}
 
 <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">Каталог лекарств</h1>
-    <div class="flex items-center gap-3">
-        <span class="text-gray-400 text-sm">{{ products|length }} товаров</span>
-        {% if user.is_staff %}
-        <a href="{% url 'product_add' %}"
-           class="bg-green-600 text-white px-5 py-2.5 rounded-xl text-sm hover:bg-green-700 transition">
-            + Добавить товар
-        </a>
-        {% endif %}
+    <div>
+        <h1 class="text-3xl font-black text-gray-900 dark:text-white">Каталог лекарств</h1>
+        <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">{{ products|length }} товаров</p>
     </div>
+    {% if user.is_staff %}
+    <a href="{% url 'product_add' %}"
+       class="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold btn-press transition-all shadow-lg shadow-brand-500/25">
+        <i class="ti ti-plus text-base"></i> Добавить товар
+    </a>
+    {% endif %}
 </div>
 
 <!-- Фильтры -->
-<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-8">
+<div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-5 mb-8 shadow-sm">
     <form method="GET" class="flex flex-wrap gap-3 items-end">
-        <input type="text" name="search" placeholder="🔍 Поиск по названию..."
-               value="{{ request.GET.search }}"
-               class="flex-1 min-w-48 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400">
+        <div class="relative flex-1 min-w-48">
+            <i class="ti ti-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="text" name="search" placeholder="Поиск по названию..."
+                   value="{{ request.GET.search }}"
+                   class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 focus:bg-white dark:focus:bg-gray-800 transition-all">
+        </div>
         <select name="category"
-                class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400">
+                class="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
             <option value="">Все категории</option>
             {% for cat in categories %}
             <option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>
@@ -29,75 +32,100 @@
             </option>
             {% endfor %}
         </select>
-        <input type="number" name="min_price" placeholder="Цена от"
-               value="{{ request.GET.min_price }}"
-               class="w-28 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400">
-        <input type="number" name="max_price" placeholder="Цена до"
-               value="{{ request.GET.max_price }}"
-               class="w-28 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-400">
+        <div class="relative w-28">
+            <input type="number" name="min_price" placeholder="Цена от"
+                   value="{{ request.GET.min_price }}"
+                   class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
+        </div>
+        <div class="relative w-28">
+            <input type="number" name="max_price" placeholder="Цена до"
+                   value="{{ request.GET.max_price }}"
+                   class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
+        </div>
         <button type="submit"
-                class="bg-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-green-700 transition">
-            Найти
+                class="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold btn-press transition-all shadow-lg shadow-brand-500/25">
+            <i class="ti ti-search text-sm"></i> Найти
         </button>
-        <a href="{% url 'catalog' %}" class="text-gray-400 text-sm py-2.5 hover:text-gray-600">Сбросить</a>
+        <a href="{% url 'catalog' %}" class="flex items-center gap-1.5 text-gray-400 dark:text-gray-500 text-sm py-2.5 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">
+            <i class="ti ti-x text-sm"></i> Сбросить
+        </a>
     </form>
 </div>
 
 <!-- Товары -->
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
     {% for product in products %}
-    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition group">
-        {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                 class="w-full h-44 object-cover group-hover:scale-105 transition duration-300">
-        {% else %}
-            <div class="w-full h-44 bg-green-50 flex items-center justify-center text-5xl">💊</div>
-        {% endif %}
+    <div class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 overflow-hidden card-lift hover:border-brand-200 dark:hover:border-brand-800 transition-all">
+        <div class="relative overflow-hidden bg-gray-50 dark:bg-gray-800 aspect-square">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                    <i class="ti ti-pill text-5xl text-gray-300 dark:text-gray-600"></i>
+                </div>
+            {% endif %}
 
-        <div class="p-4">
             {% if product.is_prescription %}
-                <span class="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full mb-2 inline-block">По рецепту</span>
+            <div class="absolute top-2 left-2 flex items-center gap-1 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                <i class="ti ti-file-certificate text-xs"></i>
+                Рецепт
+            </div>
             {% endif %}
-            <h3 class="font-semibold text-gray-800 text-sm mb-1 truncate">{{ product.name }}</h3>
-            <p class="text-xs text-gray-400 mb-2">{{ product.manufacturer }}</p>
-            <p class="text-green-600 font-bold text-xl mb-3">{{ product.price }} <span class="text-sm font-normal">сом</span></p>
 
-            <div class="flex gap-2">
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 dark:group-hover:bg-black/30 transition-all flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100">
                 <a href="{% url 'add_to_cart' product.pk %}"
-                   class="flex-1 text-center bg-green-600 text-white text-sm py-2 rounded-xl hover:bg-green-700 transition">
-                    + В корзину
-                </a>
-                <a href="{% url 'product_detail' product.pk %}"
-                   class="px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-500 hover:border-green-400 hover:text-green-600 transition">
-                    →
+                   class="flex items-center gap-1.5 bg-white dark:bg-gray-900 text-brand-600 dark:text-brand-400 text-xs font-semibold px-4 py-2 rounded-xl shadow-lg translate-y-2 group-hover:translate-y-0 transition-transform duration-200">
+                    <i class="ti ti-shopping-cart-plus text-sm"></i>
+                    В корзину
                 </a>
             </div>
-
-            <!-- Кнопки админа -->
-            {% if user.is_staff %}
-            <div class="flex gap-2 mt-3 pt-3 border-t border-gray-100">
-                <a href="{% url 'product_edit' product.pk %}"
-                   class="flex-1 text-center bg-blue-50 text-blue-600 text-xs py-2 rounded-xl hover:bg-blue-100 transition">
-                    ✏️ Изменить
-                </a>
-                <form method="POST" action="{% url 'product_delete' product.pk %}"
-                      onsubmit="return confirm('Удалить {{ product.name }}?')">
-                    {% csrf_token %}
-                    <button type="submit"
-                            class="bg-red-50 text-red-500 text-xs px-3 py-2 rounded-xl hover:bg-red-100 transition">
-                        🗑
-                    </button>
-                </form>
-            </div>
-            {% endif %}
-
         </div>
+
+        <div class="p-3.5">
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 truncate">{{ product.manufacturer }}</p>
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-sm leading-snug mb-2 line-clamp-2 min-h-[2.5rem]">
+                {{ product.name }}
+            </h3>
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-base font-black text-brand-600 dark:text-brand-400">{{ product.price }}</span>
+                    <span class="text-xs text-gray-400 ml-0.5">сом</span>
+                </div>
+                <a href="{% url 'add_to_cart' product.pk %}"
+                   class="w-8 h-8 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-500 text-brand-600 dark:text-brand-400 hover:text-white rounded-xl flex items-center justify-center btn-press transition-all">
+                    <i class="ti ti-plus text-base"></i>
+                </a>
+            </div>
+        </div>
+
+        {% if user.is_staff %}
+        <div class="flex gap-2 p-3.5 pt-0">
+            <a href="{% url 'product_edit' product.pk %}"
+               class="flex-1 text-center bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs py-2 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all">
+                <i class="ti ti-edit text-xs"></i> Изменить
+            </a>
+            <form method="POST" action="{% url 'product_delete' product.pk %}"
+                  onsubmit="return confirm('Удалить {{ product.name }}?')">
+                {% csrf_token %}
+                <button type="submit"
+                        class="bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 text-xs px-3 py-2 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition-all">
+                    <i class="ti ti-trash text-xs"></i>
+                </button>
+            </form>
+        </div>
+        {% endif %}
     </div>
     {% empty %}
-    <div class="col-span-4 text-center py-20">
-        <div class="text-6xl mb-4">🔍</div>
-        <p class="text-gray-400 text-lg">Ничего не найдено</p>
-        <a href="{% url 'catalog' %}" class="text-green-600 text-sm mt-2 inline-block hover:underline">Сбросить фильтры</a>
+    <div class="col-span-2 md:col-span-3 lg:col-span-4 text-center py-20">
+        <div class="text-6xl mb-4">
+            <i class="ti ti-search-off text-gray-300 dark:text-gray-600"></i>
+        </div>
+        <p class="text-gray-400 dark:text-gray-500 text-lg mb-2">Ничего не найдено</p>
+        <p class="text-gray-400 dark:text-gray-500 text-sm mb-4">Попробуйте изменить параметры поиска</p>
+        <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 text-brand-600 dark:text-brand-400 text-sm font-semibold hover:underline">
+            <i class="ti ti-refresh text-sm"></i> Сбросить фильтры
+        </a>
     </div>
     {% endfor %}
 </div>
