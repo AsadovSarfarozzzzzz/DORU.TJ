@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'server.context_processors.mobile_nav_items',
             ],
         },
     },
@@ -162,10 +163,7 @@ EMAIL_HOST_PASSWORD = 'ubaq cfgn fism iqzq '
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 import os
-from pathlib import Path
-from dotenv import load_dotenv  # <-- Добавь это
-
-BASE_DIR = Path(__file__).resolve().parent.parent
+from dotenv import load_dotenv
 
 load_dotenv(BASE_DIR / '.env')
 

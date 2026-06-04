@@ -109,10 +109,12 @@
                     if (msg.text) content += `<p class="text-sm">${msg.text}</p>`;
                     if (msg.image) content += `<img src="${msg.image}" class="rounded-xl mt-2 max-w-full cursor-pointer" onclick="window.open('${msg.image}')">`;
 
+                    const userLabel = '{% trans "Вы" %}';
+                    const managerLabel = '🏥 {% trans "Менеджер" %}';
                     div.innerHTML = `
                         <div class="max-w-sm">
                             <p class="text-xs text-gray-400 mb-1 ${isUser ? 'text-right' : ''}">
-                                {% trans '${isUser ? 'Вы' : '🏥 Менеджер'} · ${msg.time}' %}
+                                ${isUser ? userLabel : managerLabel} · ${msg.time}
                             </p>
                             <div class="${isUser ? 'bg-brand-500 text-white rounded-2xl rounded-tr-sm' : 'bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm border border-gray-200 dark:border-gray-700'} px-4 py-3">
                                 ${content}

@@ -1,523 +1,621 @@
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth">
+<html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% trans 'DoriTJ — Онлайн аптека с доставкой по Душанбе' %}">
-    <link rel="manifest" href="/static/manifest.json">
-    <meta name="theme-color" content="#22c55e">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="DoriTJ">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2322c55e'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='50' fill='white'%3E💊%3C/text%3E%3C/svg%3E">
-    <title>{% block title %}{% trans 'DoruTJ — Онлайн аптека' %}{% endblock %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% trans 'DoriTJ — Онлайн аптека с доставкой по Душанбе' %}">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#22c55e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="DoriTJ">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2322c55e'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='50' fill='white'%3E💊%3C/text%3E%3C/svg%3E">
+  <title>{% block title %}{% trans 'DoriTJ — Онлайн аптека' %}{% endblock %}</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <script>
+    (function(){var t=localStorage.getItem('dorutj-theme');var d=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(!t&&d))document.documentElement.classList.add('dark');else if(t==='light')document.documentElement.classList.remove('dark');else document.documentElement.classList.add('dark');})();
+  </script>
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-                    colors: {
-                        surface: { DEFAULT: '#ffffff', dark: '#0d1117' },
-                        card: { DEFAULT: '#ffffff', dark: '#161b22' },
-                        border: { DEFAULT: '#e5e7eb', dark: '#30363d' },
-                        brand: { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d' }
-                    },
-                    animation: {
-                        'fade-up': 'fadeUp .5s cubic-bezier(.16,1,.3,1) forwards',
-                        'fade-in': 'fadeIn .3s ease forwards',
-                        'slide-down': 'slideDown .25s cubic-bezier(.16,1,.3,1) forwards',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                        'float': 'float 3s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        fadeUp: { '0%':{opacity:0,transform:'translateY(20px)'}, '100%':{opacity:1,transform:'translateY(0)'} },
-                        fadeIn: { '0%':{opacity:0}, '100%':{opacity:1} },
-                        slideDown: { '0%':{opacity:0,transform:'translateY(-8px)'}, '100%':{opacity:1,transform:'translateY(0)'} },
-                        glow: { '0%':{boxShadow:'0 0 0 rgba(34,197,94,0)'}, '100%':{boxShadow:'0 0 20px rgba(34,197,94,0.3)'} },
-                        float: { '0%,100%':{transform:'translateY(0)'}, '50%':{transform:'translateY(-8px)'} },
-                    }
-                }
-            }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d' },
+            surface: '#161b22',
+            card: '#1c2128',
+            border: '#30363d',
+            hover: '#21262d',
+          }
         }
-    </script>
+      }
+    }
+  </script>
 
-    <style>
-        *,*::before,*::after{box-sizing:border-box}
-        html{font-family:'Inter',system-ui,sans-serif}
-        body,header,nav,footer,main,.card,.btn,input,select,textarea,button{transition:background-color .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease}
-        ::-webkit-scrollbar{width:4px;height:4px}
-        ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:99px}
-        .dark ::-webkit-scrollbar-thumb{background:#30363d}
-        .glass{backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
-        .card-lift{transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s ease}
-        .card-lift:hover{transform:translateY(-2px);box-shadow:0 12px 40px -8px rgba(0,0,0,.12)}
-        .dark .card-lift:hover{box-shadow:0 12px 40px -8px rgba(0,0,0,.5)}
-        .nav-item{position:relative}
-        .nav-item::after{content:'';position:absolute;bottom:0;left:50%;right:50%;height:2px;background:#22c55e;border-radius:99px;transition:left .2s ease,right .2s ease}
-        .nav-item:hover::after,.nav-item.active::after{left:0;right:0}
-        .btn-press:active{transform:scale(.97)}
-        .focus-ring:focus{outline:none;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
-        .text-gradient{background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#ef4444;border-radius:50%;font-size:9px;color:white;display:flex;align-items:center;justify-content:center;border:2px solid white;font-weight:700}
-        .dark .badge{border-color:#0d1117}
-        #mobile-menu{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.16,1,.3,1)}
-        #mobile-menu.open{max-height:600px}
-        #mobile-overlay{opacity:0;pointer-events:none;transition:opacity .3s ease}
-        #mobile-overlay.open{opacity:1;pointer-events:auto}
-        .scrollbar-none::-webkit-scrollbar{display:none}
-        .scrollbar-none{-ms-overflow-style:none;scrollbar-width:none}
-        .stagger>*{opacity:0;animation:fadeUp .45s cubic-bezier(.16,1,.3,1) forwards}
-        .stagger>*:nth-child(1){animation-delay:.05s}
-        .stagger>*:nth-child(2){animation-delay:.10s}
-        .stagger>*:nth-child(3){animation-delay:.15s}
-        .stagger>*:nth-child(4){animation-delay:.20s}
-        .stagger>*:nth-child(5){animation-delay:.25s}
-        .stagger>*:nth-child(6){animation-delay:.30s}
-        .stagger>*:nth-child(7){animation-delay:.35s}
-        .stagger>*:nth-child(8){animation-delay:.40s}
-        .glow-border{border:1px solid transparent;background-clip:padding-box;position:relative}
-        .glow-border::before{content:'';position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg,rgba(34,197,94,.3),transparent,rgba(34,197,94,.1));z-index:-1;opacity:0;transition:opacity .3s ease}
-        .glow-border:hover::before{opacity:1}
-        @media(max-width:1023px){.mobile-touch{min-height:44px}}
-        .sidebar-item{position:relative;overflow:hidden}
-        .sidebar-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:0;background:#22c55e;border-radius:0 3px 3px 0;transition:height .2s ease}
-        .sidebar-item:hover::before,.sidebar-item.active::before{height:60%}
-        .input-glow:focus-within{box-shadow:0 0 0 3px rgba(34,197,94,.15),0 0 20px rgba(34,197,94,.08)}
-    </style>
-    {% block extra_head %}{% endblock %}
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{font-family:'Inter',system-ui,sans-serif}
+
+    ::-webkit-scrollbar{width:4px;height:4px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:#30363d;border-radius:99px}
+
+    /* ═══ DARK MODE OVERRIDES ═══ */
+    html.dark body{background:#0d1117!important;color:#e6edf3!important}
+    html.dark .bg-white{background-color:#1c2128!important}
+    html.dark .bg-gray-50{background-color:#161b22!important}
+    html.dark .bg-gray-100{background-color:#21262d!important}
+    html.dark .border-gray-100,html.dark .border-gray-200{border-color:#30363d!important}
+    html.dark .text-gray-900{color:#e6edf3!important}
+    html.dark .text-gray-800{color:#c9d1d9!important}
+    html.dark .text-gray-700{color:#8b949e!important}
+    html.dark .text-gray-500{color:#6e7681!important}
+    html.dark input:not([type=submit]):not([type=button]),
+    html.dark select,
+    html.dark textarea{background-color:#21262d!important;border-color:#30363d!important;color:#e6edf3!important}
+    html.dark input::placeholder,html.dark textarea::placeholder{color:#484f58!important}
+
+    /* ═══ MEDICAL BG ANIMATIONS ═══ */
+    @keyframes float1{0%,100%{transform:translateY(0) rotate(0deg) scale(1)}33%{transform:translateY(-20px) rotate(8deg) scale(1.05)}66%{transform:translateY(-10px) rotate(-4deg) scale(0.98)}}
+    @keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-15px) rotate(-6deg)}}
+    @keyframes float3{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-25px) scale(1.1)}}
+    @keyframes dna-rotate{from{transform:rotate(0deg) translateX(30px) rotate(0deg)}to{transform:rotate(360deg) translateX(30px) rotate(-360deg)}}
+    @keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+    @keyframes scan-line{0%{transform:translateY(-100%);opacity:0}50%{opacity:1}100%{transform:translateY(100vh);opacity:0}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes slideLeft{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes shimmer{0%{background-position:-1000px 0}100%{background-position:1000px 0}}
+    @keyframes glow-pulse{0%,100%{box-shadow:0 0 15px rgba(34,197,94,0.2)}50%{box-shadow:0 0 30px rgba(34,197,94,0.5)}}
+    @keyframes count-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ═══ SIDEBAR ═══ */
+    .sidebar{width:240px;min-width:240px;transition:width .3s cubic-bezier(.4,0,.2,1),min-width .3s cubic-bezier(.4,0,.2,1)}
+    .sidebar.collapsed{width:64px;min-width:64px}
+    .sidebar.collapsed .sidebar-label{opacity:0;width:0;overflow:hidden;transition:opacity .15s,width .15s}
+    .sidebar .sidebar-label{opacity:1;width:auto;transition:opacity .2s .1s,width .2s .1s}
+    .sidebar.collapsed .sidebar-icon{margin:0 auto}
+    .sidebar.collapsed .sidebar-logo-text{opacity:0;width:0;overflow:hidden}
+    .sidebar.collapsed .sidebar-search{display:none}
+    .sidebar.collapsed .sidebar-bottom-text{display:none}
+    .sidebar.collapsed .sidebar-collapse-icon{transform:rotate(180deg)}
+
+    .sidebar-item{position:relative;display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;transition:all .2s;color:#8b949e;cursor:pointer;text-decoration:none;white-space:nowrap;overflow:hidden}
+    .sidebar-item:hover{background:#21262d;color:#e6edf3}
+    .sidebar-item:hover .sidebar-item-icon{color:#22c55e}
+    .sidebar-item.active{background:rgba(34,197,94,.1);color:#22c55e}
+    .sidebar-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:#22c55e;border-radius:0 3px 3px 0}
+    .sidebar-item.active .sidebar-item-icon{color:#22c55e}
+    .sidebar-item-icon{font-size:18px;width:20px;text-align:center;flex-shrink:0;transition:color .2s}
+
+    .sidebar-divider{height:1px;background:#30363d;margin:8px 16px}
+
+    /* ═══ MAIN CONTENT ═══ */
+    .main-content{margin-left:240px;transition:margin-left .3s cubic-bezier(.4,0,.2,1)}
+    .main-content.sidebar-collapsed{margin-left:64px}
+
+    /* ═══ UTILITIES ═══ */
+    .card-lift{transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s ease}
+    .card-lift:hover{transform:translateY(-4px);box-shadow:0 12px 40px -8px rgba(34,197,94,.15)}
+    .dark .card-lift:hover{box-shadow:0 12px 40px -8px rgba(34,197,94,.12)}
+    .btn-press:active{transform:scale(.97)}
+    .btn-glow{position:relative}
+    .btn-glow::after{content:'';position:absolute;inset:0;border-radius:inherit;background:inherit;filter:blur(16px);opacity:0;z-index:-1;transition:opacity .3s}
+    .btn-glow:hover::after{opacity:.6}
+    .text-gradient{background:linear-gradient(135deg,#22c55e,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#ef4444;border-radius:50%;font-size:9px;color:white;display:flex;align-items:center;justify-content:center;border:2px solid #161b22;font-weight:700}
+    .shimmer{position:relative;overflow:hidden}
+    .shimmer::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);background-size:1000px 100%;animation:shimmer 2s infinite}
+    .stagger>*{opacity:0;animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards}
+    .stagger>*:nth-child(1){animation-delay:.05s}
+    .stagger>*:nth-child(2){animation-delay:.10s}
+    .stagger>*:nth-child(3){animation-delay:.15s}
+    .stagger>*:nth-child(4){animation-delay:.20s}
+    .stagger>*:nth-child(5){animation-delay:.25s}
+    .stagger>*:nth-child(6){animation-delay:.30s}
+    .stagger>*:nth-child(7){animation-delay:.35s}
+    .stagger>*:nth-child(8){animation-delay:.40s}
+    .input-glow:focus-within{box-shadow:0 0 0 3px rgba(34,197,94,.15),0 0 20px rgba(34,197,94,.08)}
+    .scrollbar-none::-webkit-scrollbar{display:none}
+    .scrollbar-none{-ms-overflow-style:none;scrollbar-width:none}
+    .pill-spinner{width:20px;height:20px;border:2px solid rgba(34,197,94,.2);border-top-color:#22c55e;border-radius:50%;animation:spin .6s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Mobile bottom nav */
+    .mobile-nav-link{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 0;font-size:10px;color:#8b949e;transition:color .2s;min-height:44px;min-width:44px;text-decoration:none}
+    .mobile-nav-link.active,.mobile-nav-link:hover{color:#22c55e}
+    .mobile-nav-link i{font-size:20px}
+    .mobile-nav-link span{font-size:9px;font-weight:500}
+
+    /* Profile menu */
+    #profile-menu{opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .2s,transform .2s cubic-bezier(.16,1,.3,1)}
+    #profile-menu.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+    /* Mobile overlay */
+    #mobile-overlay{opacity:0;pointer-events:none;transition:opacity .3s}
+    #mobile-overlay.open{opacity:1;pointer-events:auto}
+
+    /* Scroll reveal */
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* Smooth image zoom */
+    .img-zoom{overflow:hidden}
+    .img-zoom img{transition:transform .5s cubic-bezier(.16,1,.3,1)}
+    .img-zoom:hover img{transform:scale(1.08)}
+
+    @media(max-width:1023px){
+      .sidebar{transform:translateX(-100%);width:280px;min-width:280px;position:fixed;top:0;left:0;height:100%;z-index:60}
+      .sidebar.open{transform:translateX(0)}
+      .main-content{margin-left:0!important}
+      .main-content.sidebar-collapsed{margin-left:0!important}
+      .mobile-bottom-nav{display:flex!important}
+    }
+    @media(min-width:1024px){
+      .sidebar{transform:translateX(0);position:fixed;top:0;left:0;height:100%;z-index:50}
+      .mobile-bottom-nav{display:none!important}
+      .mobile-header{display:none!important}
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
 </head>
 
-<body class="bg-surface dark:bg-[#0d1117] text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col overflow-x-hidden">
+<body class="bg-[#0d1117] text-[#e6edf3] antialiased min-h-screen">
 
-<!-- ═══ TOP BAR ═══ -->
-<div class="hidden md:block bg-[#0d1117] text-white/80 border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-4 md:px-6 py-1.5">
-        <div class="flex items-center justify-between text-[11px] font-medium tracking-wide">
-            <div class="flex items-center gap-5">
-                <a href="tel:+99244XXXXXXX" class="flex items-center gap-1.5 hover:text-white transition-colors">
-                    <i class="ti ti-phone-call text-brand-400 text-xs"></i> +992 44 XXX XX XX
-                </a>
-                <span class="hidden lg:flex items-center gap-1.5 text-white/50">
-                    <i class="ti ti-map-pin text-brand-400/60 text-xs"></i>
-                    {% trans 'Душанбе, Таджикистан' %}
-                </span>
-            </div>
-            <div class="flex items-center gap-5 text-white/50">
-                <span class="flex items-center gap-1.5">
-                    <i class="ti ti-truck-delivery text-brand-400/60 text-xs"></i>
-                    {% trans 'Доставка за 2 часа' %}
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <i class="ti ti-clock text-brand-400/60 text-xs"></i> 08:00—22:00
-                </span>
-            </div>
-        </div>
-    </div>
+<!-- ═══ MEDICAL FLOATING BACKGROUND ═══ -->
+<div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+  <div style="position:absolute;top:10%;left:5%;width:300px;height:300px;border-radius:50%;border:1px solid rgba(34,197,94,0.05)"></div>
+  <div style="position:absolute;top:10%;left:5%;width:200px;height:200px;border-radius:50%;border:1px solid rgba(34,197,94,0.08);top:15%;left:8%"></div>
+  <i class="ti ti-pill" style="position:absolute;top:15%;left:8%;font-size:2.5rem;color:rgba(34,197,94,0.08);animation:float1 6s ease-in-out infinite"></i>
+  <i class="ti ti-stethoscope" style="position:absolute;top:25%;right:10%;font-size:3rem;color:rgba(34,197,94,0.06);animation:float2 8s ease-in-out infinite 1s"></i>
+  <i class="ti ti-heartbeat" style="position:absolute;top:60%;left:5%;font-size:2rem;color:rgba(34,197,94,0.08);animation:heartbeat 2s ease-in-out infinite .5s"></i>
+  <i class="ti ti-vaccine" style="position:absolute;bottom:20%;right:8%;font-size:2.5rem;color:rgba(34,197,94,0.06);animation:float3 7s ease-in-out infinite 2s"></i>
+  <i class="ti ti-microscope" style="position:absolute;top:45%;right:5%;font-size:2rem;color:rgba(34,197,94,0.05);animation:float1 9s ease-in-out infinite 3s"></i>
+  <i class="ti ti-dna" style="position:absolute;bottom:30%;left:8%;font-size:3rem;color:rgba(34,197,94,0.06);animation:float2 5s ease-in-out infinite 1.5s"></i>
+  <i class="ti ti-first-aid-kit" style="position:absolute;top:75%;right:15%;font-size:2rem;color:rgba(34,197,94,0.07);animation:float3 6.5s ease-in-out infinite .8s"></i>
+  <div style="position:absolute;top:-20%;left:30%;width:600px;height:600px;background:radial-gradient(circle,rgba(34,197,94,0.04) 0%,transparent 70%);border-radius:50%"></div>
+  <div style="position:absolute;bottom:-10%;right:20%;width:400px;height:400px;background:radial-gradient(circle,rgba(34,197,94,0.03) 0%,transparent 70%);border-radius:50%"></div>
+  <div style="position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(34,197,94,0.1),transparent);animation:scan-line 8s linear infinite"></div>
 </div>
 
-<!-- ═══ HEADER ═══ -->
-<header id="header" class="sticky top-0 z-50 glass bg-white/80 dark:bg-[#0d1117]/80 border-b border-gray-200/60 dark:border-[#30363d]/60">
-    <div class="max-w-7xl mx-auto px-4 md:px-6">
-        <div class="flex items-center justify-between h-14 md:h-16 gap-2">
+<!-- ═══ LEFT SIDEBAR ═══ -->
+<aside id="sidebar" class="sidebar flex flex-col bg-[#161b22] border-r border-[#30363d]">
+  <!-- Logo + collapse -->
+  <div class="flex items-center justify-between h-16 px-4 border-b border-[#30363d] flex-shrink-0">
+    <a href="{% url 'home' %}" class="flex items-center gap-2.5 overflow-hidden flex-shrink-0">
+      <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/30 flex-shrink-0">
+        <i class="ti ti-pill text-white text-sm"></i>
+      </div>
+      <span class="sidebar-logo-text text-sm font-black tracking-tight truncate transition-all duration-300">
+        Doru<span class="text-gradient">TJ</span>
+      </span>
+    </a>
+    <button onclick="toggleSidebar()" class="w-7 h-7 rounded-lg flex items-center justify-center text-gray-500 hover:text-[#e6edf3] hover:bg-[#21262d] transition-all flex-shrink-0 sidebar-collapse-btn">
+      <i class="sidebar-collapse-icon ti ti-chevron-left text-sm transition-transform duration-300"></i>
+    </button>
+  </div>
 
-            <a href="{% url 'home' %}" class="flex items-center gap-2.5 group flex-shrink-0">
-                <div class="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:scale-105 group-hover:shadow-brand-500/40 transition-all duration-300">
-                    <i class="ti ti-pill text-white text-sm md:text-base"></i>
-                </div>
-                <span class="text-sm md:text-base font-black tracking-tight">
-                    <span class="text-gray-900 dark:text-white">Doru</span><span class="text-gradient">TJ</span>
-                </span>
-            </a>
+  <!-- Search (sidebar) -->
+  {% if user.is_authenticated and not user.is_courier and not user.is_manager %}
+  <div class="sidebar-search px-3 pt-3 pb-1">
+    <form method="GET" action="{% url 'catalog' %}" class="input-glow">
+      <div class="flex items-center bg-[#21262d] rounded-lg border border-[#30363d] hover:border-brand-500/50 focus-within:border-brand-500 transition-all overflow-hidden">
+        <i class="ti ti-search text-[#8b949e] text-sm ml-2.5 flex-shrink-0"></i>
+        <input type="text" name="search" placeholder="{% trans 'Поиск...' %}"
+               class="w-full bg-transparent px-2 py-2 text-sm text-[#e6edf3] placeholder-[#484f58] focus:outline-none">
+      </div>
+    </form>
+  </div>
+  {% endif %}
 
-            <div class="flex items-center gap-1 md:gap-1.5">
-                {% if user.is_authenticated and not user.is_courier and not user.is_manager %}
-                <form method="GET" action="{% url 'catalog' %}" class="hidden md:flex input-glow">
-                    <div class="flex items-center bg-gray-100 dark:bg-[#161b22] rounded-xl border border-gray-200 dark:border-[#30363d] hover:border-brand-400/50 dark:hover:border-brand-500/50 focus-within:border-brand-500 transition-all w-36 lg:w-44 xl:w-52">
-                        <i class="ti ti-search text-gray-400 text-sm ml-2.5 flex-shrink-0"></i>
-                        <input type="text" name="search" placeholder="{% trans 'Поиск...' %}"
-                            class="flex-1 bg-transparent px-2 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none">
-                        <kbd class="hidden xl:inline-flex mr-2 text-[10px] text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-[#21262d] px-1.5 py-0.5 rounded font-mono">/</kbd>
-                    </div>
-                </form>
-                {% endif %}
+  <!-- Navigation -->
+  <nav class="flex-1 overflow-y-auto scrollbar-none px-3 py-3 space-y-0.5 sidebar-nav">
+    {% url 'home' as home_url %}
+    {% url 'catalog' as catalog_url %}
+    {% url 'pharmacy_list' as pharmacy_url %}
+    {% url 'consultant' as consultant_url %}
+    {% url 'my_orders' as orders_url %}
+    {% url 'cart' as cart_url %}
+    {% url 'favorites' as favorites_url %}
+    {% url 'symptom_search' as symptom_url %}
+    {% url 'reminders' as reminders_url %}
+    {% url 'profile' as profile_url %}
+    {% with request.path as path %}
+    <!-- Главная -->
+    <a href="{{ home_url }}" class="sidebar-item {% if path == home_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-home"></i>
+      <span class="sidebar-label">{% trans 'Главная' %}</span>
+    </a>
+    {% if not user.is_courier and not user.is_manager %}
+    <!-- Каталог -->
+    <a href="{{ catalog_url }}" class="sidebar-item {% if path == catalog_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-pill"></i>
+      <span class="sidebar-label">{% trans 'Каталог' %}</span>
+    </a>
+    <!-- Аптеки -->
+    <a href="{{ pharmacy_url }}" class="sidebar-item {% if path == pharmacy_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-building-hospital"></i>
+      <span class="sidebar-label">{% trans 'Аптеки' %}</span>
+    </a>
+    <!-- AI Консультант -->
+    <a href="{{ consultant_url }}" class="sidebar-item {% if path == consultant_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-robot"></i>
+      <span class="sidebar-label">AI {% trans 'Консультант' %}</span>
+    </a>
+    {% endif %}
+    {% if user.is_courier %}
+    <a href="{% url 'courier_dashboard' %}" class="sidebar-item {% if path == '/orders/courier-dashboard/' %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-bike"></i>
+      <span class="sidebar-label">{% trans 'Панель курьера' %}</span>
+    </a>
+    {% endif %}
+    {% if user.is_manager %}
+    <a href="{% url 'manager_dashboard' %}" class="sidebar-item {% if path == '/pharmacies/manager/' %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-building-store"></i>
+      <span class="sidebar-label">{% trans 'Моя аптека' %}</span>
+    </a>
+    {% endif %}
+    {% if user.is_staff %}
+    <div class="sidebar-divider"></div>
+    <a href="{% url 'product_list' %}" class="sidebar-item">
+      <i class="sidebar-item-icon ti ti-settings"></i>
+      <span class="sidebar-label">{% trans 'Управление' %}</span>
+    </a>
+    <a href="{% url 'analytics' %}" class="sidebar-item">
+      <i class="sidebar-item-icon ti ti-chart-bar"></i>
+      <span class="sidebar-label">{% trans 'Аналитика' %}</span>
+    </a>
+    {% endif %}
+    {% if user.is_authenticated and not user.is_courier and not user.is_manager %}
+    <div class="sidebar-divider"></div>
+    <!-- Заказы -->
+    <a href="{{ orders_url }}" class="sidebar-item {% if path == orders_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-package"></i>
+      <span class="sidebar-label">{% trans 'Мои заказы' %}</span>
+    </a>
+    <!-- Корзина -->
+    <a href="{{ cart_url }}" class="sidebar-item {% if path == cart_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-shopping-cart"></i>
+      <span class="sidebar-label">{% trans 'Корзина' %}</span>
+    </a>
+    <!-- Избранное -->
+    <a href="{{ favorites_url }}" class="sidebar-item {% if path == favorites_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-star"></i>
+      <span class="sidebar-label">{% trans 'Избранное' %}</span>
+    </a>
+    <!-- Симптомы -->
+    <a href="{{ symptom_url }}" class="sidebar-item {% if path == symptom_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-stethoscope"></i>
+      <span class="sidebar-label">{% trans 'Симптомы' %}</span>
+    </a>
+    <!-- Напоминания -->
+    <a href="{{ reminders_url }}" class="sidebar-item {% if path == reminders_url %}active{% endif %}">
+      <i class="sidebar-item-icon ti ti-bell-plus"></i>
+      <span class="sidebar-label">{% trans 'Напоминания' %}</span>
+    </a>
+    {% endif %}
+    {% endwith %}
+  </nav>
 
-                <form action="{% url 'set_language' %}" method="post" id="lang-form" class="flex">
-                    {% csrf_token %}
-                    <input name="next" type="hidden" value="{{ request.path }}">
-                    <div class="flex items-center gap-0.5 bg-gray-100 dark:bg-[#161b22] rounded-lg p-0.5 border border-gray-200 dark:border-[#30363d]">
-                        {% for code, label in LANGUAGES %}
-                        <button type="submit" name="language" value="{{ code }}"
-                            class="px-1.5 md:px-2 py-1 rounded-md text-[10px] md:text-xs font-semibold transition-all duration-200 tracking-wider
-                            {% if LANGUAGE_CODE == code %}bg-white dark:bg-[#21262d] text-brand-600 dark:text-brand-400 shadow-sm{% else %}text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">{{ code|upper }}</button>
-                        {% endfor %}
-                    </div>
-                </form>
-
-                <button onclick="toggleTheme()" id="theme-btn"
-                    class="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#21262d] hover:text-gray-700 dark:hover:text-gray-200 btn-press transition-all">
-                    <i id="theme-icon" class="ti ti-moon text-sm md:text-[17px]"></i>
-                </button>
-
-                {% if user.is_authenticated %}
-                <a href="{% url 'notifications' %}"
-                    class="relative w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#21262d] hover:text-brand-500 btn-press transition-all"
-                    id="notification-btn">
-                    <i class="ti ti-bell text-sm md:text-[17px]"></i>
-                    <span id="notification-badge" class="badge hidden">0</span>
-                </a>
-
-                {% if not user.is_courier and not user.is_manager %}
-                <a href="{% url 'cart' %}"
-                    class="relative w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#21262d] hover:text-brand-500 btn-press transition-all">
-                    <i class="ti ti-shopping-cart text-sm md:text-[17px]"></i>
-                </a>
-                {% endif %}
-
-                <div class="relative" id="profile-dropdown">
-                    <button onclick="toggleProfileDropdown(event)"
-                            class="flex items-center gap-1.5 bg-gray-100 dark:bg-[#161b22] hover:bg-gray-200 dark:hover:bg-[#21262d] pl-1.5 pr-2 md:pl-2 md:pr-2.5 py-1 md:py-1.5 rounded-xl btn-press transition-all border border-transparent hover:border-gray-200 dark:hover:border-[#30363d]">
-                        <div class="w-5 h-5 md:w-6 md:h-6 rounded-lg overflow-hidden flex-shrink-0">
-                            {% if user.avatar %}
-                            <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
-                            {% else %}
-                            <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-[10px] md:text-xs font-bold">
-                                {{ user.username|first|upper }}
-                            </div>
-                            {% endif %}
-                        </div>
-                        <span class="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-200 max-w-[64px] truncate">{{ user.username }}</span>
-                    </button>
-
-                    <div id="profile-menu" class="hidden absolute right-0 top-full mt-2 w-52 bg-white dark:bg-[#161b22] rounded-2xl shadow-xl shadow-black/10 dark:shadow-black/40 border border-gray-100 dark:border-[#30363d] overflow-hidden z-50">
-                        <div class="p-3 bg-gradient-to-br from-brand-50 to-emerald-50 dark:from-brand-900/20 dark:to-emerald-900/20 border-b border-gray-100 dark:border-[#30363d]">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
-                                    {% if user.avatar %}
-                                    <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
-                                    {% else %}
-                                    <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-bold">
-                                        {{ user.username|first|upper }}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div class="min-w-0">
-                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">{{ user.username }}</p>
-                                    <p class="text-xs text-gray-400 truncate">{{ user.email }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-1.5">
-                            {% if not user.is_courier and not user.is_manager %}
-                            <a href="{% url 'profile' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
-                                <i class="ti ti-user text-base text-gray-400 w-5"></i> {% trans 'Профиль' %}
-                            </a>
-                            <a href="{% url 'notifications' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
-                                <i class="ti ti-bell text-base text-gray-400 w-5"></i> {% trans 'Уведомления' %}
-                            </a>
-                            <a href="{% url 'my_orders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
-                                <i class="ti ti-package text-base text-gray-400 w-5"></i> {% trans 'Мои заказы' %}
-                            </a>
-                            <a href="{% url 'favorites' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
-                                <i class="ti ti-star text-base text-gray-400 w-5"></i> {% trans 'Избранное' %}
-                            </a>
-                            <a href="{% url 'consultant' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
-                                <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'AI Консультант' %}
-                            </a>
-                            <a href="{% url 'reminders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
-                                <i class="ti ti-bell-plus text-base text-gray-400 w-5"></i> {% trans 'Напоминания' %}
-                            </a>
-                            {% endif %}
-                            {% if user.is_staff %}
-                            <div class="h-px bg-gray-100 dark:bg-[#30363d] my-1.5 mx-1"></div>
-                            <a href="{% url 'product_list' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                                <i class="ti ti-settings text-base w-5"></i> {% trans 'Управление' %}
-                            </a>
-                            <a href="{% url 'analytics' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                                <i class="ti ti-chart-bar text-base w-5"></i> {% trans 'Аналитика' %}
-                            </a>
-                            {% endif %}
-                            {% if user.is_courier %}
-                            <a href="{% url 'courier_dashboard' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors">
-                                <i class="ti ti-bike text-base w-5"></i> {% trans 'Панель курьера' %}
-                            </a>
-                            {% endif %}
-                            {% if user.is_manager %}
-                            <a href="{% url 'manager_dashboard' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
-                                <i class="ti ti-building-store text-base w-5"></i> {% trans 'Моя аптека' %}
-                            </a>
-                            {% endif %}
-                            <div class="h-px bg-gray-100 dark:bg-[#30363d] my-1.5 mx-1"></div>
-                            <a href="{% url 'logout' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                                <i class="ti ti-logout text-base w-5"></i> {% trans 'Выйти' %}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                {% else %}
-                <a href="{% url 'login_user' %}"
-                    class="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-brand-500 px-2 md:px-3 py-1.5 md:py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262d] btn-press transition-all">
-                    {% trans 'Войти' %}
-                </a>
-                <a href="{% url 'register' %}"
-                    class="text-xs md:text-sm font-semibold bg-brand-500 hover:bg-brand-600 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-xl shadow-lg shadow-brand-500/25 btn-press transition-all">
-                    {% trans 'Регистрация' %}
-                </a>
-                {% endif %}
-
-                <button onclick="toggleMobile()"
-                    class="lg:hidden flex items-center gap-1 px-2 py-1.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#21262d] btn-press transition-all">
-                    <i id="mobile-icon" class="ti ti-menu-2 text-lg"></i>
-                </button>
-            </div>
+  <!-- Bottom section -->
+  <div class="border-t border-[#30363d] px-3 py-3 flex-shrink-0 sidebar-bottom">
+    {% if user.is_authenticated %}
+    <!-- Notifications + Theme + User -->
+    <div class="flex items-center justify-between gap-1 mb-2">
+      <a href="{% url 'notifications' %}" class="sidebar-item !p-2 !rounded-lg flex-1 flex items-center justify-center gap-2 relative" title="{% trans 'Уведомления' %}">
+        <i class="sidebar-item-icon ti ti-bell text-base"></i>
+        <span class="sidebar-label text-xs">{% trans 'Уведомления' %}</span>
+        <span id="notification-badge" class="badge hidden" style="border-color:#161b22">0</span>
+      </a>
+      <button onclick="toggleTheme()" class="sidebar-item !p-2 !rounded-lg flex-1 flex items-center justify-center gap-2" title="{% trans 'Тема' %}">
+        <i id="sidebar-theme-icon" class="sidebar-item-icon ti ti-moon text-base"></i>
+        <span id="sidebar-theme-text" class="sidebar-label text-xs">{% trans 'Тёмная' %}</span>
+      </button>
+      <a href="{% url 'profile' %}" class="sidebar-item !p-2 !rounded-lg flex-1 flex items-center justify-center gap-2" title="{% trans 'Профиль' %}">
+        <div class="w-5 h-5 rounded-md overflow-hidden flex-shrink-0">
+          {% if user.avatar %}
+          <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
+          {% else %}
+          <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-[8px] font-bold">
+            {{ user.username|first|upper }}
+          </div>
+          {% endif %}
         </div>
+        <span class="sidebar-label text-xs truncate">{{ user.username }}</span>
+      </a>
     </div>
+    <a href="{% url 'logout' %}" class="sidebar-item !p-2 !rounded-lg text-red-500 hover:bg-red-500/10 hover:text-red-400">
+      <i class="sidebar-item-icon ti ti-logout text-base"></i>
+      <span class="sidebar-label text-xs">{% trans 'Выйти' %}</span>
+    </a>
+    {% else %}
+    <a href="{% url 'login_user' %}" class="sidebar-item !p-2 !rounded-lg">
+      <i class="sidebar-item-icon ti ti-login text-base"></i>
+      <span class="sidebar-label text-xs">{% trans 'Войти' %}</span>
+    </a>
+    <a href="{% url 'register' %}" class="sidebar-item !p-2 !rounded-lg mt-1">
+      <i class="sidebar-item-icon ti ti-user-plus text-base"></i>
+      <span class="sidebar-label text-xs">{% trans 'Регистрация' %}</span>
+    </a>
+    {% endif %}
+  </div>
+</aside>
 
-    <div id="mobile-menu" class="lg:hidden border-t border-gray-100 dark:border-[#30363d] bg-white dark:bg-[#0d1117] shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 py-4 space-y-1">
-            {% if user.is_authenticated %}
-            {% if not user.is_courier and not user.is_manager %}
-            <form method="GET" action="{% url 'catalog' %}" class="mb-4 input-glow">
-                <div class="flex items-center bg-gray-100 dark:bg-[#161b22] rounded-xl border border-gray-200 dark:border-[#30363d] focus-within:border-brand-500 transition-all overflow-hidden">
-                    <i class="ti ti-search text-gray-400 text-sm ml-3.5 flex-shrink-0"></i>
-                    <input type="text" name="search" placeholder="{% trans 'Поиск лекарств...' %}"
-                        class="flex-1 bg-transparent px-3 py-3 text-sm focus:outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400">
-                </div>
-            </form>
+<!-- ═══ MOBILE OVERLAY ═══ -->
+<div id="mobile-overlay" onclick="closeSidebar()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden"></div>
 
-            <div class="grid grid-cols-2 gap-2">
-                {% for item in mobile_nav_items %}
-                <a href="{{ item.url }}" onclick="toggleMobile()"
-                    class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-[#161b22]">
-                    <i class="{{ item.icon }} text-base text-gray-400 w-5"></i> {{ item.label }}
-                </a>
-                {% endfor %}
-            </div>
-            {% endif %}
-            <div class="h-px bg-gray-100 dark:bg-[#30363d] my-3"></div>
-            <a href="{% url 'logout' %}" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
-                <i class="ti ti-logout text-base w-5"></i> {% trans 'Выйти' %}
-            </a>
-            {% else %}
-            <a href="{% url 'login_user' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-[#161b22]">
-                <i class="ti ti-login text-base w-5"></i> {% trans 'Войти' %}
-            </a>
-            <a href="{% url 'register' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/15 transition-all bg-gray-50 dark:bg-[#161b22]">
-                <i class="ti ti-user-plus text-base w-5"></i> {% trans 'Регистрация' %}
-            </a>
-            {% endif %}
-        </div>
+<!-- ═══ MAIN CONTENT ═══ -->
+<div id="main-wrapper" class="main-content flex flex-col min-h-screen relative z-10">
+
+  <!-- Mobile header -->
+  <div class="mobile-header flex items-center justify-between h-14 px-4 bg-[#161b22] border-b border-[#30363d] sticky top-0 z-40">
+    <button onclick="openSidebar()" class="w-9 h-9 rounded-xl flex items-center justify-center text-[#8b949e] hover:text-[#e6edf3] hover:bg-[#21262d] transition-all">
+      <i class="ti ti-menu-2 text-lg"></i>
+    </button>
+    <a href="{% url 'home' %}" class="flex items-center gap-2">
+      <div class="w-7 h-7 bg-gradient-to-br from-brand-400 to-brand-600 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/30">
+        <i class="ti ti-pill text-white text-xs"></i>
+      </div>
+      <span class="text-sm font-black tracking-tight">Doru<span class="text-gradient">TJ</span></span>
+    </a>
+    <div class="flex items-center gap-1">
+      {% if user.is_authenticated %}
+      <a href="{% url 'notifications' %}" class="relative w-9 h-9 rounded-xl flex items-center justify-center text-[#8b949e] hover:text-brand-500 hover:bg-[#21262d] transition-all">
+        <i class="ti ti-bell text-lg"></i>
+        <span id="mobile-notif-badge" class="badge hidden" style="border-color:#161b22">0</span>
+      </a>
+      {% else %}
+      <a href="{% url 'login_user' %}" class="text-xs font-medium text-[#e6edf3] hover:text-brand-500 px-3 py-1.5 rounded-lg hover:bg-[#21262d] transition-all">{% trans 'Войти' %}</a>
+      {% endif %}
     </div>
-</header>
+  </div>
 
-<div id="mobile-overlay" onclick="toggleMobile()" class="lg:hidden fixed inset-0 z-30 bg-black/50 backdrop-blur-sm"></div>
-
-{% if messages %}
-<div class="max-w-7xl mx-auto px-4 md:px-6 pt-4 space-y-2" id="messages-container">
+  <!-- Messages -->
+  {% if messages %}
+  <div class="px-4 pt-4 space-y-2 max-w-5xl mx-auto w-full" id="messages-container">
     {% for msg in messages %}
-    <div class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium border animate-slide-down
-        {% if msg.tags == 'success' %}bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400
-        {% elif msg.tags == 'error' %}bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400
-        {% elif msg.tags == 'warning' %}bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400
-        {% else %}bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400{% endif %}">
-        <i class="ti {% if msg.tags == 'success' %}ti-circle-check{% elif msg.tags == 'error' %}ti-circle-x{% elif msg.tags == 'warning' %}ti-alert-triangle{% else %}ti-info-circle{% endif %} text-lg flex-shrink-0"></i>
-        <span class="flex-1">{{ msg }}</span>
-        <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 transition-opacity"><i class="ti ti-x text-base"></i></button>
+    <div class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium border animate-fadeUp
+      {% if msg.tags == 'success' %}bg-green-900/20 border-green-800 text-green-400
+      {% elif msg.tags == 'error' %}bg-red-900/20 border-red-800 text-red-400
+      {% elif msg.tags == 'warning' %}bg-yellow-900/20 border-yellow-800 text-yellow-400
+      {% else %}bg-blue-900/20 border-blue-800 text-blue-400{% endif %}">
+      <i class="ti {% if msg.tags == 'success' %}ti-circle-check{% elif msg.tags == 'error' %}ti-circle-x{% elif msg.tags == 'warning' %}ti-alert-triangle{% else %}ti-info-circle{% endif %} text-lg flex-shrink-0"></i>
+      <span class="flex-1">{{ msg }}</span>
+      <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 transition-opacity"><i class="ti ti-x text-base"></i></button>
     </div>
     {% endfor %}
-</div>
-{% endif %}
+  </div>
+  {% endif %}
 
-<main class="flex-1 w-full">
-    <div class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 animate-fade-up lg:flex lg:gap-10">
-        {% if user.is_authenticated and not user.is_courier and not user.is_manager %}
-        <aside class="hidden lg:block w-40 flex-shrink-0 order-first">
-            <nav class="sticky top-20 flex flex-col gap-0.5">
-                {% url 'catalog' as catalog_url %}
-                {% url 'pharmacy_list' as pharmacy_url %}
-                {% url 'consultant' as consultant_url %}
-                {% url 'my_orders' as orders_url %}
-                {% url 'favorites' as favorites_url %}
-                {% url 'symptom_search' as symptom_url %}
-                {% url 'reminders' as reminders_url %}
-                {% with request.path as path %}
-                <a href="{{ catalog_url }}"
-                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                    {% if path == catalog_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
-                    <i class="ti ti-pill text-base w-5"></i> {% trans 'Каталог' %}
-                </a>
-                <a href="{{ pharmacy_url }}"
-                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                    {% if path == pharmacy_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
-                    <i class="ti ti-building-hospital text-base w-5"></i> {% trans 'Аптеки' %}
-                </a>
-                <div class="h-px bg-gray-100 dark:bg-[#30363d] my-2 mx-2"></div>
-                <a href="{{ consultant_url }}"
-                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                    {% if path == consultant_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
-                    <i class="ti ti-robot text-base w-5"></i> AI {% trans 'Консультант' %}
-                </a>
-                <a href="{{ orders_url }}"
-                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                    {% if path == orders_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
-                    <i class="ti ti-package text-base w-5"></i> {% trans 'Заказы' %}
-                </a>
-                <a href="{{ favorites_url }}"
-                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                    {% if path == favorites_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
-                    <i class="ti ti-star text-base w-5"></i> {% trans 'Избранное' %}
-                </a>
-                <a href="{{ symptom_url }}"
-                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                    {% if path == symptom_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
-                    <i class="ti ti-robot text-base w-5"></i> {% trans 'Симптомы' %}
-                </a>
-                <a href="{{ reminders_url }}"
-                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                    {% if path == reminders_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
-                    <i class="ti ti-bell-plus text-base w-5"></i> {% trans 'Напоминания' %}
-                </a>
-                {% endwith %}
-            </nav>
-        </aside>
-        {% endif %}
-        <div class="flex-1 min-w-0">
-            {% block content %}{% endblock %}
-        </div>
-    </div>
-</main>
+  <!-- Content -->
+  <main class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10">
+    {% block content %}{% endblock %}
+  </main>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="bg-white dark:bg-[#0d1117] border-t border-gray-200 dark:border-[#30363d] mt-auto">
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="bg-[#161b22] border-t border-[#30363d] mt-auto pb-20 lg:pb-0">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
-            <div class="col-span-2 md:col-span-1">
-                <a href="{% url 'home' %}" class="flex items-center gap-2.5 mb-4 group">
-                    <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-brand-500/30">
-                        <i class="ti ti-pill text-white text-sm"></i>
-                    </div>
-                    <span class="font-black text-gray-900 dark:text-white">Dori<span class="text-gradient">TJ</span></span>
-                </a>
-                <p class="text-gray-400 dark:text-gray-500 text-sm leading-relaxed mb-5 max-w-xs">
-                    {% trans 'Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое.' %}
-                </p>
-                <button onclick="toggleTheme()"
-                    class="inline-flex items-center gap-2 bg-gray-100 dark:bg-[#161b22] hover:bg-gray-200 dark:hover:bg-[#21262d] px-3 py-2 rounded-xl text-xs font-medium text-gray-500 dark:text-gray-400 btn-press transition-all border border-transparent hover:border-gray-200 dark:hover:border-[#30363d]">
-                    <i id="footer-icon" class="ti ti-moon text-sm"></i>
-                    <span id="footer-text">{% trans 'Тёмная тема' %}</span>
-                </button>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
+        <!-- Brand -->
+        <div class="col-span-2 md:col-span-1">
+          <a href="{% url 'home' %}" class="flex items-center gap-2.5 mb-4 group">
+            <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-brand-500/30">
+              <i class="ti ti-pill text-white text-sm"></i>
             </div>
-            <div>
-                <h4 class="text-xs font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">{% trans 'Покупателям' %}</h4>
-                <ul class="space-y-3">
-                    <li><a href="{% url 'catalog' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-pill text-[10px] text-brand-400"></i>{% trans 'Каталог' %}</a></li>
-                    <li><a href="{% url 'pharmacy_list' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-building-hospital text-[10px] text-brand-400"></i>{% trans 'Аптеки' %}</a></li>
-                    <li><a href="{% url 'cart' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-shopping-cart text-[10px] text-brand-400"></i>{% trans 'Корзина' %}</a></li>
-                    <li><a href="{% url 'my_orders' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-package text-[10px] text-brand-400"></i>{% trans 'Мои заказы' %}</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xs font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">{% trans 'Сервисы' %}</h4>
-                <ul class="space-y-3">
-                    <li><a href="{% url 'consultant' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-robot text-[10px] text-brand-400"></i>{% trans 'AI Консультант' %}</a></li>
-                    <li><a href="#" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-truck-delivery text-[10px] text-brand-400"></i>{% trans 'Доставка' %}</a></li>
-                    <li><a href="#" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-info-circle text-[10px] text-brand-400"></i>{% trans 'О нас' %}</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xs font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">{% trans 'Контакты' %}</h4>
-                <ul class="space-y-3">
-                    <li class="flex items-start gap-2 text-sm text-gray-400 dark:text-gray-500"><i class="ti ti-map-pin text-[10px] text-brand-400 mt-0.5 flex-shrink-0"></i>{% trans 'Душанбе, Таджикистан' %}</li>
-                    <li><a href="tel:+992XXXXXXXXX" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-phone text-[10px] text-brand-400"></i>+992 XX XXX XXXX</a></li>
-                    <li><a href="mailto:info@doritj.tj" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-mail text-[10px] text-brand-400"></i>info@doritj.tj</a></li>
-                    <li class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500"><i class="ti ti-clock text-[10px] text-brand-400"></i>08:00 — 22:00</li>
-                </ul>
-            </div>
+            <span class="font-black text-[#e6edf3]">Dori<span class="text-gradient">TJ</span></span>
+          </a>
+          <p class="text-[#8b949e] text-sm leading-relaxed mb-5 max-w-xs">
+            {% trans 'Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое.' %}
+          </p>
+          <button onclick="toggleTheme()" class="inline-flex items-center gap-2 bg-[#21262d] hover:bg-[#30363d] px-3 py-2 rounded-xl text-xs font-medium text-[#8b949e] btn-press transition-all border border-[#30363d]">
+            <i id="footer-theme-icon" class="ti ti-moon text-sm"></i>
+            <span id="footer-theme-text">{% trans 'Тёмная тема' %}</span>
+          </button>
         </div>
-        <div class="border-t border-gray-100 dark:border-[#30363d] py-6 flex flex-col md:flex-row items-center justify-between gap-3">
-            <p class="text-sm text-gray-400 dark:text-gray-500">{% blocktrans %}© 2025 DoriTJ. Все права защищены.{% endblocktrans %}</p>
-            <p class="text-sm text-gray-400 dark:text-gray-500 flex items-center gap-1.5"><i class="ti ti-heart text-red-400 text-xs"></i>{% trans 'Сделано в Таджикистане' %}</p>
+
+        <!-- Customers -->
+        <div>
+          <h4 class="text-xs font-semibold text-[#c9d1d9] uppercase tracking-wider mb-4">{% trans 'Покупателям' %}</h4>
+          <ul class="space-y-3">
+            <li><a href="{% url 'catalog' %}" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-pill text-[10px] text-brand-400"></i>{% trans 'Каталог' %}</a></li>
+            <li><a href="{% url 'pharmacy_list' %}" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-building-hospital text-[10px] text-brand-400"></i>{% trans 'Аптеки' %}</a></li>
+            <li><a href="{% url 'cart' %}" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-shopping-cart text-[10px] text-brand-400"></i>{% trans 'Корзина' %}</a></li>
+            <li><a href="{% url 'my_orders' %}" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-package text-[10px] text-brand-400"></i>{% trans 'Мои заказы' %}</a></li>
+          </ul>
         </div>
+
+        <!-- Services -->
+        <div>
+          <h4 class="text-xs font-semibold text-[#c9d1d9] uppercase tracking-wider mb-4">{% trans 'Сервисы' %}</h4>
+          <ul class="space-y-3">
+            <li><a href="{% url 'consultant' %}" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-robot text-[10px] text-brand-400"></i>{% trans 'AI Консультант' %}</a></li>
+            <li><a href="#" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-truck-delivery text-[10px] text-brand-400"></i>{% trans 'Доставка' %}</a></li>
+            <li><a href="#" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-info-circle text-[10px] text-brand-400"></i>{% trans 'О нас' %}</a></li>
+          </ul>
+        </div>
+
+        <!-- Contacts -->
+        <div>
+          <h4 class="text-xs font-semibold text-[#c9d1d9] uppercase tracking-wider mb-4">{% trans 'Контакты' %}</h4>
+          <ul class="space-y-3 mb-5">
+            <li class="flex items-start gap-2 text-sm text-[#8b949e]"><i class="ti ti-map-pin text-[10px] text-brand-400 mt-0.5 flex-shrink-0"></i>{% trans 'Душанбе, Таджикистан' %}</li>
+            <li><a href="tel:+992XXXXXXXXX" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-phone text-[10px] text-brand-400"></i>+992 XX XXX XXXX</a></li>
+            <li><a href="mailto:info@doritj.tj" class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-brand-500 transition-colors"><i class="ti ti-mail text-[10px] text-brand-400"></i>info@doritj.tj</a></li>
+            <li class="flex items-center gap-2 text-sm text-[#8b949e]"><i class="ti ti-clock text-[10px] text-brand-400"></i>08:00 — 22:00</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="border-t border-[#30363d] py-6 flex flex-col md:flex-row items-center justify-between gap-3">
+        <p class="text-sm text-[#8b949e]">{% blocktrans %}© 2025 DoriTJ. Все права защищены.{% endblocktrans %}</p>
+        <p class="text-sm text-[#8b949e] flex items-center gap-1.5"><i class="ti ti-heart text-red-400 text-xs"></i>{% trans 'Сделано в Таджикистане' %}</p>
+      </div>
     </div>
-</footer>
+  </footer>
+</div>
+
+<!-- ═══ MOBILE BOTTOM NAV ═══ -->
+{% if user.is_authenticated and not user.is_courier and not user.is_manager %}
+<nav class="mobile-bottom-nav fixed bottom-0 left-0 right-0 z-40 bg-[#161b22]/95 backdrop-blur-xl border-t border-[#30363d]">
+  <div class="flex items-center justify-around max-w-lg mx-auto">
+    <a href="{% url 'catalog' %}" class="mobile-nav-link">
+      <i class="ti ti-pill"></i>
+      <span>{% trans 'Каталог' %}</span>
+    </a>
+    <a href="{% url 'consultant' %}" class="mobile-nav-link">
+      <i class="ti ti-robot"></i>
+      <span>AI</span>
+    </a>
+    <a href="{% url 'home' %}" class="mobile-nav-link">
+      <i class="ti ti-home"></i>
+      <span>{% trans 'Главная' %}</span>
+    </a>
+    <a href="{% url 'favorites' %}" class="mobile-nav-link">
+      <i class="ti ti-star"></i>
+      <span>{% trans 'Избранное' %}</span>
+    </a>
+    <a href="{% url 'cart' %}" class="mobile-nav-link relative">
+      <i class="ti ti-shopping-cart"></i>
+      <span>{% trans 'Корзина' %}</span>
+    </a>
+  </div>
+</nav>
+{% endif %}
 
 {% block extra_scripts %}{% endblock %}
 
 <script>
-    function updateNotificationCount() {
-        fetch('/notifications/count/').then(r=>r.json()).then(data=>{
-            const badge=document.getElementById('notification-badge');
-            if(data.count>0){badge.textContent=data.count;badge.classList.remove('hidden')}
-            else{badge.classList.add('hidden')}
-        }).catch(()=>{});
+  /* ═══ NOTIFICATION COUNT ═══ */
+  function updateNotificationCount(){
+    fetch('/notifications/count/').then(r=>r.json()).then(data=>{
+      const badge=document.getElementById('notification-badge');
+      const mBadge=document.getElementById('mobile-notif-badge');
+      const count=data.count||0;
+      if(badge){if(count>0){badge.textContent=count;badge.classList.remove('hidden')}else{badge.classList.add('hidden')}}
+      if(mBadge){if(count>0){mBadge.textContent=count;mBadge.classList.remove('hidden')}else{mBadge.classList.add('hidden')}}
+    }).catch(()=>{});
+  }
+  {% if user.is_authenticated %}
+  updateNotificationCount();
+  setInterval(updateNotificationCount,15000);
+  {% endif %}
+
+  /* ═══ SERVICE WORKER ═══ */
+  if('serviceWorker'in navigator){navigator.serviceWorker.register('/static/service-worker.js').catch(()=>{});}
+
+  /* ═══ THEME ═══ */
+  const html=document.documentElement;
+  const saved=localStorage.getItem('dorutj-theme');
+  const prefersDark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  if(saved==='dark'||(!saved&&prefersDark)){html.classList.add('dark')}else if(saved==='light'){html.classList.remove('dark')}else{html.classList.add('dark')}
+  updateThemeUI();
+
+  function toggleTheme(){
+    const isDark=!html.classList.contains('dark');
+    html.classList.toggle('dark',isDark);
+    localStorage.setItem('dorutj-theme',isDark?'dark':'light');
+    updateThemeUI();
+  }
+
+  function setTheme(mode){
+    const isDark=mode==='dark';
+    html.classList.toggle('dark',isDark);
+    localStorage.setItem('dorutj-theme',mode);
+    updateThemeUI();
+  }
+
+  function updateThemeUI(){
+    const isDark=html.classList.contains('dark');
+    const sIcon=document.getElementById('sidebar-theme-icon');
+    const sText=document.getElementById('sidebar-theme-text');
+    const fIcon=document.getElementById('footer-theme-icon');
+    const fText=document.getElementById('footer-theme-text');
+    if(sIcon)sIcon.className='sidebar-item-icon ti '+(isDark?'ti-sun':'ti-moon')+' text-base';
+    if(sText)sText.textContent=isDark?'{% trans 'Светлая' %}':'{% trans 'Тёмная' %}';
+    if(fIcon)fIcon.className='ti '+(isDark?'ti-sun':'ti-moon')+' text-sm';
+    if(fText)fText.textContent=isDark?'{% trans 'Светлая тема' %}':'{% trans 'Тёмная тема' %}';
+  }
+
+  /* ═══ SIDEBAR ═══ */
+  const sidebar=document.getElementById('sidebar');
+  const mainWrapper=document.getElementById('main-wrapper');
+  const SIDEBAR_STORAGE_KEY='dorutj-sidebar';
+
+  function toggleSidebar(){
+    const collapsed=sidebar.classList.toggle('collapsed');
+    mainWrapper.classList.toggle('sidebar-collapsed',collapsed);
+    localStorage.setItem(SIDEBAR_STORAGE_KEY,collapsed?'collapsed':'expanded');
+  }
+
+  function openSidebar(){
+    sidebar.classList.add('open');
+    document.getElementById('mobile-overlay').classList.add('open');
+    document.body.classList.add('overflow-hidden');
+  }
+
+  function closeSidebar(){
+    sidebar.classList.remove('open');
+    document.getElementById('mobile-overlay').classList.remove('open');
+    document.body.classList.remove('overflow-hidden');
+  }
+
+  (function(){
+    const state=localStorage.getItem(SIDEBAR_STORAGE_KEY);
+    if(state==='collapsed'&&window.innerWidth>=1024){
+      sidebar.classList.add('collapsed');
+      mainWrapper.classList.add('sidebar-collapsed');
     }
-    {% if user.is_authenticated %}
-    updateNotificationCount();
-    setInterval(updateNotificationCount,15000);
-    {% endif %}
-    if('serviceWorker'in navigator){navigator.serviceWorker.register('/static/service-worker.js').catch(()=>{});}
-    const html=document.documentElement;
-    const saved=localStorage.getItem('doritj-theme');
-    const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if(saved==='dark'||(!saved&&prefersDark)){html.classList.add('dark');syncThemeUI(true);}
-    function toggleTheme(){
-        const isDark=html.classList.toggle('dark');
-        localStorage.setItem('doritj-theme',isDark?'dark':'light');
-        syncThemeUI(isDark);
+  })();
+
+  /* ═══ SCROLL REVEAL ═══ */
+  (function(){
+    const observer=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}
+      });
+    },{threshold:.1});
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  })();
+
+  /* ═══ MESSAGES AUTO-DISMISS ═══ */
+  setTimeout(()=>{
+    const c=document.getElementById('messages-container');
+    if(c){c.style.transition='opacity .5s ease';c.style.opacity='0';setTimeout(()=>c.remove(),500);}
+  },4000);
+
+  /* ═══ SEARCH SHORTCUT ═══ */
+  document.addEventListener('keydown',e=>{
+    if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)){
+      e.preventDefault();
+      const s=document.querySelector('input[name="search"]');
+      if(s)s.focus();
     }
-    function syncThemeUI(isDark){
-        const icon=document.getElementById('theme-icon');
-        const fIcon=document.getElementById('footer-icon');
-        const fText=document.getElementById('footer-text');
-        if(icon)icon.className=isDark?'ti ti-sun text-sm md:text-[17px]':'ti ti-moon text-sm md:text-[17px]';
-        if(fIcon)fIcon.className=isDark?'ti ti-sun text-sm':'ti ti-moon text-sm';
-        if(fText)fText.textContent=isDark?'{% trans 'Светлая тема' %}':'{% trans 'Тёмная тема' %}';
-    }
-    function toggleMobile(){
-        const menu=document.getElementById('mobile-menu');
-        const overlay=document.getElementById('mobile-overlay');
-        const icon=document.getElementById('mobile-icon');
-        const isOpen=menu.classList.toggle('open');
-        overlay.classList.toggle('open');
-        document.body.classList.toggle('overflow-hidden',isOpen);
-        icon.className=isOpen?'ti ti-x text-lg':'ti ti-menu-2 text-lg';
-    }
-    setTimeout(()=>{
-        const c=document.getElementById('messages-container');
-        if(c){c.style.transition='opacity .5s ease';c.style.opacity='0';setTimeout(()=>c.remove(),500);}
-    },4000);
-    const header=document.getElementById('header');
+  });
+
+  /* ═══ BACK TO TOP ═══ */
+  (function(){
+    const btn=document.createElement('button');
+    btn.innerHTML='<i class="ti ti-arrow-up"></i>';
+    btn.style.cssText='position:fixed;bottom:80px;right:16px;z-index:40;width:44px;height:44px;border-radius:50%;background:#22c55e;color:white;border:none;box-shadow:0 4px 15px rgba(34,197,94,.4);cursor:pointer;opacity:0;transform:scale(.8);transition:all .3s cubic-bezier(.16,1,.3,1);display:flex;align-items:center;justify-content:center';
+    btn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+    document.body.appendChild(btn);
     window.addEventListener('scroll',()=>{
-        header.classList.toggle('shadow-sm',window.scrollY>10);
-        header.classList.toggle('shadow-black/5',window.scrollY>10);
+      const show=window.scrollY>400;
+      btn.style.opacity=show?'1':'0';
+      btn.style.transform=show?'scale(1)':'scale(.8)';
+      btn.style.pointerEvents=show?'auto':'none';
     },{passive:true});
-    document.addEventListener('keydown',e=>{
-        if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)){
-            e.preventDefault();
-            const s=document.querySelector('input[name="search"]');
-            if(s)s.focus();
-        }
-    });
-    function toggleProfileDropdown(e){
-        e.stopPropagation();
-        document.getElementById('profile-menu').classList.toggle('hidden');
-    }
-    document.addEventListener('click',function(e){
-        const dd=document.getElementById('profile-dropdown');
-        const menu=document.getElementById('profile-menu');
-        if(dd&&!dd.contains(e.target))menu.classList.add('hidden');
-    });
+  })();
 </script>
 </body>
 </html>
