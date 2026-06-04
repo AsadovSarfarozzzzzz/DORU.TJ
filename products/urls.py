@@ -10,4 +10,7 @@ urlpatterns = [
     path('admin-panel/products/edit/<int:pk>/', views.ProductUpdateView.as_view(), name='product_edit'),
     path('admin-panel/products/delete/<int:pk>/', views.ProductDeleteView.as_view(), name='product_delete'),
     path('product/<int:pk>/review/', views.add_review, name='add_review'),
+    path('favorites/', views.favorites_list, name='favorites'),
+    path('favorite/toggle/<int:pk>/', views.toggle_favorite, name='toggle_favorite'),
+    path('admin-panel/analytics/', views.analytics, name='analytics'),
 ]

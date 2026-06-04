@@ -973,3 +973,124 @@ msgstr "🛵 Courier panel"
 
 msgid "🟢 Онлайн"
 msgstr "🟢 Online"
+
+msgid "Preview"
+msgstr "Preview"
+
+msgid "© 2025 DoriTJ. Все права защищены."
+msgstr "© 2025 DoriTJ. All rights reserved."
+
+msgid "Аналитика"
+msgstr "Analytics"
+
+msgid "В избранное"
+msgstr "Add to favorites"
+
+msgid "Всего заказов"
+msgstr "Total orders"
+
+msgid "Выручка по дням (30 дн.)"
+msgstr "Revenue by day (30 days)"
+
+msgid "Добавляйте товары в избранное из каталога"
+msgstr "Add products to favorites from catalog"
+
+msgid "Заказы по дням (30 дн.)"
+msgstr "Orders by day (30 days)"
+
+msgid "Избранное"
+msgstr "Favorites"
+
+msgid "Или выберите точку на карте:"
+msgstr "Or select a point on the map:"
+
+msgid "Купить аспирин, витамин D..."
+msgstr "Buy aspirin, vitamin D..."
+
+msgid "Мои напоминания"
+msgstr "My reminders"
+
+msgid "Напоминания"
+msgstr "Reminders"
+
+msgid "Например: головная боль, температура 38, насморк..."
+msgstr "For example: headache, fever 38, runny nose..."
+
+msgid "Не удалось подобрать товары. Попробуйте изменить описание симптомов."
+msgstr ""
+"Could not find matching products. Try changing the symptom description."
+
+msgid "Нет уведомлений"
+msgstr "No notifications"
+
+msgid "Общая выручка"
+msgstr "Total revenue"
+
+msgid ""
+"Опишите ваши симптомы, и AI подберёт подходящие лекарства из нашего каталога"
+msgstr ""
+"Describe your symptoms, and AI will find suitable medications from our "
+"catalog"
+
+msgid "Отправлено"
+msgstr "Sent"
+
+msgid "По вашим симптомам подобраны:"
+msgstr "Matched by your symptoms:"
+
+msgid "Подобрать лекарства"
+msgstr "Find medications"
+
+msgid "Поиск по симптомам"
+msgstr "Symptom search"
+
+msgid "Применить"
+msgstr "Apply"
+
+msgid "Промокод"
+msgstr "Promocode"
+
+msgid "Промокод:"
+msgstr "Promocode:"
+
+msgid "Прочитать все"
+msgstr "Read all"
+
+msgid "Рекомендованные товары"
+msgstr "Recommended products"
+
+msgid "Симптомы"
+msgstr "Symptoms"
+
+msgid "Скидка"
+msgstr "Discount"
+
+msgid "Создать напоминание"
+msgstr "Create reminder"
+
+msgid "Список избранного пуст"
+msgstr "Favorites list is empty"
+
+msgid "Средний чек"
+msgstr "Average check"
+
+msgid "Статусы заказов"
+msgstr "Order statuses"
+
+msgid "У вас нет напоминаний"
+msgstr "You have no reminders"
+
+msgid "Уведомления"
+msgstr "Notifications"
+
+msgid "Уведомления будут появляться здесь при изменении статуса заказа"
+msgstr "Notifications will appear here when order status changes"
+
+msgid "Через сколько дней?"
+msgstr "In how many days?"
+
+msgid "Что напомнить?"
+msgstr "What to remind?"
+
+msgid "Email"
+msgstr "Email"

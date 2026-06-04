@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+
+<div class="flex items-center gap-3 mb-6 md:mb-8">
+    <i class="ti ti-star text-2xl md:text-3xl text-yellow-500"></i>
+    <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">{% trans 'Избранное' %}</h1>
+</div>
+
+{% if favorites %}
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+    {% for fav in favorites %}
+    <div class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 overflow-hidden card-lift hover:border-brand-200 dark:hover:border-brand-800 transition-all">
+        <a href="{% url 'product_detail' fav.product.pk %}">
+            <div class="relative overflow-hidden bg-gray-50 dark:bg-gray-800 aspect-square">
+                {% if fav.product.image %}
+                    <img src="{{ fav.product.image.url }}" alt="{{ fav.product.name }}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="ti ti-pill text-5xl text-gray-300 dark:text-gray-600"></i>
+                    </div>
+                {% endif %}
+                <div class="absolute top-2 left-2">
+                    <a href="{% url 'toggle_favorite' fav.product.pk %}"
+                       class="flex items-center gap-1 bg-white dark:bg-gray-900 text-yellow-500 text-xs font-bold px-2 py-1 rounded-full shadow-sm hover:bg-red-50 hover:text-red-500 transition-all">
+                        <i class="ti ti-heart-filled text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </a>
+        <div class="p-3.5">
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 truncate">{{ fav.product.manufacturer }}</p>
+            <a href="{% url 'product_detail' fav.product.pk %}">
+                <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-sm leading-snug mb-2 line-clamp-2 min-h-[2.5rem] hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    {{ fav.product.name }}
+                </h3>
+            </a>
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-base font-black text-brand-600 dark:text-brand-400">{{ fav.product.price }}</span>
+                    <span class="text-xs text-gray-400 ml-0.5">{% trans 'сом' %}</span>
+                </div>
+                <a href="{% url 'add_to_cart' fav.product.pk %}"
+                   class="w-8 h-8 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-500 text-brand-600 dark:text-brand-400 hover:text-white rounded-xl flex items-center justify-center btn-press transition-all">
+                    <i class="ti ti-plus text-base"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-24">
+    <i class="ti ti-star-off text-8xl text-gray-300 dark:text-gray-600 mb-6 block"></i>
+    <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-3">{% trans 'Список избранного пуст' %}</h2>
+    <p class="text-gray-400 dark:text-gray-500 mb-8">{% trans 'Добавляйте товары в избранное из каталога' %}</p>
+    <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-10 py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25">
+        <i class="ti ti-pill text-lg"></i>
+        {% trans 'Перейти в каталог' %}
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

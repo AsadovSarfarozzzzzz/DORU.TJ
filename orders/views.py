@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from products.models import Product
-from .models import Cart, CartItem, Order, OrderItem, DeliveryChat, DeliveryChatMessage, CourierLocation
+from .models import Cart, CartItem, Order, OrderItem, DeliveryChat, DeliveryChatMessage, CourierLocation, Promocode, Reminder
 from .telegram import send_order_notification
+from django.utils import timezone
+from datetime import timedelta
 import json
 
 @login_required
@@ -231,9 +233,22 @@ def cart_view(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
     items = CartItem.objects.filter(cart=cart).select_related('product')
     total = sum(item.product.price * item.quantity for item in items)
+
+    discount = 0
+    promo_code = request.session.get('promocode')
+    if promo_code:
+        try:
+            promo = Promocode.objects.get(code=promo_code, is_active=True)
+            if promo.is_valid() and total >= promo.min_order_amount:
+                discount = total - promo.apply(total)
+        except Promocode.DoesNotExist:
+            pass
+
     return render(request, 'cart.html', {
         'items': items,
-        'total': total
+        'total': total,
+        'discount': discount,
+        'final_total': total - discount,
     })
 
 
@@ -246,24 +261,44 @@ def checkout(request):
         messages.error(request, 'Корзина пуста!')
         return redirect('cart')
 
+    total = sum(item.product.price * item.quantity for item in items)
+    discount = 0
+    promocode_obj = None
+    promo_code = request.session.get('promocode')
+
+    if promo_code:
+        try:
+            promocode_obj = Promocode.objects.get(code=promo_code, is_active=True)
+            if promocode_obj.is_valid() and total >= promocode_obj.min_order_amount:
+                discount = total - promocode_obj.apply(total)
+            else:
+                del request.session['promocode']
+                promocode_obj = None
+        except Promocode.DoesNotExist:
+            del request.session['promocode']
+
+    final_total = total - discount
+
     if request.method == 'POST':
         address = request.POST.get('address')
+        latitude = request.POST.get('latitude', '')
+        longitude = request.POST.get('longitude', '')
         prescription = request.FILES.get('prescription')
 
         if not address:
             messages.error(request, 'Укажите адрес доставки!')
             return redirect('checkout')
 
-        total = sum(item.product.price * item.quantity for item in items)
-        
+        if latitude and longitude:
+            address = f'{address} (📍 {latitude}, {longitude})'
+
         payment = request.POST.get('payment_method', 'cash')
-        print("PAYMENT:", payment)
         order = Order.objects.create(
             user=request.user,
             address=address,
-            total=total,
+            total=final_total,
             prescription=prescription or '',
-            payment_method=request.POST.get('payment_method', 'cash')
+            payment_method=payment
         )
 
         for item in items:
@@ -274,6 +309,12 @@ def checkout(request):
                 price=item.product.price
             )
 
+        if promocode_obj:
+            promocode_obj.used_count += 1
+            promocode_obj.save()
+            if 'promocode' in request.session:
+                del request.session['promocode']
+
         order_items = OrderItem.objects.filter(order=order)
         send_order_notification(order, order_items)
 
@@ -281,11 +322,70 @@ def checkout(request):
         messages.success(request, 'Заказ оформлен!')
         return redirect('order_detail', pk=order.pk)
 
-    total = sum(item.product.price * item.quantity for item in items)
     return render(request, 'checkout.html', {
         'items': items,
-        'total': total
+        'total': total,
+        'discount': discount,
+        'final_total': final_total,
+        'promocode': promocode_obj,
     })
+
+
+@login_required
+def apply_promocode(request):
+    if request.method == 'POST':
+        code = request.POST.get('code', '').strip().upper()
+        try:
+            promo = Promocode.objects.get(code=code, is_active=True)
+            if promo.is_valid():
+                request.session['promocode'] = code
+                messages.success(request, f'Промокод {code} применён! Скидка {promo.discount_percent}%')
+            else:
+                messages.error(request, 'Промокод истёк или использован')
+        except Promocode.DoesNotExist:
+            messages.error(request, 'Промокод не найден')
+    return redirect('cart')
+
+
+@login_required
+def remove_promocode(request):
+    if 'promocode' in request.session:
+        del request.session['promocode']
+        messages.success(request, 'Промокод удалён')
+    return redirect('cart')
+
+
+@login_required
+def reminder_list(request):
+    reminders = Reminder.objects.filter(user=request.user)
+    return render(request, 'reminders.html', {'reminders': reminders})
+
+
+@login_required
+def reminder_create(request):
+    if request.method == 'POST':
+        text = request.POST.get('text', '').strip()
+        days = int(request.POST.get('days', 1))
+        if text and days > 0:
+            remind_at = timezone.now() + timedelta(days=days)
+            Reminder.objects.create(
+                user=request.user,
+                text=text,
+                remind_at=remind_at
+            )
+            messages.success(request, f'Напоминание создано через {days} дн.')
+        else:
+            messages.error(request, 'Заполните поля')
+        return redirect('reminders')
+    return redirect('reminders')
+
+
+@login_required
+def reminder_delete(request, pk):
+    reminder = get_object_or_404(Reminder, pk=pk, user=request.user)
+    reminder.delete()
+    messages.success(request, 'Напоминание удалено')
+    return redirect('reminders')
 
 
 @login_required

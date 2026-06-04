@@ -161,7 +161,7 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         }
         if (!marker) {
-            {% trans 'marker = L.marker([lat, lng]).addTo(map).bindPopup('Вы здесь').openPopup();' %}
+            marker = L.marker([lat, lng]).addTo(map).bindPopup('Вы здесь').openPopup();
         } else {
             marker.setLatLng([lat, lng]);
             map.setView([lat, lng], 15);
@@ -170,11 +170,11 @@
 
     function shareLocation() {
         if (!navigator.geolocation) {
-            {% trans 'alert('Геолокация не поддерживается');' %}
+            alert('Геолокация не поддерживается');
             return;
         }
 
-        {% trans 'document.getElementById('location-btn').textContent = '📍 Отслеживается...';' %}
+        document.getElementById('location-btn').textContent = '📍 Отслеживается...';
         document.getElementById('location-btn').className = 'bg-orange-500 text-white text-xs px-4 py-2 rounded-xl transition';
 
         watchId = navigator.geolocation.watchPosition(

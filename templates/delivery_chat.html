@@ -172,7 +172,7 @@
                 if (data.lat) {
                     document.getElementById('map').style.display = 'block';
                     document.getElementById('no-location').style.display = 'none';
-                    {% trans 'document.getElementById('location-time').textContent = 'Обновлено в ' + data.updated_at;' %}
+                    document.getElementById('location-time').textContent = 'Обновлено в ' + data.updated_at;
                     initMap(data.lat, data.lng);
                 } else {
                     document.getElementById('map').style.display = 'none';

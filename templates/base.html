@@ -6,6 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% trans 'DoriTJ — Онлайн аптека с доставкой по Душанбе' %}">
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#16a34a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="DoriTJ">
+    <link rel="icon" type="image/svg+xml" href="/static/icons/icon-192.svg">
     <title>{% block title %}{% trans 'DoruTJ — Онлайн аптека' %}{% endblock %}</title>
 
     <!-- Tailwind -->
@@ -154,7 +160,6 @@
             visibility: visible;
             transform: translateY(0);
         }
-
         /* Mobile menu */
         #mobile-menu {
             max-height: 0;
@@ -179,6 +184,17 @@
             .mobile-touch { min-height: 44px; }
         }
 
+        /* Hide scrollbar for nav */
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Pulse animation for notification dot */
+        .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
         /* Stagger children */
         .stagger > * { opacity: 0; animation: fadeUp .45s cubic-bezier(.16,1,.3,1) forwards; }
         .stagger > *:nth-child(1) { animation-delay: .05s; }
@@ -192,34 +208,30 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="bg-white dark:bg-[#090d0b] text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col">
+<body class="bg-white dark:bg-[#090d0b] text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col overflow-x-hidden">
 
 <!-- ═══════════════════════════════ TOP BAR ═══════════════════════════════ -->
-<div class="hidden md:block bg-brand-600 dark:bg-brand-700 text-white">
-    <div class="max-w-7xl mx-auto px-6 py-1.5">
+<div class="hidden md:block bg-gradient-to-r from-brand-600 to-brand-500 dark:from-brand-700 dark:to-brand-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-1.5">
         <div class="flex items-center justify-between text-xs font-medium">
-            <div class="flex items-center gap-6 opacity-90">
+            <div class="flex items-center gap-4 opacity-90">
                 <a href="tel:+99244XXXXXXX" class="flex items-center gap-1.5 hover:opacity-100 transition-opacity">
                     <i class="ti ti-phone-call"></i>
                     +992 44 XXX XX XX
                 </a>
-                <a href="mailto:info@doritj.tj" class="flex items-center gap-1.5 hover:opacity-100 transition-opacity">
-                    <i class="ti ti-mail"></i>
-                    info@doritj.tj
-                </a>
-                <span class="flex items-center gap-1.5 opacity-80">
+                <span class="hidden lg:flex items-center gap-1.5 opacity-80">
                     <i class="ti ti-map-pin"></i>
                     {% trans 'Душанбе, Таджикистан' %}
                 </span>
             </div>
-            <div class="flex items-center gap-5 opacity-80">
+            <div class="flex items-center gap-4 opacity-80">
                 <span class="flex items-center gap-1.5">
                     <i class="ti ti-truck-delivery"></i>
                     {% trans 'Доставка за 2 часа' %}
                 </span>
                 <span class="flex items-center gap-1.5">
                     <i class="ti ti-clock"></i>
-                    08:00 — 22:00
+                    08:00—22:00
                 </span>
             </div>
         </div>
@@ -229,116 +241,85 @@
 <!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
 <header id="header" class="sticky top-0 z-50 glass bg-white/80 dark:bg-[#090d0b]/80 border-b border-gray-200/60 dark:border-gray-800/60">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
-        <div class="flex items-center justify-between h-16 gap-4">
+        <div class="flex items-center justify-between h-14 md:h-16 gap-2">
 
             <!-- Logo -->
             <a href="{% url 'home' %}" class="flex items-center gap-2 group flex-shrink-0">
-                <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center shadow-md shadow-brand-500/30 group-hover:scale-105 transition-all duration-200">
-                    <i class="ti ti-pill text-white text-base"></i>
+                <div class="w-7 h-7 md:w-8 md:h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center shadow-md shadow-brand-500/30 group-hover:scale-105 transition-all duration-200">
+                    <i class="ti ti-pill text-white text-sm md:text-base"></i>
                 </div>
-                <span class="text-base font-black tracking-tight">
+                <span class="text-sm md:text-base font-black tracking-tight">
                     <span class="text-gray-900 dark:text-white">Doru</span><span class="text-gradient">TJ</span>
                 </span>
             </a>
 
-            <!-- Nav — центр -->
-            {% if user.is_authenticated %}
-            <nav class="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
-                {% if user.is_courier %}
-                <a href="{% url 'courier_dashboard' %}" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold bg-orange-500 text-white">
-                    <i class="ti ti-bike text-base"></i> {% trans 'Курьер' %}
-                </a>
-                {% elif user.is_manager %}
-                <a href="{% url 'manager_dashboard' %}" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold bg-purple-500 text-white">
-                    <i class="ti ti-building-store text-base"></i> {% trans 'Аптека' %}
-                </a>
-                {% else %}
-                <a href="{% url 'home' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
-                    <i class="ti ti-home text-base"></i> {% trans 'Главная' %}
-                </a>
-                <a href="{% url 'catalog' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
-                    <i class="ti ti-pill text-base"></i> {% trans 'Каталог' %}
-                </a>
-                <a href="{% url 'pharmacy_list' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
-                    <i class="ti ti-building-hospital text-base"></i> {% trans 'Аптеки' %}
-                </a>
-                <a href="{% url 'consultant' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
-                    <i class="ti ti-robot text-base"></i> AI
-                </a>
-                <a href="{% url 'my_orders' %}" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all">
-                    <i class="ti ti-package text-base"></i> {% trans 'Заказы' %}
-                </a>
-                {% endif %}
-            </nav>
-            {% endif %}
-
-            <!-- Search + Actions -->
-            <div class="flex items-center gap-2 flex-shrink-0">
+            <!-- Actions -->
+            <div class="flex items-center gap-1.5 md:gap-2">
 
                 <!-- Search -->
                 {% if user.is_authenticated and not user.is_courier and not user.is_manager %}
                 <form method="GET" action="{% url 'catalog' %}" class="hidden md:flex">
-                    <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent hover:border-brand-300 dark:hover:border-brand-700 focus-within:border-brand-500 focus-within:bg-white dark:focus-within:bg-gray-700 transition-all w-52 lg:w-64">
-                        <i class="ti ti-search text-gray-400 text-sm ml-3 flex-shrink-0"></i>
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent hover:border-brand-300 dark:hover:border-brand-700 focus-within:border-brand-500 focus-within:bg-white dark:focus-within:bg-gray-700 transition-all w-40 lg:w-48 xl:w-56">
+                        <i class="ti ti-search text-gray-400 text-sm ml-2.5 flex-shrink-0"></i>
                         <input type="text" name="search"
                                placeholder="{% trans 'Поиск...' %}"
-                               class="flex-1 bg-transparent px-2.5 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none">
+                               class="flex-1 bg-transparent px-2 py-1.5 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none">
                     </div>
                 </form>
                 {% endif %}
 
-                <!-- Divider -->
-                <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
-
-                <!-- Language -->
+                <!-- Language (compact on mobile) -->
                 <form action="{% url 'set_language' %}" method="post" id="lang-form" class="flex">
                     {% csrf_token %}
                     <input name="next" type="hidden" value="{{ request.path }}">
                     <div class="flex items-center gap-0.5 bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 border border-gray-200 dark:border-gray-700">
                         <button type="submit" name="language" value="ru"
-                                class="px-2 py-1 rounded-md text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'ru' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">RU</button>
+                                class="px-1.5 md:px-2 py-1 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'ru' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">RU</button>
                         <button type="submit" name="language" value="tg"
-                                class="px-2 py-1 rounded-md text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'tg' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">TG</button>
+                                class="px-1.5 md:px-2 py-1 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'tg' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">TG</button>
                         <button type="submit" name="language" value="en"
-                                class="px-2 py-1 rounded-md text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'en' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">EN</button>
+                                class="px-1.5 md:px-2 py-1 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'en' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">EN</button>
                     </div>
                 </form>
 
                 <!-- Theme -->
                 <button onclick="toggleTheme()" id="theme-btn"
-                        class="w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 btn-press transition-all">
-                    <i id="theme-icon" class="ti ti-moon text-[17px]"></i>
+                        class="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 btn-press transition-all">
+                    <i id="theme-icon" class="ti ti-moon text-sm md:text-[17px]"></i>
                 </button>
 
                 {% if user.is_authenticated %}
 
-                <!-- Cart -->
+                <!-- Notifications -->
+                <a href="{% url 'notifications' %}"
+                   class="relative w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand-600 btn-press transition-all"
+                   id="notification-btn">
+                    <i class="ti ti-bell text-sm md:text-[17px]"></i>
+                    <span id="notification-badge" class="badge hidden">0</span>
+                </a>
+
                 {% if not user.is_courier and not user.is_manager %}
                 <a href="{% url 'cart' %}"
-                   class="relative w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand-600 btn-press transition-all">
-                    <i class="ti ti-shopping-cart text-[17px]"></i>
+                   class="relative w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand-600 btn-press transition-all">
+                    <i class="ti ti-shopping-cart text-sm md:text-[17px]"></i>
                 </a>
                 {% endif %}
 
-                <!-- Divider -->
-                <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
-
                 <!-- Profile dropdown -->
                 <div class="dropdown-trigger relative">
-                    <button class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 pl-2 pr-2.5 py-1.5 rounded-xl btn-press transition-all">
-                        <div class="w-6 h-6 rounded-lg overflow-hidden flex-shrink-0">
+                    <button class="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 pl-1.5 pr-2 md:pl-2 md:pr-2.5 py-1 md:py-1.5 rounded-xl btn-press transition-all">
+                        <div class="w-5 h-5 md:w-6 md:h-6 rounded-lg overflow-hidden flex-shrink-0">
                             {% if user.avatar %}
                                 <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
                             {% else %}
-                                <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-bold">
+                                <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-[10px] md:text-xs font-bold">
                                     {{ user.username|first|upper }}
                                 </div>
                             {% endif %}
                         </div>
-                        <span class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200 max-w-[72px] truncate">
+                        <span class="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-200 max-w-[64px] truncate">
                             {{ user.username }}
                         </span>
-                        <i class="ti ti-chevron-down text-gray-400 text-xs"></i>
                     </button>
 
                     <!-- Dropdown -->
@@ -366,17 +347,29 @@
                             <a href="{% url 'profile' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                 <i class="ti ti-user text-base text-gray-400 w-5"></i> {% trans 'Профиль' %}
                             </a>
+                            <a href="{% url 'notifications' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <i class="ti ti-bell text-base text-gray-400 w-5"></i> {% trans 'Уведомления' %}
+                            </a>
                             <a href="{% url 'my_orders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                 <i class="ti ti-package text-base text-gray-400 w-5"></i> {% trans 'Мои заказы' %}
                             </a>
+                            <a href="{% url 'favorites' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <i class="ti ti-star text-base text-gray-400 w-5"></i> {% trans 'Избранное' %}
+                            </a>
                             <a href="{% url 'consultant' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                 <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'AI Консультант' %}
+                            </a>
+                            <a href="{% url 'reminders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <i class="ti ti-bell-plus text-base text-gray-400 w-5"></i> {% trans 'Напоминания' %}
                             </a>
                             {% endif %}
                             {% if user.is_staff %}
                             <div class="h-px bg-gray-100 dark:bg-gray-800 my-1.5 mx-1"></div>
                             <a href="{% url 'product_list' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
                                 <i class="ti ti-settings text-base w-5"></i> {% trans 'Управление' %}
+                            </a>
+                            <a href="{% url 'analytics' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                                <i class="ti ti-chart-bar text-base w-5"></i> {% trans 'Аналитика' %}
                             </a>
                             {% endif %}
                             {% if user.is_courier %}
@@ -399,72 +392,80 @@
 
                 {% else %}
                 <a href="{% url 'login_user' %}"
-                   class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-brand-600 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 btn-press transition-all">
+                   class="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-brand-600 px-2 md:px-3 py-1.5 md:py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 btn-press transition-all">
                     {% trans 'Войти' %}
                 </a>
                 <a href="{% url 'register' %}"
-                   class="text-sm font-semibold bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl shadow-lg shadow-brand-500/25 btn-press transition-all">
+                   class="text-xs md:text-sm font-semibold bg-brand-500 hover:bg-brand-600 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-xl shadow-lg shadow-brand-500/25 btn-press transition-all">
                     {% trans 'Регистрация' %}
                 </a>
                 {% endif %}
 
-                <!-- Mobile menu button -->
+                <!-- Mobile menu button (compact) -->
                 <button onclick="toggleMobile()"
-                        class="lg:hidden flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 btn-press transition-all">
+                        class="lg:hidden flex items-center gap-1 px-2 py-1.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 btn-press transition-all">
                     <i id="mobile-icon" class="ti ti-menu-2 text-lg"></i>
-                    <span>{% trans 'Меню' %}</span>
                 </button>
             </div>
         </div>
+
     </div>
 
-    <!-- Mobile menu (outside container for full-width) -->
+    <!-- Mobile menu -->
     <div id="mobile-menu" class="lg:hidden relative z-50 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-[#090d0b] shadow-xl">
         <div class="max-w-7xl mx-auto px-4 py-4 space-y-0.5">
             {% if user.is_authenticated %}
             {% if not user.is_courier and not user.is_manager %}
 
             <!-- Mobile search -->
-            <form method="GET" action="{% url 'catalog' %}" class="mb-4">
+            <form method="GET" action="{% url 'catalog' %}" class="mb-3">
                 <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent focus-within:border-brand-500 transition-all overflow-hidden">
                     <i class="ti ti-search text-gray-400 text-sm ml-3.5 flex-shrink-0"></i>
                     <input type="text" name="search" placeholder="{% trans 'Поиск лекарств...' %}"
-                           class="flex-1 bg-transparent px-3 py-3 text-sm focus:outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400">
-                    <button type="submit" class="m-1 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-                        {% trans 'Найти' %}
-                    </button>
+                           class="flex-1 bg-transparent px-3 py-2.5 text-sm focus:outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400">
                 </div>
             </form>
 
-            <a href="{% url 'home' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                <i class="ti ti-home text-lg text-gray-400 dark:text-gray-500 w-5"></i> {% trans 'Главная' %}
-            </a>
-            <a href="{% url 'catalog' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                <i class="ti ti-pill text-lg text-gray-400 dark:text-gray-500 w-5"></i> {% trans 'Каталог' %}
-            </a>
-            <a href="{% url 'pharmacy_list' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                <i class="ti ti-building-hospital text-lg text-gray-400 dark:text-gray-500 w-5"></i> {% trans 'Аптеки' %}
-            </a>
-            <a href="{% url 'consultant' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                <i class="ti ti-robot text-lg text-gray-400 dark:text-gray-500 w-5"></i> {% trans 'AI Консультант' %}
-            </a>
-            <a href="{% url 'my_orders' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                <i class="ti ti-package text-lg text-gray-400 dark:text-gray-500 w-5"></i> {% trans 'Мои заказы' %}
-            </a>
-            <a href="{% url 'cart' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                <i class="ti ti-shopping-cart text-lg text-gray-400 dark:text-gray-500 w-5"></i> {% trans 'Корзина' %}
-            </a>
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <a href="{% url 'home' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-home text-base text-gray-400 w-5"></i> {% trans 'Главная' %}
+                </a>
+                <a href="{% url 'catalog' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-pill text-base text-gray-400 w-5"></i> {% trans 'Каталог' %}
+                </a>
+                <a href="{% url 'pharmacy_list' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-building-hospital text-base text-gray-400 w-5"></i> {% trans 'Аптеки' %}
+                </a>
+                <a href="{% url 'consultant' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-robot text-base text-gray-400 w-5"></i> AI
+                </a>
+                <a href="{% url 'my_orders' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-package text-base text-gray-400 w-5"></i> {% trans 'Заказы' %}
+                </a>
+                <a href="{% url 'favorites' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-star text-base text-gray-400 w-5"></i> {% trans 'Избранное' %}
+                </a>
+                <a href="{% url 'symptom_search' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'Симптомы' %}
+                </a>
+                <a href="{% url 'reminders' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-bell-plus text-base text-gray-400 w-5"></i> {% trans 'Напоминания' %}
+                </a>
+                <a href="{% url 'cart' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
+                    <i class="ti ti-shopping-cart text-base text-gray-400 w-5"></i> {% trans 'Корзина' %}
+                </a>
+            </div>
             {% endif %}
-            <div class="h-px bg-gray-100 dark:bg-gray-800 my-3"></div>
-            <a href="{% url 'logout' %}" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
-                <i class="ti ti-logout text-lg w-5"></i> {% trans 'Выйти' %}
+            <div class="h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
+            <a href="{% url 'logout' %}" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
+                <i class="ti ti-logout text-base w-5"></i> {% trans 'Выйти' %}
             </a>
             {% else %}
-            <a href="{% url 'login_user' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                <i class="ti ti-login text-lg text-gray-400 dark:text-gray-500 w-5"></i> {% trans 'Войти' %}
+            <a href="{% url 'login_user' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                <i class="ti ti-login text-base w-5"></i> {% trans 'Войти' %}
             </a>
-            <a href="{% url 'register' %}" onclick="toggleMobile()" class="mobile-touch flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/15 transition-all">
-                <i class="ti ti-user-plus text-lg w-5"></i> {% trans 'Регистрация' %}
+            <a href="{% url 'register' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/15 transition-all">
+                <i class="ti ti-user-plus text-base w-5"></i> {% trans 'Регистрация' %}
             </a>
             {% endif %}
         </div>
@@ -500,8 +501,50 @@
 
 <!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
 <main class="flex-1 w-full overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 animate-fade-up">
-        {% block content %}{% endblock %}
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 animate-fade-up lg:flex lg:gap-8">
+        <div class="flex-1 min-w-0">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- Left sidebar nav (desktop) -->
+        {% if user.is_authenticated %}
+        <aside class="hidden lg:block w-40 flex-shrink-0 order-first">
+            <nav class="sticky top-20 flex flex-col gap-1">
+                {% if user.is_courier %}
+                <a href="{% url 'courier_dashboard' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-600 dark:hover:text-orange-400 transition-all">
+                    <i class="ti ti-bike text-base w-5"></i> {% trans 'Курьер' %}
+                </a>
+                {% elif user.is_manager %}
+                <a href="{% url 'manager_dashboard' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:text-purple-600 dark:hover:text-purple-400 transition-all">
+                    <i class="ti ti-building-store text-base w-5"></i> {% trans 'Аптека' %}
+                </a>
+                {% else %}
+                <a href="{% url 'catalog' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                    <i class="ti ti-pill text-base text-gray-400 w-5"></i> {% trans 'Каталог' %}
+                </a>
+                <a href="{% url 'pharmacy_list' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                    <i class="ti ti-building-hospital text-base text-gray-400 w-5"></i> {% trans 'Аптеки' %}
+                </a>
+                <div class="h-px bg-gray-100 dark:bg-gray-800 my-1.5 mx-1"></div>
+                <a href="{% url 'consultant' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                    <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'AI Консультант' %}
+                </a>
+                <a href="{% url 'my_orders' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                    <i class="ti ti-package text-base text-gray-400 w-5"></i> {% trans 'Заказы' %}
+                </a>
+                <a href="{% url 'favorites' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                    <i class="ti ti-star text-base text-gray-400 w-5"></i> {% trans 'Избранное' %}
+                </a>
+                <a href="{% url 'symptom_search' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                    <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'Поиск по симптомам' %}
+                </a>
+                <a href="{% url 'reminders' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+                    <i class="ti ti-bell-plus text-base text-gray-400 w-5"></i> {% trans 'Напоминания' %}
+                </a>
+                {% endif %}
+            </nav>
+        </aside>
+        {% endif %}
     </div>
 </main>
 <!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
@@ -594,6 +637,32 @@
 
 <!-- ══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
 <script>
+    // ── Notifications ──────────────────────────────────────────────────────
+    function updateNotificationCount() {
+        fetch('/notifications/count/')
+            .then(r => r.json())
+            .then(data => {
+                const badge = document.getElementById('notification-badge');
+                if (data.count > 0) {
+                    badge.textContent = data.count;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            })
+            .catch(() => {});
+    }
+    {% if user.is_authenticated %}
+    updateNotificationCount();
+    setInterval(updateNotificationCount, 15000);
+    {% endif %}
+
+    // ── PWA ─────────────────────────────────────────────────────────────────
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/static/service-worker.js')
+            .catch(() => {});
+    }
+
     // ── Theme ──────────────────────────────────────────────────────────────
     const html = document.documentElement;
     const saved = localStorage.getItem('doritj-theme');

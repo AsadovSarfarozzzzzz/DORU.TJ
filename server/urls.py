@@ -27,5 +27,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('orders/', include('orders.urls')),
     path('consultantai/', include('consultantai.urls')),
-    path('pharmacies/', include('pharmacies.urls')), 
+    path('pharmacies/', include('pharmacies.urls')),
+    path('notifications/', include('notifications.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

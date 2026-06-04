@@ -1,10 +1,12 @@
 import base64
+import json
 from groq import Groq
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.utils.translation import get_language
 from .models import ChatMessage
+from products.models import Product
 
 client = Groq(api_key=settings.GROQ_API_KEY)
 
@@ -90,3 +92,43 @@ def consultant(request):
 def clear_chat(request):
     ChatMessage.objects.filter(user=request.user).delete()
     return redirect('consultant')
+
+
+SYMPTOM_PROMPT = '''Ты фармацевтический консультант для аптеки DoriTJ в Таджикистане.
+У нас есть каталог товаров. По списку симптомов пользователя определи какие лекарства/товары подойдут.
+
+Верни ТОЛЬКО список названий товаров (без описания, без лишнего текста), которые подходят по симптомам.
+Перечисли названия через запятую. Например: "Парацетамол, Ибупрофен, Нурофен"
+Если не уверен — напиши "Не найдено". Используй русский язык.'''
+
+
+@login_required
+def symptom_search(request):
+    products = Product.objects.filter(stock__gt=0, is_deleted=False)
+    recommendations = []
+    symptom = ''
+
+    if request.method == 'POST':
+        symptom = request.POST.get('symptom', '').strip()
+        if symptom:
+            try:
+                response = client.chat.completions.create(
+                    model='llama-3.3-70b-versatile',
+                    messages=[
+                        {'role': 'system', 'content': SYMPTOM_PROMPT},
+                        {'role': 'user', 'content': f'Симптомы: {symptom}'}
+                    ]
+                )
+                ai_text = response.choices[0].message.content.strip()
+                if ai_text and ai_text != 'Не найдено':
+                    names = [n.strip() for n in ai_text.split(',')]
+                    for name in names:
+                        found = products.filter(name__icontains=name)
+                        recommendations.extend(found)
+            except Exception as e:
+                print("SYMPTOM SEARCH ERROR:", e)
+
+    return render(request, 'symptom_search.html', {
+        'recommendations': recommendations,
+        'symptom': symptom,
+    })

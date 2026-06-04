@@ -2,8 +2,51 @@ from django.db import models
 from products.models import Product
 from django.conf import settings
 import secrets
+from django.utils import timezone
 
-# Create your models here.
+
+class Promocode(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    discount_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    max_uses = models.PositiveIntegerField(default=100)
+    used_count = models.PositiveIntegerField(default=0)
+    min_order_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    is_active = models.BooleanField(default=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        if not self.is_active:
+            return False
+        if self.expires_at and self.expires_at < timezone.now():
+            return False
+        if self.used_count >= self.max_uses:
+            return False
+        return True
+
+    def apply(self, total):
+        discount = max(self.discount_amount, total * self.discount_percent / 100)
+        return max(total - discount, 0)
+
+    def __str__(self):
+        return self.code
+
+
+class Reminder(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reminders')
+    text = models.CharField(max_length=500)
+    remind_at = models.DateTimeField()
+    is_sent = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['remind_at']
+
+    def __str__(self):
+        return f'{self.user.username} — {self.text[:30]}'
+
+
 class Cart(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

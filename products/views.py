@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from .models import Product, Category
+from .models import Product, Category, Favorite
 from .forms import ProductForm, CategoryForm
 from django.http import JsonResponse
 from django.views import generic
@@ -8,6 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Product, Category, Manufacturer, Review
 from django.contrib.auth.decorators import login_required
 from django.db import models
+from orders.models import Order
+from django.db.models import Avg
 
 class ProductView(LoginRequiredMixin,generic.ListView):
     model = Product
@@ -160,6 +162,82 @@ def product_detail(request, pk):
         'reviews': reviews,
         'avg_rating': round(avg_rating, 1),
         'user_review': user_review,
+    })
+
+
+@login_required
+def toggle_favorite(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    fav, created = Favorite.objects.get_or_create(user=request.user, product=product)
+    if not created:
+        fav.delete()
+        messages.success(request, f'{product.name} удалён из избранного')
+    else:
+        messages.success(request, f'{product.name} добавлен в избранное')
+    return redirect(request.META.get('HTTP_REFERER', 'catalog'))
+
+
+@login_required
+def favorites_list(request):
+    favorites = Favorite.objects.filter(user=request.user).select_related('product')
+    return render(request, 'favorites.html', {'favorites': favorites})
+
+
+from django.db.models import Count, Sum
+from django.db.models.functions import TruncDate
+from datetime import timedelta, date
+from django.utils import timezone
+import json
+
+
+@login_required
+def analytics(request):
+    if not request.user.is_staff:
+        return redirect('home')
+
+    now = timezone.now()
+    thirty_days_ago = now - timedelta(days=30)
+
+    orders_daily = Order.objects.filter(
+        created_at__gte=thirty_days_ago
+    ).annotate(
+        day=TruncDate('created_at')
+    ).values('day').annotate(
+        count=Count('id'),
+        revenue=Sum('total')
+    ).order_by('day')
+
+    orders_by_status = Order.objects.values('status').annotate(
+        count=Count('id')
+    )
+
+    total_orders = Order.objects.count()
+    total_revenue = Order.objects.filter(status__in=['done', 'delivering', 'confirmed']).aggregate(s=Sum('total'))['s'] or 0
+    avg_order = Order.objects.filter(status__in=['done', 'delivering', 'confirmed']).aggregate(a=Avg('total'))['a'] or 0
+
+    days = []
+    counts = []
+    revenues = []
+    for entry in orders_daily:
+        days.append(entry['day'].isoformat())
+        counts.append(entry['count'])
+        revenues.append(float(entry['revenue'] or 0))
+
+    status_labels = []
+    status_counts = []
+    for entry in orders_by_status:
+        status_labels.append(dict(Order.STATUS_CHOICES).get(entry['status'], entry['status']))
+        status_counts.append(entry['count'])
+
+    return render(request, 'analytics.html', {
+        'days': json.dumps(days),
+        'counts': json.dumps(counts),
+        'revenues': json.dumps(revenues),
+        'status_labels': json.dumps(status_labels),
+        'status_counts': json.dumps(status_counts),
+        'total_orders': total_orders,
+        'total_revenue': total_revenue,
+        'avg_order': avg_order,
     })
 
 
