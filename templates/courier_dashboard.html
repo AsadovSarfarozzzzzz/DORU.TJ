@@ -4,36 +4,36 @@
 <div class="max-w-5xl mx-auto">
 
     <!-- Заголовок -->
-    <div class="flex items-center justify-between mb-8">
-        <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center text-2xl">
+    <div class="flex items-start md:items-center justify-between mb-6 md:mb-8 gap-3">
+        <div class="flex items-center gap-3 md:gap-4 min-w-0">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-green-600 rounded-2xl flex items-center justify-center text-xl md:text-2xl shrink-0">
                 🛵
             </div>
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Панель курьера</h1>
-                <p class="text-gray-400 dark:text-gray-500 text-sm">Привет, {{ request.user.username }}!</p>
+            <div class="min-w-0">
+                <h1 class="text-lg md:text-2xl font-bold text-gray-800 dark:text-white truncate">Панель курьера</h1>
+                <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm truncate">Привет, {{ request.user.username }}!</p>
             </div>
         </div>
-        <span class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium border border-green-200 dark:border-green-800">
+        <span class="shrink-0 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium border border-green-200 dark:border-green-800">
             🟢 Онлайн
         </span>
     </div>
 
     <!-- Статистика -->
-    <div class="grid grid-cols-3 gap-5 mb-8">
-        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 text-center">
-            <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ pending_orders|length }}</p>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Новых заказов</p>
+    <div class="grid grid-cols-3 gap-3 md:gap-5 mb-8">
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-3 md:p-5 text-center">
+            <p class="text-xl md:text-3xl font-bold text-green-600 dark:text-green-400">{{ pending_orders|length }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Новых заказов</p>
         </div>
-        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 text-center">
-            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ my_orders|length }}</p>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Моих заказов</p>
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-3 md:p-5 text-center">
+            <p class="text-xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">{{ my_orders|length }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Моих заказов</p>
         </div>
-        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 text-center">
-            <p class="text-3xl font-bold text-orange-500 dark:text-orange-400">
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-3 md:p-5 text-center">
+            <p class="text-xl md:text-3xl font-bold text-orange-500 dark:text-orange-400">
                 {{ my_orders|length }}
             </p>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Доставлено</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Доставлено</p>
         </div>
     </div>
 
@@ -62,16 +62,16 @@
                     </span>
                 </div>
 
-                <div class="grid grid-cols-3 gap-4 mb-4 text-sm">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 mb-4 text-xs md:text-sm">
                     <div>
                         <p class="text-gray-400 dark:text-gray-500">Клиент</p>
-                        <p class="font-medium text-gray-800 dark:text-gray-200">{{ order.user.username }}</p>
+                        <p class="font-medium text-gray-800 dark:text-gray-200 truncate">{{ order.user.username }}</p>
                     </div>
                     <div>
                         <p class="text-gray-400 dark:text-gray-500">Телефон</p>
-                        <p class="font-medium text-green-600 dark:text-green-400">{{ order.user.phone }}</p>
+                        <p class="font-medium text-green-600 dark:text-green-400 text-xs md:text-sm">{{ order.user.phone }}</p>
                     </div>
-                    <div>
+                    <div class="col-span-2 md:col-span-1">
                         <p class="text-gray-400 dark:text-gray-500">Сумма</p>
                         <p class="font-bold text-green-600 dark:text-green-400">{{ order.total }} сом</p>
                     </div>
@@ -122,28 +122,28 @@
         {% if my_orders %}
         <div class="space-y-3">
             {% for order in my_orders %}
-            <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-5 flex items-center justify-between hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20 transition">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-xl">
+            <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-100 dark:border-gray-800 p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3 hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20 transition">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-green-50 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-lg md:text-xl shrink-0">
                         📦
                     </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 dark:text-white">Заказ #{{ order.pk }}</h3>
-                        <p class="text-gray-400 dark:text-gray-500 text-sm">{{ order.user.username }} · {{ order.address|truncatechars:30 }}</p>
+                    <div class="min-w-0">
+                        <h3 class="font-bold text-gray-800 dark:text-white text-sm md:text-base">Заказ #{{ order.pk }}</h3>
+                        <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm truncate">{{ order.user.username }} · {{ order.address|truncatechars:30 }}</p>
                         <p class="text-gray-400 dark:text-gray-500 text-xs">{{ order.created_at|date:"d.m.Y H:i" }}</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 md:gap-3 flex-wrap shrink-0">
                     <span class="{% if order.status == 'done' %}bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400
                                  {% elif order.status == 'delivering' %}bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400
                                  {% else %}bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400{% endif %}
-                                 px-3 py-1 rounded-full text-xs font-medium">
+                                 px-2 md:px-3 py-1 rounded-full text-xs font-medium">
                         {{ order.get_status_display }}
                     </span>
-                    <p class="font-bold text-green-600 dark:text-green-400">{{ order.total }} сом</p>
+                    <p class="font-bold text-green-600 dark:text-green-400 text-sm md:text-base">{{ order.total }} сом</p>
                     {% if order.status == 'delivering' %}
                     <a href="{% url 'courier_order_detail' order.pk %}"
-                       class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm transition shadow-lg shadow-green-600/20">
+                       class="bg-green-600 hover:bg-green-700 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-xs md:text-sm transition shadow-lg shadow-green-600/20">
                         Открыть →
                     </a>
                     {% endif %}

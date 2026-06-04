@@ -4,17 +4,17 @@
 <div class="max-w-5xl mx-auto">
 
     <!-- Заголовок -->
-    <div class="flex items-center justify-between mb-8">
-        <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-purple-500/30">
+    <div class="flex items-start md:items-center justify-between mb-6 md:mb-8 gap-3">
+        <div class="flex items-center gap-3 md:gap-4 min-w-0">
+            <div class="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-lg md:text-2xl shadow-lg shadow-purple-500/30 shrink-0">
                 <i class="ti ti-building-store text-white"></i>
             </div>
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ pharmacy.name }}</h1>
-                <p class="text-gray-400 dark:text-gray-500 text-sm">Панель менеджера · {{ request.user.username }}</p>
+            <div class="min-w-0">
+                <h1 class="text-lg md:text-2xl font-bold text-gray-900 dark:text-white truncate">{{ pharmacy.name }}</h1>
+                <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm truncate">Панель менеджера · {{ request.user.username }}</p>
             </div>
         </div>
-        <span class="flex items-center gap-1.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium border border-green-200 dark:border-green-800">
+        <span class="shrink-0 flex items-center gap-1.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium border border-green-200 dark:border-green-800">
             <span class="relative flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
@@ -24,27 +24,27 @@
     </div>
 
     <!-- Статистика -->
-    <div class="grid grid-cols-3 gap-5 mb-8">
-        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-800 p-5 text-center shadow-sm">
-            <div class="w-10 h-10 bg-purple-50 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <i class="ti ti-message text-purple-600 dark:text-purple-400 text-xl"></i>
+    <div class="grid grid-cols-3 gap-3 md:gap-5 mb-8">
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-800 p-3 md:p-5 text-center shadow-sm">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-purple-50 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-2 md:mb-3">
+                <i class="ti ti-message text-purple-600 dark:text-purple-400 text-lg md:text-xl"></i>
             </div>
-            <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ chats|length }}</p>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Активных чатов</p>
+            <p class="text-xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">{{ chats|length }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Активных чатов</p>
         </div>
-        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-800 p-5 text-center shadow-sm">
-            <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <i class="ti ti-pill text-brand-600 dark:text-brand-400 text-xl"></i>
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-800 p-3 md:p-5 text-center shadow-sm">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-brand-50 dark:bg-brand-900/30 rounded-xl flex items-center justify-center mx-auto mb-2 md:mb-3">
+                <i class="ti ti-pill text-brand-600 dark:text-brand-400 text-lg md:text-xl"></i>
             </div>
-            <p class="text-3xl font-bold text-brand-600 dark:text-brand-400">{{ products|length }}</p>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Товаров в аптеке</p>
+            <p class="text-xl md:text-3xl font-bold text-brand-600 dark:text-brand-400">{{ products|length }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Товаров в аптеке</p>
         </div>
-        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-800 p-5 text-center shadow-sm">
-            <div class="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <i class="ti ti-messages text-blue-600 dark:text-blue-400 text-xl"></i>
+        <div class="bg-white dark:bg-gray-900/70 dark:backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-800 p-3 md:p-5 text-center shadow-sm">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-2 md:mb-3">
+                <i class="ti ti-messages text-blue-600 dark:text-blue-400 text-lg md:text-xl"></i>
             </div>
-            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ total_messages }}</p>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Всего сообщений</p>
+            <p class="text-xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">{{ total_messages }}</p>
+            <p class="text-gray-400 dark:text-gray-500 text-xs md:text-sm mt-1">Всего сообщений</p>
         </div>
     </div>
 
@@ -135,7 +135,7 @@
             <i class="ti ti-info-circle text-brand-500"></i>
             Информация об аптеке
         </h2>
-        <div class="grid grid-cols-3 gap-4 text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 text-xs md:text-sm">
             <div>
                 <p class="text-gray-400 dark:text-gray-500 mb-1"><i class="ti ti-map-pin text-xs mr-1"></i>Адрес</p>
                 <p class="font-medium text-gray-900 dark:text-white">{{ pharmacy.address }}</p>
