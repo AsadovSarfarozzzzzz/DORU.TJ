@@ -2,141 +2,142 @@
 {% load i18n %}
 {% block content %}
 
-<div class="flex items-center gap-4 mb-8">
-    <a href="{% url 'pharmacy_list' %}"
-       class="flex items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">
-        <i class="ti ti-arrow-left text-sm"></i> {% trans 'Все аптеки' %}
-    </a>
-    <div class="flex items-center gap-3">
-        <i class="ti ti-building-hospital text-3xl text-brand-500"></i>
-        <h1 class="text-3xl font-black text-gray-900 dark:text-white">{{ pharmacy.name }}</h1>
-    </div>
+<div class="flex items-center gap-3 mb-8">
+  <a href="{% url 'pharmacy_list' %}"
+     class="flex items-center gap-1 text-gray-400 hover:text-brand-500 text-sm transition-colors">
+    <i class="ti ti-arrow-left text-sm"></i> {% trans 'Все аптеки' %}
+  </a>
+  <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+    <i class="ti ti-building-hospital text-xl text-brand-600 dark:text-brand-400"></i>
+  </div>
+  <div>
+    <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">{{ pharmacy.name }}</h1>
+    <p class="text-gray-400 text-sm">{{ pharmacy.address }}</p>
+  </div>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+  <!-- Info -->
+  <div class="bg-white/80 dark:bg-[#161b22]/80 backdrop-blur-sm rounded-3xl border border-gray-200 dark:border-[#30363d] p-6 shadow-sm">
+    <h2 class="font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+      <i class="ti ti-info-circle text-brand-500"></i>
+      {% trans 'Информация' %}
+    </h2>
+    <div class="space-y-4 text-sm">
+      {% if user.is_authenticated %}
+      <a href="{% url 'pharmacy_chat' pharmacy.pk %}"
+         class="flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-2xl btn-press transition-all font-medium shadow-lg shadow-brand-500/25 w-full">
+        <i class="ti ti-message text-base"></i>
+        {% trans 'Написать менеджеру' %}
+      </a>
+      {% endif %}
 
-    <!-- Инфо аптеки -->
-    <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 p-6 shadow-sm">
-        <h2 class="font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
-            <i class="ti ti-info-circle text-brand-500"></i>
-            {% trans 'Информация' %}
-        </h2>
-        <div class="space-y-4 text-sm">
-
-            {% if user.is_authenticated %}
-                <a href="{% url 'pharmacy_chat' pharmacy.pk %}"
-                   class="flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-2xl btn-press transition-all font-medium shadow-lg shadow-brand-500/25 w-full">
-                    <i class="ti ti-message text-base"></i>
-                    {% trans 'Написать менеджеру' %}
-                </a>
-            {% endif %}
-
-            <div class="flex items-start gap-3 pt-2">
-                <i class="ti ti-map-pin text-brand-500 text-lg mt-0.5"></i>
-                <div>
-                    <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'Адрес' %}</p>
-                    <p class="font-medium text-gray-900 dark:text-white">{{ pharmacy.address }}</p>
-                </div>
-            </div>
-            <div class="flex items-start gap-3">
-                <i class="ti ti-phone text-brand-500 text-lg mt-0.5"></i>
-                <div>
-                    <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'Телефон' %}</p>
-                    <a href="tel:{{ pharmacy.phone }}"
-                       class="font-medium text-brand-600 dark:text-brand-400 hover:underline">
-                        {{ pharmacy.phone }}
-                    </a>
-                </div>
-            </div>
-            <div class="flex items-start gap-3">
-                <i class="ti ti-clock text-brand-500 text-lg mt-0.5"></i>
-                <div>
-                    <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'Режим работы' %}</p>
-                    <p class="font-medium text-gray-900 dark:text-white">{{ pharmacy.working_hours }}</p>
-                </div>
-            </div>
+      <div class="flex items-start gap-3 pt-2">
+        <i class="ti ti-map-pin text-brand-500 text-lg mt-0.5"></i>
+        <div>
+          <p class="text-gray-400 text-xs">{% trans 'Адрес' %}</p>
+          <p class="font-medium text-gray-900 dark:text-white">{{ pharmacy.address }}</p>
         </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <i class="ti ti-phone text-brand-500 text-lg mt-0.5"></i>
+        <div>
+          <p class="text-gray-400 text-xs">{% trans 'Телефон' %}</p>
+          <a href="tel:{{ pharmacy.phone }}" class="font-medium text-brand-600 dark:text-brand-400 hover:underline">{{ pharmacy.phone }}</a>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <i class="ti ti-clock text-brand-500 text-lg mt-0.5"></i>
+        <div>
+          <p class="text-gray-400 text-xs">{% trans 'Режим работы' %}</p>
+          <p class="font-medium text-gray-900 dark:text-white">{{ pharmacy.working_hours }}</p>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Карта -->
-    <div class="md:col-span-2 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 overflow-hidden shadow-sm">
-        <div id="map" style="height: 250px;"></div>
-    </div>
+  <!-- Map -->
+  <div class="md:col-span-2 bg-white/80 dark:bg-[#161b22]/80 backdrop-blur-sm rounded-3xl border border-gray-200 dark:border-[#30363d] overflow-hidden shadow-sm">
+    <div id="map" style="height: 280px;"></div>
+  </div>
 </div>
 
-<!-- Товары аптеки -->
+<!-- Products -->
 <div>
-    <div class="flex items-center gap-3 mb-6">
-        <i class="ti ti-pill text-2xl text-brand-500"></i>
-        <h2 class="text-2xl font-black text-gray-900 dark:text-white">
-            {% trans 'Товары в наличии' %}
-        </h2>
-        <span class="text-gray-400 dark:text-gray-500 font-normal text-base ml-1">{{ products|length }} {% trans 'позиций' %}</span>
+  <div class="flex items-center gap-3 mb-6">
+    <div class="w-8 h-8 bg-brand-50 dark:bg-brand-900/30 rounded-lg flex items-center justify-center">
+      <i class="ti ti-pill text-base text-brand-600 dark:text-brand-400"></i>
     </div>
+    <h2 class="text-2xl font-black text-gray-900 dark:text-white">{% trans 'Товары в наличии' %}</h2>
+    <span class="text-gray-400 text-base ml-1">{{ products|length }} {% trans 'позиций' %}</span>
+  </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-        {% for item in products %}
-        <div class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 overflow-hidden card-lift hover:border-brand-200 dark:hover:border-brand-800 transition-all">
-            <div class="aspect-square bg-gray-50 dark:bg-gray-800 overflow-hidden">
-                {% if item.product.image %}
-                    <img src="{{ item.product.image.url }}"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                {% else %}
-                    <div class="w-full h-full flex items-center justify-center">
-                        <i class="ti ti-pill text-4xl text-gray-300 dark:text-gray-600"></i>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="p-3.5">
-                <h3 class="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate">
-                    {{ item.product.name }}
-                </h3>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mb-2 truncate">{{ item.product.active_substance }}</p>
-                <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-baseline gap-0.5">
-                        <span class="text-brand-600 dark:text-brand-400 font-bold text-lg">{{ item.price }}</span>
-                        <span class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'сом' %}</span>
-                    </div>
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full {% if item.stock > 10 %}bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400{% elif item.stock > 0 %}bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400{% else %}bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400{% endif %}">
-                        {{ item.stock }} {% trans 'шт.' %}
-                    </span>
-                </div>
-                {% if user.is_authenticated %}
-                <a href="{% url 'add_to_cart' item.product.pk %}"
-                   class="flex items-center justify-center gap-1.5 w-full bg-brand-500 hover:bg-brand-600 text-white text-sm py-2.5 rounded-xl btn-press transition-all shadow-lg shadow-brand-500/25 font-medium">
-                    <i class="ti ti-shopping-cart-plus text-sm"></i>
-                    {% trans 'В корзину' %}
-                </a>
-                {% else %}
-                <a href="{% url 'login_user' %}"
-                   class="flex items-center justify-center gap-1.5 w-full border border-brand-500 dark:border-brand-400 text-brand-600 dark:text-brand-400 text-sm py-2.5 rounded-xl hover:bg-brand-50 dark:hover:bg-brand-900/20 btn-press transition-all font-medium">
-                    <i class="ti ti-login text-sm"></i>
-                    {% trans 'Войти для заказа' %}
-                </a>
-                {% endif %}
-            </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5 stagger">
+    {% for item in products %}
+    <div class="bg-white dark:bg-[#161b22] rounded-2xl border border-gray-200 dark:border-[#30363d] hover:border-brand-400/40 dark:hover:border-brand-500/40 overflow-hidden card-lift transition-all shadow-sm">
+      <div class="aspect-square bg-gray-50 dark:bg-[#21262d] overflow-hidden">
+        {% if item.product.image %}
+        <img src="{{ item.product.image.url }}"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        {% else %}
+        <div class="w-full h-full flex items-center justify-center">
+          <i class="ti ti-pill text-4xl text-gray-300 dark:text-gray-600"></i>
         </div>
-        {% empty %}
-        <div class="col-span-4 text-center py-16">
-            <i class="ti ti-package-off text-5xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
-            <p class="text-gray-400 dark:text-gray-500">{% trans 'Товаров пока нет' %}</p>
+        {% endif %}
+      </div>
+      <div class="p-3.5">
+        <h3 class="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate">{{ item.product.name }}</h3>
+        <p class="text-xs text-gray-400 mb-2 truncate">{{ item.product.active_substance }}</p>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-baseline gap-0.5">
+            <span class="text-brand-600 dark:text-brand-400 font-black text-lg">{{ item.price }}</span>
+            <span class="text-gray-400 text-xs">{% trans 'сом' %}</span>
+          </div>
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full
+            {% if item.stock > 10 %}bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400
+            {% elif item.stock > 0 %}bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400
+            {% else %}bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400{% endif %}">
+            {{ item.stock }} {% trans 'шт.' %}
+          </span>
         </div>
-        {% endfor %}
+        {% if user.is_authenticated %}
+        <a href="{% url 'add_to_cart' item.product.pk %}"
+           class="flex items-center justify-center gap-1.5 w-full bg-brand-500 hover:bg-brand-600 text-white text-sm py-2.5 rounded-xl btn-press transition-all shadow-lg shadow-brand-500/25 font-medium">
+          <i class="ti ti-shopping-cart-plus text-sm"></i>
+          {% trans 'В корзину' %}
+        </a>
+        {% else %}
+        <a href="{% url 'login_user' %}"
+           class="flex items-center justify-center gap-1.5 w-full border border-brand-500 dark:border-brand-400 text-brand-600 dark:text-brand-400 text-sm py-2.5 rounded-xl hover:bg-brand-50 dark:hover:bg-brand-900/20 btn-press transition-all font-medium">
+          <i class="ti ti-login text-sm"></i>
+          {% trans 'Войти для заказа' %}
+        </a>
+        {% endif %}
+      </div>
     </div>
+    {% empty %}
+    <div class="col-span-4 text-center py-16">
+      <div class="w-20 h-20 mx-auto mb-4 bg-gray-100 dark:bg-[#21262d] rounded-3xl flex items-center justify-center">
+        <i class="ti ti-package-off text-4xl text-gray-300 dark:text-gray-600"></i>
+      </div>
+      <p class="text-gray-400">{% trans 'Товаров пока нет' %}</p>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    const map = L.map('map').setView([{{ pharmacy.latitude }}, {{ pharmacy.longitude }}], 16);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-    L.marker([{{ pharmacy.latitude }}, {{ pharmacy.longitude }}])
-        .addTo(map)
-        .bindPopup('🏥 {{ pharmacy.name }}')
-        .openPopup();
+  const map = L.map('map').setView([{{ pharmacy.latitude }}, {{ pharmacy.longitude }}], 16);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+  L.marker([{{ pharmacy.latitude }}, {{ pharmacy.longitude }}])
+    .addTo(map)
+    .bindPopup('<div style="font-family:system-ui,sans-serif"><strong>{{ pharmacy.name }}</strong></div>')
+    .openPopup();
 </script>
 
 {% endblock %}

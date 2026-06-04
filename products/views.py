@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Product, Category, Manufacturer, Review
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db import models
 from orders.models import Order
 from django.db.models import Avg

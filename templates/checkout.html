@@ -1,154 +1,166 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% block content %}
-<div class="max-w-xl mx-auto">
-    <div class="flex items-center gap-3 mb-8">
-        <i class="ti ti-truck-delivery text-3xl text-brand-500"></i>
-        <h1 class="text-3xl font-black text-gray-900 dark:text-white">{% trans 'Оформление заказа' %}</h1>
+
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-xl flex items-center justify-center">
+      <i class="ti ti-truck-delivery text-xl text-brand-600 dark:text-brand-400"></i>
     </div>
-
-    <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700/50 p-8 mb-6 shadow-sm">
-        <h2 class="font-bold text-gray-900 dark:text-white mb-5 text-lg flex items-center gap-2">
-            <i class="ti ti-map-pin text-brand-500"></i>
-            {% trans 'Адрес доставки' %}
-        </h2>
-
-        <form method="POST" enctype="multipart/form-data" id="checkout-form">
-            {% csrf_token %}
-            <div class="relative mb-4">
-                <i class="ti ti-home absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-                <textarea name="address" id="address-input" rows="2" placeholder="{% trans 'Улица, дом, квартира...' %}" required
-                    class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition resize-none"></textarea>
-            </div>
-
-            <div class="mb-4">
-                <p class="text-xs text-gray-400 dark:text-gray-500 mb-2 flex items-center gap-1">
-                    <i class="ti ti-map text-brand-500"></i>
-                    {% trans 'Или выберите точку на карте:' %}
-                </p>
-                <div id="map" class="w-full h-48 md:h-64 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-0"></div>
-                <input type="hidden" name="latitude" id="lat-input">
-                <input type="hidden" name="longitude" id="lng-input">
-                <p id="map-coords" class="text-xs text-gray-400 dark:text-gray-500 mt-1"></p>
-            </div>
-
-            <label class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                <i class="ti ti-file-text text-brand-500"></i>
-                {% trans 'Рецепт (если нужен)' %}
-            </label>
-            <div class="relative mb-6">
-                <input type="file" name="prescription" accept="image/*"
-                    class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-3 text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 dark:file:bg-brand-900/20 file:text-brand-600 dark:file:text-brand-400 hover:file:bg-brand-100 dark:hover:file:bg-brand-900/30 transition">
-            </div>
-
-            <!-- СПОСОБ ОПЛАТЫ -->
-            <div class="mb-6">
-                <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                    <i class="ti ti-credit-card text-brand-500"></i>
-                    {% trans 'Способ оплаты' %}
-                </label>
-                <div class="grid grid-cols-2 gap-3">
-                    <div onclick="selectPayment('cash')" id="opt-cash"
-                         class="cursor-pointer border-2 border-brand-500 dark:border-brand-400 bg-brand-50 dark:bg-brand-900/20 rounded-2xl p-4 text-center transition-all hover:shadow-md">
-                        <i class="ti ti-cash text-2xl text-brand-600 dark:text-brand-400 mb-1 block"></i>
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm">{% trans 'Наличными' %}</p>
-                        <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'При получении' %}</p>
-                    </div>
-                    <div onclick="selectPayment('card')" id="opt-card"
-                         class="cursor-pointer border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-4 text-center transition-all hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-md">
-                        <i class="ti ti-credit-card text-2xl text-gray-400 dark:text-gray-500 mb-1 block"></i>
-                        <p class="font-semibold text-gray-700 dark:text-gray-300 text-sm">{% trans 'Картой' %}</p>
-                        <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans 'Alif Pay, Корти Милли' %}</p>
-                    </div>
-                </div>
-                <input type="hidden" name="payment_method" id="payment_method" value="cash">
-            </div>
-
-            <div class="bg-brand-50 dark:bg-brand-900/10 rounded-xl p-5 mb-6 border border-brand-100 dark:border-brand-900/20">
-                <div class="flex justify-between text-gray-600 dark:text-gray-300 text-sm mb-2">
-                    <span>{% trans 'Товары' %}</span><span>{{ total }} {% trans 'сом' %}</span>
-                </div>
-                {% if discount %}
-                <div class="flex justify-between text-red-500 text-sm mb-2">
-                    <span>{% trans 'Скидка' %}</span><span>-{{ discount }} {% trans 'сом' %}</span>
-                </div>
-                {% endif %}
-                <div class="flex justify-between text-gray-600 dark:text-gray-300 text-sm mb-3">
-                    <span>{% trans 'Доставка' %}</span><span class="text-brand-600 dark:text-brand-400">{% trans 'Бесплатно' %}</span>
-                </div>
-                <div class="flex justify-between font-bold text-xl text-gray-900 dark:text-white border-t border-brand-200 dark:border-brand-900/30 pt-3">
-                    <span>{% trans 'Итого' %}</span><span class="text-brand-600 dark:text-brand-400">{{ final_total|default:total }} {% trans 'сом' %}</span>
-                </div>
-            </div>
-
-            <button type="submit"
-                class="w-full flex items-center justify-center gap-2 bg-brand-500 hover:brand-600 text-white font-bold py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25">
-                <i class="ti ti-circle-check text-xl"></i>
-                {% trans 'Подтвердить заказ' %}
-            </button>
-        </form>
-
+    <div>
+      <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">{% trans 'Оформление заказа' %}</h1>
+      <p class="text-gray-400 text-sm">{% trans 'Заполните данные для доставки' %}</p>
     </div>
+  </div>
+
+  <div class="bg-white/80 dark:bg-[#161b22]/80 backdrop-blur-sm rounded-3xl border border-gray-200 dark:border-[#30363d] p-6 md:p-8 mb-6 shadow-sm">
+    <h2 class="font-bold text-gray-900 dark:text-white mb-6 text-lg flex items-center gap-2">
+      <i class="ti ti-map-pin text-brand-500"></i>
+      {% trans 'Адрес доставки' %}
+    </h2>
+
+    <form method="POST" enctype="multipart/form-data" id="checkout-form">
+      {% csrf_token %}
+
+      <!-- Address -->
+      <div class="relative mb-5 input-glow">
+        <i class="ti ti-home absolute left-3.5 top-3.5 text-gray-400 text-sm pointer-events-none"></i>
+        <textarea name="address" id="address-input" rows="2"
+                  placeholder="{% trans 'Улица, дом, квартира...' %}" required
+                  class="w-full bg-gray-50 dark:bg-[#21262d] border border-gray-200 dark:border-[#30363d] rounded-xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 transition resize-none"></textarea>
+      </div>
+
+      <!-- Map -->
+      <div class="mb-5">
+        <p class="text-xs text-gray-400 mb-2 flex items-center gap-1.5">
+          <i class="ti ti-map text-brand-500 text-sm"></i>
+          {% trans 'Или выберите точку на карте:' %}
+        </p>
+        <div id="map" class="w-full h-56 md:h-72 rounded-xl border border-gray-200 dark:border-[#30363d] overflow-hidden z-0 shadow-sm"></div>
+        <input type="hidden" name="latitude" id="lat-input">
+        <input type="hidden" name="longitude" id="lng-input">
+        <p id="map-coords" class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+          <i class="ti ti-crosshair text-brand-400 text-[10px]"></i>
+          <span>{% trans 'Нажмите на карту или перетащите маркер' %}</span>
+        </p>
+      </div>
+
+      <!-- Prescription -->
+      <label class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+        <i class="ti ti-file-text text-brand-500"></i>
+        {% trans 'Рецепт (если нужен)' %}
+      </label>
+      <div class="relative mb-6 input-glow">
+        <input type="file" name="prescription" accept="image/*"
+               class="w-full bg-gray-50 dark:bg-[#21262d] border border-gray-200 dark:border-[#30363d] rounded-xl px-4 py-3 text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 dark:file:bg-brand-900/20 file:text-brand-600 dark:file:text-brand-400 hover:file:bg-brand-100 dark:hover:file:bg-brand-900/30 transition cursor-pointer">
+      </div>
+
+      <!-- Payment method -->
+      <div class="mb-6">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
+          <i class="ti ti-credit-card text-brand-500"></i>
+          {% trans 'Способ оплаты' %}
+        </label>
+        <div class="grid grid-cols-2 gap-3">
+          <div onclick="selectPayment('cash')" id="opt-cash"
+               class="cursor-pointer border-2 border-brand-500 dark:border-brand-400 bg-brand-50 dark:bg-brand-900/20 rounded-2xl p-5 text-center transition-all hover:shadow-md">
+            <i class="ti ti-cash text-3xl text-brand-600 dark:text-brand-400 mb-2 block"></i>
+            <p class="font-semibold text-gray-900 dark:text-white text-sm">{% trans 'Наличными' %}</p>
+            <p class="text-gray-400 text-xs">{% trans 'При получении' %}</p>
+          </div>
+          <div onclick="selectPayment('card')" id="opt-card"
+               class="cursor-pointer border-2 border-gray-200 dark:border-[#30363d] rounded-2xl p-5 text-center transition-all hover:border-brand-400 dark:hover:border-brand-500 hover:shadow-md">
+            <i class="ti ti-credit-card text-3xl text-gray-400 dark:text-gray-500 mb-2 block"></i>
+            <p class="font-semibold text-gray-700 dark:text-gray-300 text-sm">{% trans 'Картой' %}</p>
+            <p class="text-gray-400 text-xs">{% trans 'Alif Pay, Корти Милли' %}</p>
+          </div>
+        </div>
+        <input type="hidden" name="payment_method" id="payment_method" value="cash">
+      </div>
+
+      <!-- Summary -->
+      <div class="bg-brand-50 dark:bg-brand-900/10 rounded-2xl p-5 mb-6 border border-brand-100 dark:border-brand-900/20">
+        <div class="flex justify-between text-gray-600 dark:text-gray-300 text-sm mb-2">
+          <span>{% trans 'Товары' %}</span><span>{{ total }} {% trans 'сом' %}</span>
+        </div>
+        {% if discount %}
+        <div class="flex justify-between text-red-500 text-sm mb-2">
+          <span>{% trans 'Скидка' %}</span><span>-{{ discount }} {% trans 'сом' %}</span>
+        </div>
+        {% endif %}
+        <div class="flex justify-between text-gray-600 dark:text-gray-300 text-sm mb-3">
+          <span>{% trans 'Доставка' %}</span><span class="text-brand-600 dark:text-brand-400 font-medium">{% trans 'Бесплатно' %}</span>
+        </div>
+        <div class="flex justify-between font-bold text-xl text-gray-900 dark:text-white border-t border-brand-200 dark:border-brand-900/30 pt-3">
+          <span>{% trans 'Итого' %}</span><span class="text-brand-600 dark:text-brand-400">{{ final_total|default:total }} {% trans 'сом' %}</span>
+        </div>
+      </div>
+
+      <button type="submit"
+              class="w-full flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25 hover:-translate-y-0.5">
+        <i class="ti ti-circle-check text-xl"></i>
+        {% trans 'Подтвердить заказ' %}
+      </button>
+    </form>
+  </div>
 </div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 function selectPayment(method) {
-    document.getElementById('payment_method').value = method;
-    if (method === 'cash') {
-        document.getElementById('opt-cash').classList.add('border-brand-500', 'dark:border-brand-400', 'bg-brand-50', 'dark:bg-brand-900/20');
-        document.getElementById('opt-cash').classList.remove('border-gray-200', 'dark:border-gray-700');
-        document.getElementById('opt-card').classList.remove('border-brand-500', 'dark:border-brand-400', 'bg-brand-50', 'dark:bg-brand-900/20');
-        document.getElementById('opt-card').classList.add('border-gray-200', 'dark:border-gray-700');
-    } else {
-        document.getElementById('opt-card').classList.add('border-brand-500', 'dark:border-brand-400', 'bg-brand-50', 'dark:bg-brand-900/20');
-        document.getElementById('opt-card').classList.remove('border-gray-200', 'dark:border-gray-700');
-        document.getElementById('opt-cash').classList.remove('border-brand-500', 'dark:border-brand-400', 'bg-brand-50', 'dark:bg-brand-900/20');
-        document.getElementById('opt-cash').classList.add('border-gray-200', 'dark:border-gray-700');
-    }
+  document.getElementById('payment_method').value = method;
+  if (method === 'cash') {
+    document.getElementById('opt-cash').classList.add('border-brand-500', 'dark:border-brand-400', 'bg-brand-50', 'dark:bg-brand-900/20');
+    document.getElementById('opt-cash').classList.remove('border-gray-200', 'dark:border-[#30363d]');
+    document.getElementById('opt-card').classList.remove('border-brand-500', 'dark:border-brand-400', 'bg-brand-50', 'dark:bg-brand-900/20');
+    document.getElementById('opt-card').classList.add('border-gray-200', 'dark:border-[#30363d]');
+  } else {
+    document.getElementById('opt-card').classList.add('border-brand-500', 'dark:border-brand-400', 'bg-brand-50', 'dark:bg-brand-900/20');
+    document.getElementById('opt-card').classList.remove('border-gray-200', 'dark:border-[#30363d]');
+    document.getElementById('opt-cash').classList.remove('border-brand-500', 'dark:border-brand-400', 'bg-brand-50', 'dark:bg-brand-900/20');
+    document.getElementById('opt-cash').classList.add('border-gray-200', 'dark:border-[#30363d]');
+  }
 }
 
-// ── Карта ──────────────────────────────────────────────────────────────────
 const defaultLat = 38.5598;
 const defaultLng = 68.7870;
 
 const map = L.map('map').setView([defaultLat, defaultLng], 12);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap',
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap',
 }).addTo(map);
 
 let marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
 
 function updateCoords(lat, lng) {
-    document.getElementById('lat-input').value = lat.toFixed(6);
-    document.getElementById('lng-input').value = lng.toFixed(6);
-    document.getElementById('map-coords').textContent = `📍 ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+  document.getElementById('lat-input').value = lat.toFixed(6);
+  document.getElementById('lng-input').value = lng.toFixed(6);
+  document.getElementById('map-coords').innerHTML = `<i class="ti ti-crosshair text-brand-400 text-[10px]"></i> ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
 }
 
 marker.on('dragend', function(e) {
-    const pos = marker.getLatLng();
-    updateCoords(pos.lat, pos.lng);
+  const pos = marker.getLatLng();
+  updateCoords(pos.lat, pos.lng);
 });
 
 map.on('click', function(e) {
-    marker.setLatLng(e.latlng);
-    updateCoords(e.latlng.lat, e.latlng.lng);
+  marker.setLatLng(e.latlng);
+  updateCoords(e.latlng.lat, e.latlng.lng);
 });
 
 updateCoords(defaultLat, defaultLng);
 
-// Try to get user's location
 if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(pos) {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        map.setView([lat, lng], 14);
-        marker.setLatLng([lat, lng]);
-        updateCoords(lat, lng);
-    }, function() {});
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    map.setView([lat, lng], 14);
+    marker.setLatLng([lat, lng]);
+    updateCoords(lat, lng);
+  }, function() {});
 }
 </script>
 

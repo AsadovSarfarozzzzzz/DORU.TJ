@@ -2,72 +2,85 @@
 {% load i18n %}
 {% block content %}
 
-<div class="flex items-center gap-3 mb-6 md:mb-8">
-    <i class="ti ti-package text-2xl md:text-3xl text-brand-500"></i>
-    <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">{% trans 'Мои заказы' %}</h1>
+<div class="flex items-center gap-3 mb-8">
+  <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-xl flex items-center justify-center">
+    <i class="ti ti-package text-xl text-brand-600 dark:text-brand-400"></i>
+  </div>
+  <div>
+    <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">{% trans 'Мои заказы' %}</h1>
+    <p class="text-gray-400 text-sm">{% trans 'История ваших заказов' %}</p>
+  </div>
 </div>
 
 {% for order in orders %}
-<div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-4 md:p-6 mb-4 hover:shadow-md transition-all card-lift">
-    <div class="flex items-start justify-between mb-4 gap-2">
-        <div>
-            <h3 class="font-bold text-gray-900 dark:text-white text-base md:text-lg">{% trans 'Заказ #' %}{{ order.pk }}</h3>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-0.5">{{ order.created_at|date:"d.m.Y H:i" }}</p>
-        </div>
-        <span class="shrink-0 px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold flex items-center gap-1.5
-            {% if order.status == 'done' %}bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800
-            {% elif order.status == 'cancelled' %}bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800
-            {% elif order.status == 'delivering' %}bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800
-            {% else %}bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800{% endif %}">
-            {% if order.status == 'done' %}<i class="ti ti-circle-check text-sm"></i>
-            {% elif order.status == 'cancelled' %}<i class="ti ti-circle-x text-sm"></i>
-            {% elif order.status == 'delivering' %}<i class="ti ti-truck-delivery text-sm"></i>
-            {% else %}<i class="ti ti-clock text-sm"></i>{% endif %}
-            {{ order.get_status_display }}
-        </span>
+<div class="bg-white/80 dark:bg-[#161b22]/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-[#30363d] p-5 md:p-6 mb-4 shadow-sm card-lift hover:border-brand-400/30 dark:hover:border-brand-500/30 transition-all">
+  <div class="flex items-start justify-between mb-4 gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-sm flex-shrink-0">
+        <i class="ti ti-receipt text-lg"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-gray-900 dark:text-white">{% trans 'Заказ' %} #{{ order.pk }}</h3>
+        <p class="text-gray-400 text-xs mt-0.5">{{ order.created_at|date:"d.m.Y H:i" }}</p>
+      </div>
     </div>
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div class="flex items-baseline gap-1">
-            <span class="text-2xl font-black text-brand-600 dark:text-brand-400">{{ order.total }}</span>
-            <span class="text-gray-400 dark:text-gray-500 text-sm">{% trans 'сом' %}</span>
-        </div>
-        <div class="flex flex-wrap gap-2">
-            {% if order.status == 'pending' %}
-                <a href="/orders/order/{{ order.pk }}/cancel/"
-                   class="flex items-center gap-1.5 text-xs md:text-sm text-red-500 dark:text-red-400 border border-red-200 dark:border-red-800 px-3 md:px-4 py-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 btn-press transition-all">
-                    <i class="ti ti-x text-sm"></i>
-                    {% trans 'Отменить' %}
-                </a>
-            {% endif %}
-            {% if order.status == 'delivering' %}
-                <a href="{% url 'delivery_chat' order.pk %}"
-                   class="flex items-center gap-1.5 text-xs md:text-sm bg-brand-500 text-white px-3 md:px-4 py-2 rounded-xl hover:bg-brand-600 btn-press transition-all">
-                    <i class="ti ti-message text-sm"></i>
-                    {% trans 'Чат' %}
-                </a>
-            {% endif %}
-            <a href="/orders/order/{{ order.pk }}/repeat/"
-               class="flex items-center gap-1.5 text-xs md:text-sm text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 px-3 md:px-4 py-2 rounded-xl hover:border-brand-400 dark:hover:border-brand-600 hover:text-brand-600 dark:hover:text-brand-400 btn-press transition-all">
-                <i class="ti ti-refresh text-sm"></i>
-                {% trans 'Повторить' %}
-            </a>
-            <a href="{% url 'order_detail' order.pk %}"
-               class="flex items-center gap-1.5 text-xs md:text-sm bg-brand-500 hover:bg-brand-600 text-white px-4 md:px-5 py-2 rounded-xl btn-press transition-all shadow-lg shadow-brand-500/25">
-                {% trans 'Подробнее' %}
-                <i class="ti ti-arrow-right text-sm"></i>
-            </a>
-        </div>
+    <span class="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5
+      {% if order.status == 'done' %}bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800
+      {% elif order.status == 'cancelled' %}bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800
+      {% elif order.status == 'delivering' %}bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800
+      {% else %}bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800{% endif %}">
+      {% if order.status == 'done' %}<i class="ti ti-circle-check text-sm"></i>
+      {% elif order.status == 'cancelled' %}<i class="ti ti-circle-x text-sm"></i>
+      {% elif order.status == 'delivering' %}<i class="ti ti-truck-delivery text-sm"></i>
+      {% else %}<i class="ti ti-clock text-sm"></i>{% endif %}
+      {{ order.get_status_display }}
+    </span>
+  </div>
+
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-gray-100 dark:border-[#30363d]">
+    <div class="flex items-baseline gap-1">
+      <span class="text-2xl font-black text-brand-600 dark:text-brand-400">{{ order.total }}</span>
+      <span class="text-gray-400 text-sm">{% trans 'сом' %}</span>
     </div>
+    <div class="flex flex-wrap gap-2">
+      {% if order.status == 'pending' %}
+      <a href="{% url 'cancel_order' order.pk %}"
+         class="flex items-center gap-1.5 text-xs text-red-500 border border-red-200 dark:border-red-800 px-3 py-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 btn-press transition-all">
+        <i class="ti ti-x text-sm"></i>
+        {% trans 'Отменить' %}
+      </a>
+      {% endif %}
+      {% if order.status == 'delivering' %}
+      <a href="{% url 'delivery_chat' order.pk %}"
+         class="flex items-center gap-1.5 text-xs bg-brand-500 text-white px-3 py-2 rounded-xl hover:bg-brand-600 btn-press transition-all shadow-sm">
+        <i class="ti ti-message text-sm"></i>
+        {% trans 'Чат с курьером' %}
+      </a>
+      {% endif %}
+      <a href="{% url 'repeat_order' order.pk %}"
+         class="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-[#30363d] px-3 py-2 rounded-xl hover:border-brand-400 dark:hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 btn-press transition-all">
+        <i class="ti ti-refresh text-sm"></i>
+        {% trans 'Повторить' %}
+      </a>
+      <a href="{% url 'order_detail' order.pk %}"
+         class="flex items-center gap-1.5 text-xs bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl btn-press transition-all shadow-lg shadow-brand-500/25">
+        {% trans 'Подробнее' %}
+        <i class="ti ti-arrow-right text-sm"></i>
+      </a>
+    </div>
+  </div>
 </div>
 {% empty %}
 <div class="text-center py-24">
-    <i class="ti ti-package-off text-8xl text-gray-300 dark:text-gray-600 mb-6 block"></i>
-    <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-3">{% trans 'Заказов пока нет' %}</h2>
-    <p class="text-gray-400 dark:text-gray-500 mb-8">{% trans 'Сделайте свой первый заказ' %}</p>
-    <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-10 py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25">
-        <i class="ti ti-pill text-lg"></i>
-        {% trans 'Перейти в каталог' %}
-    </a>
+  <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-[#21262d] rounded-3xl flex items-center justify-center">
+    <i class="ti ti-package-off text-5xl text-gray-300 dark:text-gray-600"></i>
+  </div>
+  <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-3">{% trans 'Заказов пока нет' %}</h2>
+  <p class="text-gray-400 mb-8">{% trans 'Сделайте свой первый заказ' %}</p>
+  <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-10 py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25">
+    <i class="ti ti-pill text-lg"></i>
+    {% trans 'Перейти в каталог' %}
+  </a>
 </div>
 {% endfor %}
 

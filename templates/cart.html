@@ -2,118 +2,134 @@
 {% load i18n %}
 {% block content %}
 
-<div class="flex items-center gap-3 mb-6 md:mb-8">
-    <i class="ti ti-shopping-cart text-2xl md:text-3xl text-brand-500"></i>
-    <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">{% trans 'Корзина' %}</h1>
+<div class="flex items-center gap-3 mb-8">
+  <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-xl flex items-center justify-center">
+    <i class="ti ti-shopping-cart text-xl text-brand-600 dark:text-brand-400"></i>
+  </div>
+  <div>
+    <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">{% trans 'Корзина' %}</h1>
+    <p class="text-gray-400 text-sm">{{ items|length }} {% trans 'товара' %}{{ items|length|pluralize }}</p>
+  </div>
 </div>
 
 {% if items %}
 <div class="grid md:grid-cols-3 gap-8">
-    <!-- Товары -->
-    <div class="md:col-span-2 space-y-4">
-        {% for item in items %}
-        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-3 md:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 md:gap-5 shadow-sm">
-            <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-3xl flex-shrink-0 overflow-hidden border border-gray-100 dark:border-gray-700">
-                {% if item.product.image %}
-                    <img src="{{ item.product.image.url }}" class="w-full h-full object-cover">
-                {% else %}
-                    <i class="ti ti-pill text-gray-300 dark:text-gray-600 text-xl md:text-2xl"></i>
-                {% endif %}
-            </div>
-            <div class="flex-1 min-w-0">
-                <h3 class="font-semibold text-gray-900 dark:text-white text-sm truncate">{{ item.product.name }}</h3>
-                <p class="text-brand-600 dark:text-brand-400 font-bold text-sm mt-0.5">{{ item.product.price }} {% trans 'сом' %}</p>
-            </div>
-            <div class="flex items-center gap-2 w-full md:w-auto justify-between md:justify-start">
-                <form method="POST" action="/orders/cart/update/{{ item.pk }}/" class="flex items-center gap-2">
-                    {% csrf_token %}
-                    <button type="submit" name="quantity" value="{{ item.quantity|add:"-1" }}"
-                            class="w-8 h-8 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-brand-400 dark:hover:border-brand-600 hover:text-brand-600 dark:hover:text-brand-400 transition flex items-center justify-center font-bold bg-gray-50 dark:bg-gray-800">
-                        <i class="ti ti-minus text-sm"></i>
-                    </button>
-                    <span class="w-8 text-center font-bold text-gray-900 dark:text-white">{{ item.quantity }}</span>
-                    <button type="submit" name="quantity" value="{{ item.quantity|add:"1" }}"
-                            class="w-8 h-8 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-brand-400 dark:hover:border-brand-600 hover:text-brand-600 dark:hover:text-brand-400 transition flex items-center justify-center font-bold bg-gray-50 dark:bg-gray-800">
-                        <i class="ti ti-plus text-sm"></i>
-                    </button>
-                </form>
-                <p class="font-bold text-gray-900 dark:text-white md:w-24 text-right text-sm">{{ item.total_price }} {% trans 'сом' %}</p>
-                <a href="/orders/cart/remove/{{ item.pk }}/" class="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition text-lg flex-shrink-0 ml-1">
-                    <i class="ti ti-x"></i>
-                </a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+  <!-- Items -->
+  <div class="md:col-span-2 space-y-4">
+    {% for item in items %}
+    <div class="bg-white/80 dark:bg-[#161b22]/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-[#30363d] p-4 md:p-5 flex items-center gap-4 shadow-sm card-lift">
+      <!-- Image -->
+      <div class="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gray-50 dark:bg-[#21262d] flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-100 dark:border-[#30363d]">
+        {% if item.product.image %}
+        <img src="{{ item.product.image.url }}" class="w-full h-full object-cover">
+        {% else %}
+        <i class="ti ti-pill text-gray-300 dark:text-gray-600 text-xl"></i>
+        {% endif %}
+      </div>
 
-    <!-- Итого -->
-    <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-6 h-fit sticky top-24 shadow-sm">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <i class="ti ti-receipt text-brand-500"></i>
-            {% trans 'Итого' %}
-        </h2>
+      <!-- Info -->
+      <div class="flex-1 min-w-0">
+        <a href="{% url 'product_detail' item.product.pk %}">
+          <h3 class="font-semibold text-gray-900 dark:text-white text-sm truncate hover:text-brand-600 dark:hover:text-brand-400 transition-colors">{{ item.product.name }}</h3>
+        </a>
+        <p class="text-brand-600 dark:text-brand-400 font-bold text-sm mt-0.5">{{ item.product.price }} <span class="text-xs font-normal text-gray-400">{% trans 'сом' %}</span></p>
+      </div>
 
-        <form method="POST" action="{% url 'apply_promocode' %}" class="mb-5">
-            {% csrf_token %}
-            <div class="flex items-center gap-2">
-                <input type="text" name="code" placeholder="{% trans 'Промокод' %}"
-                    class="flex-1 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl px-3 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 transition"
-                    value="{{ request.session.promocode|default:'' }}">
-                <button type="submit"
-                    class="bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl btn-press transition-all whitespace-nowrap">
-                    {% trans 'Применить' %}
-                </button>
-            </div>
-            {% if request.session.promocode %}
-            <div class="mt-2 flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl px-3 py-2">
-                <span class="text-xs font-medium text-green-700 dark:text-green-400">{% trans 'Промокод:' %} {{ request.session.promocode }}</span>
-                <a href="{% url 'remove_promocode' %}" class="text-red-500 hover:text-red-700 text-xs">
-                    <i class="ti ti-x"></i>
-                </a>
-            </div>
-            {% endif %}
+      <!-- Quantity + price -->
+      <div class="flex items-center gap-3">
+        <form method="POST" action="{% url 'update_cart' item.pk %}" class="flex items-center gap-1.5">
+          {% csrf_token %}
+          <button type="submit" name="quantity" value="{{ item.quantity|add:"-1" }}"
+                  class="w-8 h-8 rounded-lg border border-gray-200 dark:border-[#30363d] text-gray-500 dark:text-gray-400 hover:border-brand-400 dark:hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition flex items-center justify-center bg-gray-50 dark:bg-[#21262d] btn-press">
+            <i class="ti ti-minus text-sm"></i>
+          </button>
+          <span class="w-8 text-center font-bold text-gray-900 dark:text-white text-sm">{{ item.quantity }}</span>
+          <button type="submit" name="quantity" value="{{ item.quantity|add:"1" }}"
+                  class="w-8 h-8 rounded-lg border border-gray-200 dark:border-[#30363d] text-gray-500 dark:text-gray-400 hover:border-brand-400 dark:hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition flex items-center justify-center bg-gray-50 dark:bg-[#21262d] btn-press">
+            <i class="ti ti-plus text-sm"></i>
+          </button>
         </form>
-
-        <div class="space-y-3">
-            <div class="flex justify-between text-gray-500 dark:text-gray-400 text-sm">
-                <span>{% trans 'Товары (' %}{{ items|length }})</span>
-                <span class="font-medium text-gray-700 dark:text-gray-200">{{ total }} {% trans 'сом' %}</span>
-            </div>
-            <div class="flex justify-between text-gray-500 dark:text-gray-400 text-sm">
-                <span>{% trans 'Доставка' %}</span>
-                <span class="text-brand-600 dark:text-brand-400 font-medium">{% trans 'Бесплатно' %}</span>
-            </div>
-            {% if discount %}
-            <div class="flex justify-between text-red-500 text-sm">
-                <span>{% trans 'Скидка' %}</span>
-                <span class="font-medium">-{{ discount }} {% trans 'сом' %}</span>
-            </div>
-            {% endif %}
-            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4 flex justify-between font-bold text-xl">
-                <span class="text-gray-900 dark:text-white">{% trans 'Итого' %}</span>
-                <span class="text-brand-600 dark:text-brand-400">{{ final_total|default:total }} {% trans 'сом' %}</span>
-            </div>
-        </div>
-        <a href="/orders/checkout/"
-           class="flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 rounded-2xl btn-press transition-all mt-6 text-lg shadow-lg shadow-brand-500/25">
-            {% trans 'Оформить заказ' %}
-            <i class="ti ti-arrow-right text-lg"></i>
+        <p class="font-bold text-gray-900 dark:text-white w-20 text-right text-sm">{{ item.total_price }} <span class="text-xs font-normal text-gray-400">{% trans 'сом' %}</span></p>
+        <a href="{% url 'remove_from_cart' item.pk %}" class="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-1">
+          <i class="ti ti-trash text-base"></i>
         </a>
-        <a href="{% url 'catalog' %}" class="block text-center text-gray-400 dark:text-gray-500 text-sm mt-3 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">
-            {% trans 'Продолжить покупки' %}
-        </a>
+      </div>
     </div>
+    {% endfor %}
+  </div>
+
+  <!-- Summary sidebar -->
+  <div class="bg-white/80 dark:bg-[#161b22]/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-[#30363d] p-6 h-fit sticky top-24 shadow-sm">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+      <i class="ti ti-receipt text-brand-500"></i>
+      {% trans 'Итого' %}
+    </h2>
+
+    <!-- Promocode -->
+    <form method="POST" action="{% url 'apply_promocode' %}" class="mb-5">
+      {% csrf_token %}
+      <div class="flex items-center gap-2 input-glow">
+        <input type="text" name="code" placeholder="{% trans 'Промокод' %}"
+               class="flex-1 bg-gray-50 dark:bg-[#21262d] border border-gray-200 dark:border-[#30363d] rounded-xl px-3 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 transition"
+               value="{{ request.session.promocode|default:'' }}">
+        <button type="submit"
+                class="bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl btn-press transition-all whitespace-nowrap">
+          {% trans 'Применить' %}
+        </button>
+      </div>
+      {% if request.session.promocode %}
+      <div class="mt-2 flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl px-3 py-2">
+        <span class="text-xs font-medium text-green-700 dark:text-green-400">{% trans 'Промокод:' %} {{ request.session.promocode }}</span>
+        <a href="{% url 'remove_promocode' %}" class="text-red-500 hover:text-red-700 text-xs"><i class="ti ti-x"></i></a>
+      </div>
+      {% endif %}
+    </form>
+
+    <!-- Totals -->
+    <div class="space-y-3">
+      <div class="flex justify-between text-gray-500 text-sm">
+        <span>{% trans 'Товары' %} ({{ items|length }})</span>
+        <span class="font-medium text-gray-700 dark:text-gray-200">{{ total }} {% trans 'сом' %}</span>
+      </div>
+      <div class="flex justify-between text-gray-500 text-sm">
+        <span>{% trans 'Доставка' %}</span>
+        <span class="text-brand-600 dark:text-brand-400 font-medium">{% trans 'Бесплатно' %}</span>
+      </div>
+      {% if discount %}
+      <div class="flex justify-between text-red-500 text-sm">
+        <span>{% trans 'Скидка' %}</span>
+        <span class="font-medium">-{{ discount }} {% trans 'сом' %}</span>
+      </div>
+      {% endif %}
+      <div class="border-t border-gray-200 dark:border-[#30363d] pt-4 mt-4 flex justify-between font-bold text-xl">
+        <span class="text-gray-900 dark:text-white">{% trans 'Итого' %}</span>
+        <span class="text-brand-600 dark:text-brand-400">{{ final_total|default:total }} {% trans 'сом' %}</span>
+      </div>
+    </div>
+
+    <a href="{% url 'checkout' %}"
+       class="flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 rounded-2xl btn-press transition-all mt-6 text-lg shadow-lg shadow-brand-500/25">
+      {% trans 'Оформить заказ' %}
+      <i class="ti ti-arrow-right text-lg"></i>
+    </a>
+    <a href="{% url 'catalog' %}" class="block text-center text-gray-400 text-sm mt-3 hover:text-brand-500 transition-colors">
+      {% trans 'Продолжить покупки' %}
+    </a>
+  </div>
 </div>
 
 {% else %}
+<!-- Empty state -->
 <div class="text-center py-24">
-    <i class="ti ti-shopping-cart-off text-8xl text-gray-300 dark:text-gray-600 mb-6 block"></i>
-    <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-3">{% trans 'Корзина пуста' %}</h2>
-    <p class="text-gray-400 dark:text-gray-500 mb-8">{% trans 'Добавьте лекарства из каталога' %}</p>
-    <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-10 py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25">
-        <i class="ti ti-pill text-lg"></i>
-        {% trans 'Перейти в каталог' %}
-    </a>
+  <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-[#21262d] rounded-3xl flex items-center justify-center">
+    <i class="ti ti-shopping-cart-off text-5xl text-gray-300 dark:text-gray-600"></i>
+  </div>
+  <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-3">{% trans 'Корзина пуста' %}</h2>
+  <p class="text-gray-400 mb-8">{% trans 'Добавьте лекарства из каталога' %}</p>
+  <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-10 py-4 rounded-2xl btn-press transition-all text-lg shadow-lg shadow-brand-500/25">
+    <i class="ti ti-pill text-lg"></i>
+    {% trans 'Перейти в каталог' %}
+  </a>
 </div>
 {% endif %}
 

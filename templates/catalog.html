@@ -2,142 +2,173 @@
 {% load i18n %}
 {% block content %}
 
-<div class="flex items-center justify-between mb-6">
-    <div>
-        <h1 class="text-3xl font-black text-gray-900 dark:text-white">{% trans 'Каталог лекарств' %}</h1>
-        <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">{{ products|length }} {% trans 'товаров' %}</p>
+<div class="flex items-center justify-between mb-8">
+  <div>
+    <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">{% trans 'Каталог лекарств' %}</h1>
+    <p class="text-gray-400 text-sm mt-1">
+      <span class="font-semibold text-gray-600 dark:text-gray-300">{{ products|length }}</span>
+      {% trans 'товаров' %}
+    </p>
+  </div>
+  {% if user.is_staff %}
+  <a href="{% url 'product_add' %}"
+     class="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold btn-press transition-all shadow-lg shadow-brand-500/25">
+    <i class="ti ti-plus text-base"></i> {% trans 'Добавить товар' %}
+  </a>
+  {% endif %}
+</div>
+
+<!-- ═══ FILTERS ═══ -->
+<div class="bg-white/80 dark:bg-[#161b22]/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-[#30363d] p-5 md:p-6 mb-8 shadow-sm">
+  <form method="GET" class="flex flex-wrap gap-3 items-end">
+    <!-- Search -->
+    <div class="relative flex-1 min-w-48 input-glow">
+      <i class="ti ti-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+      <input type="text" name="search" placeholder="{% trans 'Поиск по названию...' %}"
+             value="{{ request.GET.search }}"
+             class="w-full bg-gray-50 dark:bg-[#21262d] border border-gray-200 dark:border-[#30363d] rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 focus:bg-white dark:focus:bg-[#21262d] transition-all">
     </div>
-    {% if user.is_staff %}
-    <a href="{% url 'product_add' %}"
-       class="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold btn-press transition-all shadow-lg shadow-brand-500/25">
-        <i class="ti ti-plus text-base"></i> {% trans 'Добавить товар' %}
+
+    <!-- Category -->
+    <div class="relative input-glow">
+      <select name="category"
+              class="appearance-none bg-gray-50 dark:bg-[#21262d] border border-gray-200 dark:border-[#30363d] rounded-xl pl-4 pr-10 py-2.5 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 transition-all cursor-pointer min-w-[140px]">
+        <option value="">{% trans 'Все категории' %}</option>
+        {% for cat in categories %}
+        <option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>
+          {{ cat.name }}
+        </option>
+        {% endfor %}
+      </select>
+      <i class="ti ti-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+    </div>
+
+    <!-- Min price -->
+    <div class="relative w-28 input-glow">
+      <input type="number" name="min_price" placeholder="{% trans 'Цена от' %}"
+             value="{{ request.GET.min_price }}"
+             class="w-full bg-gray-50 dark:bg-[#21262d] border border-gray-200 dark:border-[#30363d] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 transition-all">
+    </div>
+
+    <!-- Max price -->
+    <div class="relative w-28 input-glow">
+      <input type="number" name="max_price" placeholder="{% trans 'Цена до' %}"
+             value="{{ request.GET.max_price }}"
+             class="w-full bg-gray-50 dark:bg-[#21262d] border border-gray-200 dark:border-[#30363d] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 transition-all">
+    </div>
+
+    <!-- Submit -->
+    <button type="submit"
+            class="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold btn-press transition-all shadow-lg shadow-brand-500/25">
+      <i class="ti ti-search text-sm"></i> {% trans 'Найти' %}
+    </button>
+
+    <!-- Reset -->
+    {% if request.GET.search or request.GET.category or request.GET.min_price or request.GET.max_price %}
+    <a href="{% url 'catalog' %}" class="flex items-center gap-1.5 text-gray-400 text-sm py-2.5 hover:text-red-500 transition-colors">
+      <i class="ti ti-x text-sm"></i> {% trans 'Сбросить' %}
     </a>
     {% endif %}
+  </form>
 </div>
 
-<!-- Фильтры -->
-<div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-5 mb-8 shadow-sm">
-    <form method="GET" class="flex flex-wrap gap-3 items-end">
-        <div class="relative flex-1 min-w-48">
-            <i class="ti ti-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-            <input type="text" name="search" placeholder="{% trans 'Поиск по названию...' %}"
-                   value="{{ request.GET.search }}"
-                   class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 focus:bg-white dark:focus:bg-gray-800 transition-all">
+<!-- ═══ PRODUCT GRID ═══ -->
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5 stagger">
+  {% for product in products %}
+  <div class="group bg-white dark:bg-[#161b22] rounded-2xl border border-gray-200 dark:border-[#30363d] hover:border-brand-400/40 dark:hover:border-brand-500/40 overflow-hidden card-lift transition-all shadow-sm">
+    <div class="relative overflow-hidden bg-gray-50 dark:bg-[#21262d] aspect-square">
+      {% if product.image %}
+      <a href="{% url 'product_detail' product.pk %}">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+      </a>
+      {% else %}
+      <a href="{% url 'product_detail' product.pk %}" class="w-full h-full flex items-center justify-center">
+        <i class="ti ti-pill text-5xl text-gray-300 dark:text-gray-600 group-hover:scale-110 transition-transform duration-300"></i>
+      </a>
+      {% endif %}
+
+      {% if product.is_prescription %}
+      <div class="absolute top-2 left-2 flex items-center gap-1 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md">
+        <i class="ti ti-file-certificate text-xs"></i>
+        {% trans 'Рецепт' %}
+      </div>
+      {% endif %}
+
+      {% if user.is_authenticated %}
+      <div class="absolute top-2 right-2 z-10">
+        <a href="{% url 'toggle_favorite' product.pk %}"
+           class="flex items-center justify-center w-8 h-8 bg-white/90 dark:bg-[#161b22]/90 backdrop-blur-sm text-gray-400 hover:text-red-500 rounded-full shadow-sm transition-all hover:scale-110">
+          <i class="ti ti-heart text-sm"></i>
+        </a>
+      </div>
+      {% endif %}
+
+      <!-- Quick add overlay -->
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+        <div class="absolute bottom-3 left-3 right-3 flex gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
+          <a href="{% url 'product_detail' product.pk %}"
+             class="flex-1 flex items-center justify-center gap-1.5 bg-white/95 dark:bg-[#161b22]/95 dark:backdrop-blur-md text-gray-700 dark:text-gray-200 text-xs font-semibold px-3 py-2 rounded-xl shadow-lg hover:bg-gray-50 dark:hover:bg-[#21262d] transition-all">
+            <i class="ti ti-eye text-sm"></i>
+            <span>{% trans 'Подробнее' %}</span>
+          </a>
+          <a href="{% url 'add_to_cart' product.pk %}"
+             class="flex items-center justify-center gap-1.5 bg-brand-500 text-white text-xs font-semibold px-3 py-2 rounded-xl shadow-lg hover:bg-brand-600 transition-all">
+            <i class="ti ti-shopping-cart-plus text-sm"></i>
+          </a>
         </div>
-        <select name="category"
-                class="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
-            <option value="">{% trans 'Все категории' %}</option>
-            {% for cat in categories %}
-            <option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>
-                {{ cat.name }}
-            </option>
-            {% endfor %}
-        </select>
-        <div class="relative w-28">
-            <input type="number" name="min_price" placeholder="{% trans 'Цена от' %}"
-                   value="{{ request.GET.min_price }}"
-                   class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
+      </div>
+    </div>
+
+    <div class="p-3.5">
+      <p class="text-[10px] text-gray-400 dark:text-gray-500 mb-1 truncate uppercase tracking-wider">{{ product.manufacturer|default:'' }}</p>
+      <a href="{% url 'product_detail' product.pk %}">
+        <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-sm leading-snug mb-2 line-clamp-2 min-h-[2.5rem] hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+          {{ product.name }}
+        </h3>
+      </a>
+      <div class="flex items-center justify-between">
+        <div class="flex items-baseline gap-0.5">
+          <span class="text-lg font-black text-brand-600 dark:text-brand-400">{{ product.price }}</span>
+          <span class="text-xs text-gray-400">{% trans 'сом' %}</span>
         </div>
-        <div class="relative w-28">
-            <input type="number" name="max_price" placeholder="{% trans 'Цена до' %}"
-                   value="{{ request.GET.max_price }}"
-                   class="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all">
-        </div>
+        <a href="{% url 'add_to_cart' product.pk %}"
+           class="w-8 h-8 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-500 text-brand-600 dark:text-brand-400 hover:text-white rounded-xl flex items-center justify-center btn-press transition-all">
+          <i class="ti ti-plus text-base"></i>
+        </a>
+      </div>
+    </div>
+
+    {% if user.is_staff %}
+    <div class="flex gap-2 p-3.5 pt-0 border-t border-gray-100 dark:border-[#30363d]">
+      <a href="{% url 'product_edit' product.pk %}"
+         class="flex-1 text-center bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs py-2 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all">
+        <i class="ti ti-edit text-xs"></i> {% trans 'Изменить' %}
+      </a>
+      <form method="POST" action="{% url 'product_delete' product.pk %}"
+            onsubmit="return confirm('{% trans "Удалить" %} {{ product.name }}?')">
+        {% csrf_token %}
         <button type="submit"
-                class="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold btn-press transition-all shadow-lg shadow-brand-500/25">
-            <i class="ti ti-search text-sm"></i> {% trans 'Найти' %}
+                class="bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 text-xs px-3 py-2 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition-all">
+          <i class="ti ti-trash text-xs"></i>
         </button>
-        <a href="{% url 'catalog' %}" class="flex items-center gap-1.5 text-gray-400 dark:text-gray-500 text-sm py-2.5 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">
-            <i class="ti ti-x text-sm"></i> {% trans 'Сбросить' %}
-        </a>
-    </form>
-</div>
-
-<!-- Товары -->
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-    {% for product in products %}
-    <div class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 overflow-hidden card-lift hover:border-brand-200 dark:hover:border-brand-800 transition-all">
-        <div class="relative overflow-hidden bg-gray-50 dark:bg-gray-800 aspect-square">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-            {% else %}
-                <div class="w-full h-full flex items-center justify-center">
-                    <i class="ti ti-pill text-5xl text-gray-300 dark:text-gray-600"></i>
-                </div>
-            {% endif %}
-
-            {% if product.is_prescription %}
-            <div class="absolute top-2 left-2 flex items-center gap-1 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-                <i class="ti ti-file-certificate text-xs"></i>
-                {% trans 'Рецепт' %}
-            </div>
-            {% endif %}
-
-            {% if user.is_authenticated %}
-            <div class="absolute top-2 right-2">
-                <a href="{% url 'toggle_favorite' product.pk %}"
-                   class="flex items-center gap-1 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-gray-400 hover:text-red-500 text-xs font-bold px-2 py-1.5 rounded-full shadow-sm transition-all">
-                    <i class="ti ti-heart text-sm"></i>
-                </a>
-            </div>
-            {% endif %}
-
-            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 dark:group-hover:bg-black/30 transition-all flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100">
-                <a href="{% url 'add_to_cart' product.pk %}"
-                   class="flex items-center gap-1.5 bg-white dark:bg-gray-900 text-brand-600 dark:text-brand-400 text-xs font-semibold px-4 py-2 rounded-xl shadow-lg translate-y-2 group-hover:translate-y-0 transition-transform duration-200">
-                    <i class="ti ti-shopping-cart-plus text-sm"></i>
-                    {% trans 'В корзину' %}
-                </a>
-            </div>
-        </div>
-
-        <div class="p-3.5">
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-1 truncate">{{ product.manufacturer }}</p>
-            <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-sm leading-snug mb-2 line-clamp-2 min-h-[2.5rem]">
-                {{ product.name }}
-            </h3>
-            <div class="flex items-center justify-between">
-                <div>
-                    <span class="text-base font-black text-brand-600 dark:text-brand-400">{{ product.price }}</span>
-                    <span class="text-xs text-gray-400 ml-0.5">{% trans 'сом' %}</span>
-                </div>
-                <a href="{% url 'add_to_cart' product.pk %}"
-                   class="w-8 h-8 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-500 text-brand-600 dark:text-brand-400 hover:text-white rounded-xl flex items-center justify-center btn-press transition-all">
-                    <i class="ti ti-plus text-base"></i>
-                </a>
-            </div>
-        </div>
-
-        {% if user.is_staff %}
-        <div class="flex gap-2 p-3.5 pt-0">
-            <a href="{% url 'product_edit' product.pk %}"
-               class="flex-1 text-center bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs py-2 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all">
-                <i class="ti ti-edit text-xs"></i> {% trans 'Изменить' %}
-            </a>
-            <form method="POST" action="{% url 'product_delete' product.pk %}"
-                  onsubmit="return confirm('Удалить {{ product.name }}?')">
-                {% csrf_token %}
-                <button type="submit"
-                        class="bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 text-xs px-3 py-2 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition-all">
-                    <i class="ti ti-trash text-xs"></i>
-                </button>
-            </form>
-        </div>
-        {% endif %}
+      </form>
     </div>
-    {% empty %}
-    <div class="col-span-2 md:col-span-3 lg:col-span-4 text-center py-20">
-        <div class="text-6xl mb-4">
-            <i class="ti ti-search-off text-gray-300 dark:text-gray-600"></i>
-        </div>
-        <p class="text-gray-400 dark:text-gray-500 text-lg mb-2">{% trans 'Ничего не найдено' %}</p>
-        <p class="text-gray-400 dark:text-gray-500 text-sm mb-4">{% trans 'Попробуйте изменить параметры поиска' %}</p>
-        <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 text-brand-600 dark:text-brand-400 text-sm font-semibold hover:underline">
-            <i class="ti ti-refresh text-sm"></i> {% trans 'Сбросить фильтры' %}
-        </a>
+    {% endif %}
+  </div>
+  {% empty %}
+  <div class="col-span-2 sm:col-span-3 lg:col-span-4 text-center py-20">
+    <div class="w-20 h-20 mx-auto mb-4 bg-gray-100 dark:bg-[#21262d] rounded-2xl flex items-center justify-center">
+      <i class="ti ti-search-off text-4xl text-gray-300 dark:text-gray-600"></i>
     </div>
-    {% endfor %}
+    <p class="text-gray-400 text-lg mb-2 font-semibold">{% trans 'Ничего не найдено' %}</p>
+    <p class="text-gray-400 text-sm mb-6">{% trans 'Попробуйте изменить параметры поиска' %}</p>
+    <a href="{% url 'catalog' %}" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold btn-press transition-all shadow-lg shadow-brand-500/25">
+      <i class="ti ti-refresh text-sm"></i> {% trans 'Сбросить фильтры' %}
+    </a>
+  </div>
+  {% endfor %}
 </div>
 
 {% endblock %}

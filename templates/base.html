@@ -7,22 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% trans 'DoriTJ — Онлайн аптека с доставкой по Душанбе' %}">
     <link rel="manifest" href="/static/manifest.json">
-    <meta name="theme-color" content="#16a34a">
+    <meta name="theme-color" content="#22c55e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="DoriTJ">
-    <link rel="icon" type="image/svg+xml" href="/static/icons/icon-192.svg">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2322c55e'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='50' fill='white'%3E💊%3C/text%3E%3C/svg%3E">
     <title>{% block title %}{% trans 'DoruTJ — Онлайн аптека' %}{% endblock %}</title>
 
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- Tabler Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
     <script>
@@ -32,28 +27,24 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
                     colors: {
-                        brand: {
-                            50:  '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#86efac',
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        }
+                        surface: { DEFAULT: '#ffffff', dark: '#0d1117' },
+                        card: { DEFAULT: '#ffffff', dark: '#161b22' },
+                        border: { DEFAULT: '#e5e7eb', dark: '#30363d' },
+                        brand: { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d' }
                     },
                     animation: {
-                        'fade-up':   'fadeUp .5s cubic-bezier(.16,1,.3,1) forwards',
-                        'fade-in':   'fadeIn .3s ease forwards',
-                        'slide-down':'slideDown .25s cubic-bezier(.16,1,.3,1) forwards',
+                        'fade-up': 'fadeUp .5s cubic-bezier(.16,1,.3,1) forwards',
+                        'fade-in': 'fadeIn .3s ease forwards',
+                        'slide-down': 'slideDown .25s cubic-bezier(.16,1,.3,1) forwards',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'float': 'float 3s ease-in-out infinite',
                     },
                     keyframes: {
-                        fadeUp:    { from:{opacity:0,transform:'translateY(20px)'}, to:{opacity:1,transform:'translateY(0)'} },
-                        fadeIn:    { from:{opacity:0}, to:{opacity:1} },
-                        slideDown: { from:{opacity:0,transform:'translateY(-8px)'}, to:{opacity:1,transform:'translateY(0)'} },
+                        fadeUp: { '0%':{opacity:0,transform:'translateY(20px)'}, '100%':{opacity:1,transform:'translateY(0)'} },
+                        fadeIn: { '0%':{opacity:0}, '100%':{opacity:1} },
+                        slideDown: { '0%':{opacity:0,transform:'translateY(-8px)'}, '100%':{opacity:1,transform:'translateY(0)'} },
+                        glow: { '0%':{boxShadow:'0 0 0 rgba(34,197,94,0)'}, '100%':{boxShadow:'0 0 20px rgba(34,197,94,0.3)'} },
+                        float: { '0%,100%':{transform:'translateY(0)'}, '50%':{transform:'translateY(-8px)'} },
                     }
                 }
             }
@@ -61,191 +52,87 @@
     </script>
 
     <style>
-        /* Base */
-        *, *::before, *::after { box-sizing: border-box; }
-        html { font-family: 'Inter', system-ui, sans-serif; }
-
-        /* Smooth transitions for dark mode */
-        body, header, nav, footer, main,
-        .card, .btn, input, select, textarea, button {
-            transition: background-color .25s ease, color .25s ease,
-                        border-color .25s ease, box-shadow .25s ease;
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar              { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track        { background: transparent; }
-        ::-webkit-scrollbar-thumb        { background: #d1d5db; border-radius: 99px; }
-        .dark ::-webkit-scrollbar-thumb  { background: #374151; }
-
-        /* Glass morphism */
-        .glass {
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-        }
-
-        /* Card hover lift */
-        .card-lift {
-            transition: transform .2s cubic-bezier(.16,1,.3,1),
-                        box-shadow .2s ease;
-        }
-        .card-lift:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px -8px rgba(0,0,0,.12);
-        }
-        .dark .card-lift:hover {
-            box-shadow: 0 12px 40px -8px rgba(0,0,0,.5);
-        }
-
-        /* Nav underline animation */
-        .nav-item {
-            position: relative;
-            padding-bottom: 2px;
-        }
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            bottom: -1px; left: 50%; right: 50%;
-            height: 2px;
-            background: #22c55e;
-            border-radius: 99px;
-            transition: left .2s ease, right .2s ease;
-        }
-        .nav-item:hover::after,
-        .nav-item.active::after { left: 0; right: 0; }
-
-        /* Button press effect */
-        .btn-press:active { transform: scale(.97); }
-
-        /* Focus ring */
-        .focus-ring:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(34,197,94,.2);
-        }
-
-        /* Gradient text */
-        .text-gradient {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Notification badge */
-        .badge {
-            position: absolute;
-            top: -4px; right: -4px;
-            width: 16px; height: 16px;
-            background: #ef4444;
-            border-radius: 50%;
-            font-size: 10px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-        }
-        .dark .badge { border-color: #111827; }
-
-        /* Dropdown animation */
-        .dropdown {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-8px);
-            transition: opacity .2s ease, visibility .2s ease, transform .2s cubic-bezier(.16,1,.3,1);
-        }
-        .dropdown-trigger:hover .dropdown,
-        .dropdown-trigger:focus-within .dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        /* Mobile menu */
-        #mobile-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height .35s cubic-bezier(.16,1,.3,1);
-        }
-        #mobile-menu.open { max-height: 600px; }
-
-        /* Mobile overlay */
-        #mobile-overlay {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .3s ease;
-        }
-        #mobile-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Better touch targets on mobile */
-        @media (max-width: 1023px) {
-            .mobile-touch { min-height: 44px; }
-        }
-
-        /* Hide scrollbar for nav */
-        .scrollbar-none::-webkit-scrollbar { display: none; }
-        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Pulse animation for notification dot */
-        .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        /* Stagger children */
-        .stagger > * { opacity: 0; animation: fadeUp .45s cubic-bezier(.16,1,.3,1) forwards; }
-        .stagger > *:nth-child(1) { animation-delay: .05s; }
-        .stagger > *:nth-child(2) { animation-delay: .10s; }
-        .stagger > *:nth-child(3) { animation-delay: .15s; }
-        .stagger > *:nth-child(4) { animation-delay: .20s; }
-        .stagger > *:nth-child(5) { animation-delay: .25s; }
-        .stagger > *:nth-child(6) { animation-delay: .30s; }
+        *,*::before,*::after{box-sizing:border-box}
+        html{font-family:'Inter',system-ui,sans-serif}
+        body,header,nav,footer,main,.card,.btn,input,select,textarea,button{transition:background-color .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease}
+        ::-webkit-scrollbar{width:4px;height:4px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:99px}
+        .dark ::-webkit-scrollbar-thumb{background:#30363d}
+        .glass{backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
+        .card-lift{transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s ease}
+        .card-lift:hover{transform:translateY(-2px);box-shadow:0 12px 40px -8px rgba(0,0,0,.12)}
+        .dark .card-lift:hover{box-shadow:0 12px 40px -8px rgba(0,0,0,.5)}
+        .nav-item{position:relative}
+        .nav-item::after{content:'';position:absolute;bottom:0;left:50%;right:50%;height:2px;background:#22c55e;border-radius:99px;transition:left .2s ease,right .2s ease}
+        .nav-item:hover::after,.nav-item.active::after{left:0;right:0}
+        .btn-press:active{transform:scale(.97)}
+        .focus-ring:focus{outline:none;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+        .text-gradient{background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#ef4444;border-radius:50%;font-size:9px;color:white;display:flex;align-items:center;justify-content:center;border:2px solid white;font-weight:700}
+        .dark .badge{border-color:#0d1117}
+        #mobile-menu{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.16,1,.3,1)}
+        #mobile-menu.open{max-height:600px}
+        #mobile-overlay{opacity:0;pointer-events:none;transition:opacity .3s ease}
+        #mobile-overlay.open{opacity:1;pointer-events:auto}
+        .scrollbar-none::-webkit-scrollbar{display:none}
+        .scrollbar-none{-ms-overflow-style:none;scrollbar-width:none}
+        .stagger>*{opacity:0;animation:fadeUp .45s cubic-bezier(.16,1,.3,1) forwards}
+        .stagger>*:nth-child(1){animation-delay:.05s}
+        .stagger>*:nth-child(2){animation-delay:.10s}
+        .stagger>*:nth-child(3){animation-delay:.15s}
+        .stagger>*:nth-child(4){animation-delay:.20s}
+        .stagger>*:nth-child(5){animation-delay:.25s}
+        .stagger>*:nth-child(6){animation-delay:.30s}
+        .stagger>*:nth-child(7){animation-delay:.35s}
+        .stagger>*:nth-child(8){animation-delay:.40s}
+        .glow-border{border:1px solid transparent;background-clip:padding-box;position:relative}
+        .glow-border::before{content:'';position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg,rgba(34,197,94,.3),transparent,rgba(34,197,94,.1));z-index:-1;opacity:0;transition:opacity .3s ease}
+        .glow-border:hover::before{opacity:1}
+        @media(max-width:1023px){.mobile-touch{min-height:44px}}
+        .sidebar-item{position:relative;overflow:hidden}
+        .sidebar-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:0;background:#22c55e;border-radius:0 3px 3px 0;transition:height .2s ease}
+        .sidebar-item:hover::before,.sidebar-item.active::before{height:60%}
+        .input-glow:focus-within{box-shadow:0 0 0 3px rgba(34,197,94,.15),0 0 20px rgba(34,197,94,.08)}
     </style>
-
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="bg-white dark:bg-[#090d0b] text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col overflow-x-hidden">
+<body class="bg-surface dark:bg-[#0d1117] text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col overflow-x-hidden">
 
-<!-- ═══════════════════════════════ TOP BAR ═══════════════════════════════ -->
-<div class="hidden md:block bg-gradient-to-r from-brand-600 to-brand-500 dark:from-brand-700 dark:to-brand-600 text-white">
+<!-- ═══ TOP BAR ═══ -->
+<div class="hidden md:block bg-[#0d1117] text-white/80 border-b border-white/5">
     <div class="max-w-7xl mx-auto px-4 md:px-6 py-1.5">
-        <div class="flex items-center justify-between text-xs font-medium">
-            <div class="flex items-center gap-4 opacity-90">
-                <a href="tel:+99244XXXXXXX" class="flex items-center gap-1.5 hover:opacity-100 transition-opacity">
-                    <i class="ti ti-phone-call"></i>
-                    +992 44 XXX XX XX
+        <div class="flex items-center justify-between text-[11px] font-medium tracking-wide">
+            <div class="flex items-center gap-5">
+                <a href="tel:+99244XXXXXXX" class="flex items-center gap-1.5 hover:text-white transition-colors">
+                    <i class="ti ti-phone-call text-brand-400 text-xs"></i> +992 44 XXX XX XX
                 </a>
-                <span class="hidden lg:flex items-center gap-1.5 opacity-80">
-                    <i class="ti ti-map-pin"></i>
+                <span class="hidden lg:flex items-center gap-1.5 text-white/50">
+                    <i class="ti ti-map-pin text-brand-400/60 text-xs"></i>
                     {% trans 'Душанбе, Таджикистан' %}
                 </span>
             </div>
-            <div class="flex items-center gap-4 opacity-80">
+            <div class="flex items-center gap-5 text-white/50">
                 <span class="flex items-center gap-1.5">
-                    <i class="ti ti-truck-delivery"></i>
+                    <i class="ti ti-truck-delivery text-brand-400/60 text-xs"></i>
                     {% trans 'Доставка за 2 часа' %}
                 </span>
                 <span class="flex items-center gap-1.5">
-                    <i class="ti ti-clock"></i>
-                    08:00—22:00
+                    <i class="ti ti-clock text-brand-400/60 text-xs"></i> 08:00—22:00
                 </span>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
-<header id="header" class="sticky top-0 z-50 glass bg-white/80 dark:bg-[#090d0b]/80 border-b border-gray-200/60 dark:border-gray-800/60">
+<!-- ═══ HEADER ═══ -->
+<header id="header" class="sticky top-0 z-50 glass bg-white/80 dark:bg-[#0d1117]/80 border-b border-gray-200/60 dark:border-[#30363d]/60">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <div class="flex items-center justify-between h-14 md:h-16 gap-2">
 
-            <!-- Logo -->
-            <a href="{% url 'home' %}" class="flex items-center gap-2 group flex-shrink-0">
-                <div class="w-7 h-7 md:w-8 md:h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center shadow-md shadow-brand-500/30 group-hover:scale-105 transition-all duration-200">
+            <a href="{% url 'home' %}" class="flex items-center gap-2.5 group flex-shrink-0">
+                <div class="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:scale-105 group-hover:shadow-brand-500/40 transition-all duration-300">
                     <i class="ti ti-pill text-white text-sm md:text-base"></i>
                 </div>
                 <span class="text-sm md:text-base font-black tracking-tight">
@@ -253,86 +140,75 @@
                 </span>
             </a>
 
-            <!-- Actions -->
-            <div class="flex items-center gap-1.5 md:gap-2">
-
-                <!-- Search -->
+            <div class="flex items-center gap-1 md:gap-1.5">
                 {% if user.is_authenticated and not user.is_courier and not user.is_manager %}
-                <form method="GET" action="{% url 'catalog' %}" class="hidden md:flex">
-                    <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent hover:border-brand-300 dark:hover:border-brand-700 focus-within:border-brand-500 focus-within:bg-white dark:focus-within:bg-gray-700 transition-all w-40 lg:w-48 xl:w-56">
+                <form method="GET" action="{% url 'catalog' %}" class="hidden md:flex input-glow">
+                    <div class="flex items-center bg-gray-100 dark:bg-[#161b22] rounded-xl border border-gray-200 dark:border-[#30363d] hover:border-brand-400/50 dark:hover:border-brand-500/50 focus-within:border-brand-500 transition-all w-36 lg:w-44 xl:w-52">
                         <i class="ti ti-search text-gray-400 text-sm ml-2.5 flex-shrink-0"></i>
-                        <input type="text" name="search"
-                               placeholder="{% trans 'Поиск...' %}"
-                               class="flex-1 bg-transparent px-2 py-1.5 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none">
+                        <input type="text" name="search" placeholder="{% trans 'Поиск...' %}"
+                            class="flex-1 bg-transparent px-2 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none">
+                        <kbd class="hidden xl:inline-flex mr-2 text-[10px] text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-[#21262d] px-1.5 py-0.5 rounded font-mono">/</kbd>
                     </div>
                 </form>
                 {% endif %}
 
-                <!-- Language (compact on mobile) -->
                 <form action="{% url 'set_language' %}" method="post" id="lang-form" class="flex">
                     {% csrf_token %}
                     <input name="next" type="hidden" value="{{ request.path }}">
-                    <div class="flex items-center gap-0.5 bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 border border-gray-200 dark:border-gray-700">
-                        <button type="submit" name="language" value="ru"
-                                class="px-1.5 md:px-2 py-1 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'ru' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">RU</button>
-                        <button type="submit" name="language" value="tg"
-                                class="px-1.5 md:px-2 py-1 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'tg' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">TG</button>
-                        <button type="submit" name="language" value="en"
-                                class="px-1.5 md:px-2 py-1 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200 {% if LANGUAGE_CODE == 'en' %}bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">EN</button>
+                    <div class="flex items-center gap-0.5 bg-gray-100 dark:bg-[#161b22] rounded-lg p-0.5 border border-gray-200 dark:border-[#30363d]">
+                        {% for code, label in LANGUAGES %}
+                        <button type="submit" name="language" value="{{ code }}"
+                            class="px-1.5 md:px-2 py-1 rounded-md text-[10px] md:text-xs font-semibold transition-all duration-200 tracking-wider
+                            {% if LANGUAGE_CODE == code %}bg-white dark:bg-[#21262d] text-brand-600 dark:text-brand-400 shadow-sm{% else %}text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300{% endif %}">{{ code|upper }}</button>
+                        {% endfor %}
                     </div>
                 </form>
 
-                <!-- Theme -->
                 <button onclick="toggleTheme()" id="theme-btn"
-                        class="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 btn-press transition-all">
+                    class="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#21262d] hover:text-gray-700 dark:hover:text-gray-200 btn-press transition-all">
                     <i id="theme-icon" class="ti ti-moon text-sm md:text-[17px]"></i>
                 </button>
 
                 {% if user.is_authenticated %}
-
-                <!-- Notifications -->
                 <a href="{% url 'notifications' %}"
-                   class="relative w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand-600 btn-press transition-all"
-                   id="notification-btn">
+                    class="relative w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#21262d] hover:text-brand-500 btn-press transition-all"
+                    id="notification-btn">
                     <i class="ti ti-bell text-sm md:text-[17px]"></i>
                     <span id="notification-badge" class="badge hidden">0</span>
                 </a>
 
                 {% if not user.is_courier and not user.is_manager %}
                 <a href="{% url 'cart' %}"
-                   class="relative w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand-600 btn-press transition-all">
+                    class="relative w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#21262d] hover:text-brand-500 btn-press transition-all">
                     <i class="ti ti-shopping-cart text-sm md:text-[17px]"></i>
                 </a>
                 {% endif %}
 
-                <!-- Profile dropdown -->
-                <div class="dropdown-trigger relative">
-                    <button class="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 pl-1.5 pr-2 md:pl-2 md:pr-2.5 py-1 md:py-1.5 rounded-xl btn-press transition-all">
+                <div class="relative" id="profile-dropdown">
+                    <button onclick="toggleProfileDropdown(event)"
+                            class="flex items-center gap-1.5 bg-gray-100 dark:bg-[#161b22] hover:bg-gray-200 dark:hover:bg-[#21262d] pl-1.5 pr-2 md:pl-2 md:pr-2.5 py-1 md:py-1.5 rounded-xl btn-press transition-all border border-transparent hover:border-gray-200 dark:hover:border-[#30363d]">
                         <div class="w-5 h-5 md:w-6 md:h-6 rounded-lg overflow-hidden flex-shrink-0">
                             {% if user.avatar %}
-                                <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
+                            <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
                             {% else %}
-                                <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-[10px] md:text-xs font-bold">
-                                    {{ user.username|first|upper }}
-                                </div>
+                            <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-[10px] md:text-xs font-bold">
+                                {{ user.username|first|upper }}
+                            </div>
                             {% endif %}
                         </div>
-                        <span class="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-200 max-w-[64px] truncate">
-                            {{ user.username }}
-                        </span>
+                        <span class="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-200 max-w-[64px] truncate">{{ user.username }}</span>
                     </button>
 
-                    <!-- Dropdown -->
-                    <div class="dropdown absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 rounded-2xl shadow-xl shadow-black/10 dark:shadow-black/40 border border-gray-100 dark:border-gray-800 overflow-hidden z-50">
-                        <div class="p-3 bg-gradient-to-br from-brand-50 to-emerald-50 dark:from-brand-900/20 dark:to-emerald-900/20 border-b border-gray-100 dark:border-gray-800">
+                    <div id="profile-menu" class="hidden absolute right-0 top-full mt-2 w-52 bg-white dark:bg-[#161b22] rounded-2xl shadow-xl shadow-black/10 dark:shadow-black/40 border border-gray-100 dark:border-[#30363d] overflow-hidden z-50">
+                        <div class="p-3 bg-gradient-to-br from-brand-50 to-emerald-50 dark:from-brand-900/20 dark:to-emerald-900/20 border-b border-gray-100 dark:border-[#30363d]">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
                                     {% if user.avatar %}
-                                        <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
+                                    <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
                                     {% else %}
-                                        <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-bold">
-                                            {{ user.username|first|upper }}
-                                        </div>
+                                    <div class="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-bold">
+                                        {{ user.username|first|upper }}
+                                    </div>
                                     {% endif %}
                                 </div>
                                 <div class="min-w-0">
@@ -341,30 +217,29 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="p-1.5">
                             {% if not user.is_courier and not user.is_manager %}
-                            <a href="{% url 'profile' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <a href="{% url 'profile' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
                                 <i class="ti ti-user text-base text-gray-400 w-5"></i> {% trans 'Профиль' %}
                             </a>
-                            <a href="{% url 'notifications' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <a href="{% url 'notifications' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
                                 <i class="ti ti-bell text-base text-gray-400 w-5"></i> {% trans 'Уведомления' %}
                             </a>
-                            <a href="{% url 'my_orders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <a href="{% url 'my_orders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
                                 <i class="ti ti-package text-base text-gray-400 w-5"></i> {% trans 'Мои заказы' %}
                             </a>
-                            <a href="{% url 'favorites' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <a href="{% url 'favorites' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
                                 <i class="ti ti-star text-base text-gray-400 w-5"></i> {% trans 'Избранное' %}
                             </a>
-                            <a href="{% url 'consultant' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <a href="{% url 'consultant' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
                                 <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'AI Консультант' %}
                             </a>
-                            <a href="{% url 'reminders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <a href="{% url 'reminders' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#21262d] transition-colors">
                                 <i class="ti ti-bell-plus text-base text-gray-400 w-5"></i> {% trans 'Напоминания' %}
                             </a>
                             {% endif %}
                             {% if user.is_staff %}
-                            <div class="h-px bg-gray-100 dark:bg-gray-800 my-1.5 mx-1"></div>
+                            <div class="h-px bg-gray-100 dark:bg-[#30363d] my-1.5 mx-1"></div>
                             <a href="{% url 'product_list' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
                                 <i class="ti ti-settings text-base w-5"></i> {% trans 'Управление' %}
                             </a>
@@ -382,7 +257,7 @@
                                 <i class="ti ti-building-store text-base w-5"></i> {% trans 'Моя аптека' %}
                             </a>
                             {% endif %}
-                            <div class="h-px bg-gray-100 dark:bg-gray-800 my-1.5 mx-1"></div>
+                            <div class="h-px bg-gray-100 dark:bg-[#30363d] my-1.5 mx-1"></div>
                             <a href="{% url 'logout' %}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                                 <i class="ti ti-logout text-base w-5"></i> {% trans 'Выйти' %}
                             </a>
@@ -392,79 +267,53 @@
 
                 {% else %}
                 <a href="{% url 'login_user' %}"
-                   class="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-brand-600 px-2 md:px-3 py-1.5 md:py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 btn-press transition-all">
+                    class="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-brand-500 px-2 md:px-3 py-1.5 md:py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262d] btn-press transition-all">
                     {% trans 'Войти' %}
                 </a>
                 <a href="{% url 'register' %}"
-                   class="text-xs md:text-sm font-semibold bg-brand-500 hover:bg-brand-600 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-xl shadow-lg shadow-brand-500/25 btn-press transition-all">
+                    class="text-xs md:text-sm font-semibold bg-brand-500 hover:bg-brand-600 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-xl shadow-lg shadow-brand-500/25 btn-press transition-all">
                     {% trans 'Регистрация' %}
                 </a>
                 {% endif %}
 
-                <!-- Mobile menu button (compact) -->
                 <button onclick="toggleMobile()"
-                        class="lg:hidden flex items-center gap-1 px-2 py-1.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 btn-press transition-all">
+                    class="lg:hidden flex items-center gap-1 px-2 py-1.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#21262d] btn-press transition-all">
                     <i id="mobile-icon" class="ti ti-menu-2 text-lg"></i>
                 </button>
             </div>
         </div>
-
     </div>
 
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="lg:hidden relative z-50 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-[#090d0b] shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 py-4 space-y-0.5">
+    <div id="mobile-menu" class="lg:hidden border-t border-gray-100 dark:border-[#30363d] bg-white dark:bg-[#0d1117] shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 py-4 space-y-1">
             {% if user.is_authenticated %}
             {% if not user.is_courier and not user.is_manager %}
-
-            <!-- Mobile search -->
-            <form method="GET" action="{% url 'catalog' %}" class="mb-3">
-                <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl border border-transparent focus-within:border-brand-500 transition-all overflow-hidden">
+            <form method="GET" action="{% url 'catalog' %}" class="mb-4 input-glow">
+                <div class="flex items-center bg-gray-100 dark:bg-[#161b22] rounded-xl border border-gray-200 dark:border-[#30363d] focus-within:border-brand-500 transition-all overflow-hidden">
                     <i class="ti ti-search text-gray-400 text-sm ml-3.5 flex-shrink-0"></i>
                     <input type="text" name="search" placeholder="{% trans 'Поиск лекарств...' %}"
-                           class="flex-1 bg-transparent px-3 py-2.5 text-sm focus:outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400">
+                        class="flex-1 bg-transparent px-3 py-3 text-sm focus:outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400">
                 </div>
             </form>
 
-            <div class="grid grid-cols-2 gap-2 mb-3">
-                <a href="{% url 'home' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-home text-base text-gray-400 w-5"></i> {% trans 'Главная' %}
+            <div class="grid grid-cols-2 gap-2">
+                {% for item in mobile_nav_items %}
+                <a href="{{ item.url }}" onclick="toggleMobile()"
+                    class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-[#161b22]">
+                    <i class="{{ item.icon }} text-base text-gray-400 w-5"></i> {{ item.label }}
                 </a>
-                <a href="{% url 'catalog' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-pill text-base text-gray-400 w-5"></i> {% trans 'Каталог' %}
-                </a>
-                <a href="{% url 'pharmacy_list' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-building-hospital text-base text-gray-400 w-5"></i> {% trans 'Аптеки' %}
-                </a>
-                <a href="{% url 'consultant' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-robot text-base text-gray-400 w-5"></i> AI
-                </a>
-                <a href="{% url 'my_orders' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-package text-base text-gray-400 w-5"></i> {% trans 'Заказы' %}
-                </a>
-                <a href="{% url 'favorites' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-star text-base text-gray-400 w-5"></i> {% trans 'Избранное' %}
-                </a>
-                <a href="{% url 'symptom_search' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'Симптомы' %}
-                </a>
-                <a href="{% url 'reminders' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-bell-plus text-base text-gray-400 w-5"></i> {% trans 'Напоминания' %}
-                </a>
-                <a href="{% url 'cart' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <i class="ti ti-shopping-cart text-base text-gray-400 w-5"></i> {% trans 'Корзина' %}
-                </a>
+                {% endfor %}
             </div>
             {% endif %}
-            <div class="h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
+            <div class="h-px bg-gray-100 dark:bg-[#30363d] my-3"></div>
             <a href="{% url 'logout' %}" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
                 <i class="ti ti-logout text-base w-5"></i> {% trans 'Выйти' %}
             </a>
             {% else %}
-            <a href="{% url 'login_user' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+            <a href="{% url 'login_user' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all bg-gray-50 dark:bg-[#161b22]">
                 <i class="ti ti-login text-base w-5"></i> {% trans 'Войти' %}
             </a>
-            <a href="{% url 'register' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/15 transition-all">
+            <a href="{% url 'register' %}" onclick="toggleMobile()" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/15 transition-all bg-gray-50 dark:bg-[#161b22]">
                 <i class="ti ti-user-plus text-base w-5"></i> {% trans 'Регистрация' %}
             </a>
             {% endif %}
@@ -472,253 +321,203 @@
     </div>
 </header>
 
-<!-- Mobile overlay -->
-<div id="mobile-overlay" onclick="toggleMobile()" class="lg:hidden fixed inset-0 z-30 bg-black/40 backdrop-blur-sm"></div>
+<div id="mobile-overlay" onclick="toggleMobile()" class="lg:hidden fixed inset-0 z-30 bg-black/50 backdrop-blur-sm"></div>
 
-<!-- ══════════════════════════════ MESSAGES ═══════════════════════════════ -->
 {% if messages %}
 <div class="max-w-7xl mx-auto px-4 md:px-6 pt-4 space-y-2" id="messages-container">
     {% for msg in messages %}
     <div class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium border animate-slide-down
-                {% if msg.tags == 'success' %}
-                    bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400
-                {% elif msg.tags == 'error' %}
-                    bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400
-                {% elif msg.tags == 'warning' %}
-                    bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400
-                {% else %}
-                    bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400
-                {% endif %}">
+        {% if msg.tags == 'success' %}bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400
+        {% elif msg.tags == 'error' %}bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400
+        {% elif msg.tags == 'warning' %}bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400
+        {% else %}bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400{% endif %}">
         <i class="ti {% if msg.tags == 'success' %}ti-circle-check{% elif msg.tags == 'error' %}ti-circle-x{% elif msg.tags == 'warning' %}ti-alert-triangle{% else %}ti-info-circle{% endif %} text-lg flex-shrink-0"></i>
         <span class="flex-1">{{ msg }}</span>
-        <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 transition-opacity">
-            <i class="ti ti-x text-base"></i>
-        </button>
+        <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 transition-opacity"><i class="ti ti-x text-base"></i></button>
     </div>
     {% endfor %}
 </div>
 {% endif %}
 
-<!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
-<main class="flex-1 w-full overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 animate-fade-up lg:flex lg:gap-8">
-        <div class="flex-1 min-w-0">
-            {% block content %}{% endblock %}
-        </div>
-
-        <!-- Left sidebar nav (desktop) -->
-        {% if user.is_authenticated %}
+<main class="flex-1 w-full">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 animate-fade-up lg:flex lg:gap-10">
+        {% if user.is_authenticated and not user.is_courier and not user.is_manager %}
         <aside class="hidden lg:block w-40 flex-shrink-0 order-first">
-            <nav class="sticky top-20 flex flex-col gap-1">
-                {% if user.is_courier %}
-                <a href="{% url 'courier_dashboard' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-600 dark:hover:text-orange-400 transition-all">
-                    <i class="ti ti-bike text-base w-5"></i> {% trans 'Курьер' %}
+            <nav class="sticky top-20 flex flex-col gap-0.5">
+                {% url 'catalog' as catalog_url %}
+                {% url 'pharmacy_list' as pharmacy_url %}
+                {% url 'consultant' as consultant_url %}
+                {% url 'my_orders' as orders_url %}
+                {% url 'favorites' as favorites_url %}
+                {% url 'symptom_search' as symptom_url %}
+                {% url 'reminders' as reminders_url %}
+                {% with request.path as path %}
+                <a href="{{ catalog_url }}"
+                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    {% if path == catalog_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
+                    <i class="ti ti-pill text-base w-5"></i> {% trans 'Каталог' %}
                 </a>
-                {% elif user.is_manager %}
-                <a href="{% url 'manager_dashboard' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:text-purple-600 dark:hover:text-purple-400 transition-all">
-                    <i class="ti ti-building-store text-base w-5"></i> {% trans 'Аптека' %}
+                <a href="{{ pharmacy_url }}"
+                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    {% if path == pharmacy_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
+                    <i class="ti ti-building-hospital text-base w-5"></i> {% trans 'Аптеки' %}
                 </a>
-                {% else %}
-                <a href="{% url 'catalog' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                    <i class="ti ti-pill text-base text-gray-400 w-5"></i> {% trans 'Каталог' %}
+                <div class="h-px bg-gray-100 dark:bg-[#30363d] my-2 mx-2"></div>
+                <a href="{{ consultant_url }}"
+                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    {% if path == consultant_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
+                    <i class="ti ti-robot text-base w-5"></i> AI {% trans 'Консультант' %}
                 </a>
-                <a href="{% url 'pharmacy_list' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                    <i class="ti ti-building-hospital text-base text-gray-400 w-5"></i> {% trans 'Аптеки' %}
+                <a href="{{ orders_url }}"
+                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    {% if path == orders_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
+                    <i class="ti ti-package text-base w-5"></i> {% trans 'Заказы' %}
                 </a>
-                <div class="h-px bg-gray-100 dark:bg-gray-800 my-1.5 mx-1"></div>
-                <a href="{% url 'consultant' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                    <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'AI Консультант' %}
+                <a href="{{ favorites_url }}"
+                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    {% if path == favorites_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
+                    <i class="ti ti-star text-base w-5"></i> {% trans 'Избранное' %}
                 </a>
-                <a href="{% url 'my_orders' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                    <i class="ti ti-package text-base text-gray-400 w-5"></i> {% trans 'Заказы' %}
+                <a href="{{ symptom_url }}"
+                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    {% if path == symptom_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
+                    <i class="ti ti-robot text-base w-5"></i> {% trans 'Симптомы' %}
                 </a>
-                <a href="{% url 'favorites' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                    <i class="ti ti-star text-base text-gray-400 w-5"></i> {% trans 'Избранное' %}
+                <a href="{{ reminders_url }}"
+                    class="sidebar-item flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    {% if path == reminders_url %}text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#21262d]{% endif %}">
+                    <i class="ti ti-bell-plus text-base w-5"></i> {% trans 'Напоминания' %}
                 </a>
-                <a href="{% url 'symptom_search' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                    <i class="ti ti-robot text-base text-gray-400 w-5"></i> {% trans 'Поиск по симптомам' %}
-                </a>
-                <a href="{% url 'reminders' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/15 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-                    <i class="ti ti-bell-plus text-base text-gray-400 w-5"></i> {% trans 'Напоминания' %}
-                </a>
-                {% endif %}
+                {% endwith %}
             </nav>
         </aside>
         {% endif %}
+        <div class="flex-1 min-w-0">
+            {% block content %}{% endblock %}
+        </div>
     </div>
 </main>
-<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
-<footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-auto">
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="bg-white dark:bg-[#0d1117] border-t border-gray-200 dark:border-[#30363d] mt-auto">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
-
-        <!-- Main footer -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
-
-            <!-- Brand -->
             <div class="col-span-2 md:col-span-1">
                 <a href="{% url 'home' %}" class="flex items-center gap-2.5 mb-4 group">
-                    <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-brand-500/30">
                         <i class="ti ti-pill text-white text-sm"></i>
                     </div>
                     <span class="font-black text-gray-900 dark:text-white">Dori<span class="text-gradient">TJ</span></span>
                 </a>
-                <p class="text-gray-400 dark:text-gray-500 text-sm leading-relaxed mb-5">
+                <p class="text-gray-400 dark:text-gray-500 text-sm leading-relaxed mb-5 max-w-xs">
                     {% trans 'Онлайн аптека с доставкой по Душанбе. Лекарства, витамины и многое другое.' %}
                 </p>
-                <!-- Theme toggle in footer -->
                 <button onclick="toggleTheme()"
-                        class="inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-xl text-xs font-medium text-gray-500 dark:text-gray-400 btn-press transition-all">
+                    class="inline-flex items-center gap-2 bg-gray-100 dark:bg-[#161b22] hover:bg-gray-200 dark:hover:bg-[#21262d] px-3 py-2 rounded-xl text-xs font-medium text-gray-500 dark:text-gray-400 btn-press transition-all border border-transparent hover:border-gray-200 dark:hover:border-[#30363d]">
                     <i id="footer-icon" class="ti ti-moon text-sm"></i>
                     <span id="footer-text">{% trans 'Тёмная тема' %}</span>
                 </button>
             </div>
-
-            <!-- Links -->
             <div>
-                <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4">{% trans 'Покупателям' %}</h4>
+                <h4 class="text-xs font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">{% trans 'Покупателям' %}</h4>
                 <ul class="space-y-3">
-                    {% for url, icon, label in footer_links_buyers %}
-                    {% empty %}
-                    <li><a href="{% url 'catalog' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-pill text-xs"></i>{% trans 'Каталог' %}</a></li>
-                    <li><a href="{% url 'pharmacy_list' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-building-hospital text-xs"></i>{% trans 'Аптеки' %}</a></li>
-                    <li><a href="{% url 'cart' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-shopping-cart text-xs"></i>{% trans 'Корзина' %}</a></li>
-                    <li><a href="{% url 'my_orders' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-package text-xs"></i>{% trans 'Мои заказы' %}</a></li>
-                    {% endfor %}
+                    <li><a href="{% url 'catalog' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-pill text-[10px] text-brand-400"></i>{% trans 'Каталог' %}</a></li>
+                    <li><a href="{% url 'pharmacy_list' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-building-hospital text-[10px] text-brand-400"></i>{% trans 'Аптеки' %}</a></li>
+                    <li><a href="{% url 'cart' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-shopping-cart text-[10px] text-brand-400"></i>{% trans 'Корзина' %}</a></li>
+                    <li><a href="{% url 'my_orders' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-package text-[10px] text-brand-400"></i>{% trans 'Мои заказы' %}</a></li>
                 </ul>
             </div>
-
             <div>
-                <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4">{% trans 'Сервисы' %}</h4>
+                <h4 class="text-xs font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">{% trans 'Сервисы' %}</h4>
                 <ul class="space-y-3">
-                    <li><a href="{% url 'consultant' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-robot text-xs"></i>{% trans 'AI Консультант' %}</a></li>
-                    <li><a href="#" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-truck-delivery text-xs"></i>{% trans 'Доставка' %}</a></li>
-                    <li><a href="#" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-info-circle text-xs"></i>{% trans 'О нас' %}</a></li>
+                    <li><a href="{% url 'consultant' %}" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-robot text-[10px] text-brand-400"></i>{% trans 'AI Консультант' %}</a></li>
+                    <li><a href="#" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-truck-delivery text-[10px] text-brand-400"></i>{% trans 'Доставка' %}</a></li>
+                    <li><a href="#" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-info-circle text-[10px] text-brand-400"></i>{% trans 'О нас' %}</a></li>
                 </ul>
             </div>
-
             <div>
-                <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4">{% trans 'Контакты' %}</h4>
+                <h4 class="text-xs font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">{% trans 'Контакты' %}</h4>
                 <ul class="space-y-3">
-                    <li class="flex items-start gap-2 text-sm text-gray-400 dark:text-gray-500">
-                        <i class="ti ti-map-pin text-xs mt-0.5 flex-shrink-0"></i>
-                        {% trans 'Душанбе, Таджикистан' %}
-                    </li>
-                    <li>
-                        <a href="tel:+992XXXXXXXXX" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors">
-                            <i class="ti ti-phone text-xs"></i>+992 XX XXX XXXX
-                        </a>
-                    </li>
-                    <li>
-                        <a href="mailto:info@doritj.tj" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors">
-                            <i class="ti ti-mail text-xs"></i>info@doritj.tj
-                        </a>
-                    </li>
-                    <li class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
-                        <i class="ti ti-clock text-xs"></i>08:00 — 22:00
-                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-400 dark:text-gray-500"><i class="ti ti-map-pin text-[10px] text-brand-400 mt-0.5 flex-shrink-0"></i>{% trans 'Душанбе, Таджикистан' %}</li>
+                    <li><a href="tel:+992XXXXXXXXX" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-phone text-[10px] text-brand-400"></i>+992 XX XXX XXXX</a></li>
+                    <li><a href="mailto:info@doritj.tj" class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-brand-500 transition-colors"><i class="ti ti-mail text-[10px] text-brand-400"></i>info@doritj.tj</a></li>
+                    <li class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500"><i class="ti ti-clock text-[10px] text-brand-400"></i>08:00 — 22:00</li>
                 </ul>
             </div>
         </div>
-
-        <!-- Bottom bar -->
-        <div class="border-t border-gray-100 dark:border-gray-800 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
-            <p class="text-sm text-gray-400 dark:text-gray-500">
-                {% blocktrans %}© 2025 DoriTJ. Все права защищены.{% endblocktrans %}
-            </p>
-            <p class="text-sm text-gray-400 dark:text-gray-500 flex items-center gap-1.5">
-                <i class="ti ti-heart text-red-400 text-xs"></i>
-                {% trans 'Сделано в Таджикистане' %}
-            </p>
+        <div class="border-t border-gray-100 dark:border-[#30363d] py-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p class="text-sm text-gray-400 dark:text-gray-500">{% blocktrans %}© 2025 DoriTJ. Все права защищены.{% endblocktrans %}</p>
+            <p class="text-sm text-gray-400 dark:text-gray-500 flex items-center gap-1.5"><i class="ti ti-heart text-red-400 text-xs"></i>{% trans 'Сделано в Таджикистане' %}</p>
         </div>
     </div>
 </footer>
 
 {% block extra_scripts %}{% endblock %}
 
-<!-- ══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
 <script>
-    // ── Notifications ──────────────────────────────────────────────────────
     function updateNotificationCount() {
-        fetch('/notifications/count/')
-            .then(r => r.json())
-            .then(data => {
-                const badge = document.getElementById('notification-badge');
-                if (data.count > 0) {
-                    badge.textContent = data.count;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            })
-            .catch(() => {});
+        fetch('/notifications/count/').then(r=>r.json()).then(data=>{
+            const badge=document.getElementById('notification-badge');
+            if(data.count>0){badge.textContent=data.count;badge.classList.remove('hidden')}
+            else{badge.classList.add('hidden')}
+        }).catch(()=>{});
     }
     {% if user.is_authenticated %}
     updateNotificationCount();
-    setInterval(updateNotificationCount, 15000);
+    setInterval(updateNotificationCount,15000);
     {% endif %}
-
-    // ── PWA ─────────────────────────────────────────────────────────────────
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/static/service-worker.js')
-            .catch(() => {});
-    }
-
-    // ── Theme ──────────────────────────────────────────────────────────────
-    const html = document.documentElement;
-    const saved = localStorage.getItem('doritj-theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (saved === 'dark' || (!saved && prefersDark)) {
-        html.classList.add('dark');
-        syncThemeUI(true);
-    }
-
-    function toggleTheme() {
-        const isDark = html.classList.toggle('dark');
-        localStorage.setItem('doritj-theme', isDark ? 'dark' : 'light');
+    if('serviceWorker'in navigator){navigator.serviceWorker.register('/static/service-worker.js').catch(()=>{});}
+    const html=document.documentElement;
+    const saved=localStorage.getItem('doritj-theme');
+    const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if(saved==='dark'||(!saved&&prefersDark)){html.classList.add('dark');syncThemeUI(true);}
+    function toggleTheme(){
+        const isDark=html.classList.toggle('dark');
+        localStorage.setItem('doritj-theme',isDark?'dark':'light');
         syncThemeUI(isDark);
     }
-
-    function syncThemeUI(isDark) {
-        const icon    = document.getElementById('theme-icon');
-        const fIcon   = document.getElementById('footer-icon');
-        const fText   = document.getElementById('footer-text');
-        if (icon)  icon.className  = isDark ? 'ti ti-sun text-[18px]'  : 'ti ti-moon text-[18px]';
-        if (fIcon) fIcon.className = isDark ? 'ti ti-sun text-sm'      : 'ti ti-moon text-sm';
-        if (fText) fText.textContent = isDark ? '{% trans 'Светлая тема' %}' : '{% trans 'Тёмная тема' %}';
+    function syncThemeUI(isDark){
+        const icon=document.getElementById('theme-icon');
+        const fIcon=document.getElementById('footer-icon');
+        const fText=document.getElementById('footer-text');
+        if(icon)icon.className=isDark?'ti ti-sun text-sm md:text-[17px]':'ti ti-moon text-sm md:text-[17px]';
+        if(fIcon)fIcon.className=isDark?'ti ti-sun text-sm':'ti ti-moon text-sm';
+        if(fText)fText.textContent=isDark?'{% trans 'Светлая тема' %}':'{% trans 'Тёмная тема' %}';
     }
-
-    // ── Mobile menu ────────────────────────────────────────────────────────
-    function toggleMobile() {
-        const menu = document.getElementById('mobile-menu');
-        const overlay = document.getElementById('mobile-overlay');
-        const icon = document.getElementById('mobile-icon');
-        const isOpen = menu.classList.toggle('open');
+    function toggleMobile(){
+        const menu=document.getElementById('mobile-menu');
+        const overlay=document.getElementById('mobile-overlay');
+        const icon=document.getElementById('mobile-icon');
+        const isOpen=menu.classList.toggle('open');
         overlay.classList.toggle('open');
-        document.body.classList.toggle('overflow-hidden', isOpen);
-        icon.className = isOpen ? 'ti ti-x text-lg' : 'ti ti-menu-2 text-lg';
+        document.body.classList.toggle('overflow-hidden',isOpen);
+        icon.className=isOpen?'ti ti-x text-lg':'ti ti-menu-2 text-lg';
     }
-
-    // ── Auto-dismiss messages ──────────────────────────────────────────────
-    setTimeout(() => {
-        const container = document.getElementById('messages-container');
-        if (container) {
-            container.style.transition = 'opacity .5s ease';
-            container.style.opacity = '0';
-            setTimeout(() => container.remove(), 500);
+    setTimeout(()=>{
+        const c=document.getElementById('messages-container');
+        if(c){c.style.transition='opacity .5s ease';c.style.opacity='0';setTimeout(()=>c.remove(),500);}
+    },4000);
+    const header=document.getElementById('header');
+    window.addEventListener('scroll',()=>{
+        header.classList.toggle('shadow-sm',window.scrollY>10);
+        header.classList.toggle('shadow-black/5',window.scrollY>10);
+    },{passive:true});
+    document.addEventListener('keydown',e=>{
+        if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)){
+            e.preventDefault();
+            const s=document.querySelector('input[name="search"]');
+            if(s)s.focus();
         }
-    }, 4000);
-
-    // ── Header scroll shadow ───────────────────────────────────────────────
-    const header = document.getElementById('header');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 10) {
-            header.classList.add('shadow-sm', 'shadow-black/5');
-        } else {
-            header.classList.remove('shadow-sm', 'shadow-black/5');
-        }
-    }, { passive: true });
+    });
+    function toggleProfileDropdown(e){
+        e.stopPropagation();
+        document.getElementById('profile-menu').classList.toggle('hidden');
+    }
+    document.addEventListener('click',function(e){
+        const dd=document.getElementById('profile-dropdown');
+        const menu=document.getElementById('profile-menu');
+        if(dd&&!dd.contains(e.target))menu.classList.add('hidden');
+    });
 </script>
-
 </body>
 </html>
